@@ -14,18 +14,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserEntity_1 = __importDefault(require("../entities/UserEntity"));
 class UserDataMapper {
-    createUser(userCreationDS, salted) {
+    createUser(userCreationDS, hashPassword) {
         return __awaiter(this, void 0, void 0, function* () {
             yield UserEntity_1.default.create({
                 email: userCreationDS.getEmail(),
                 role: 'USER',
-                password: userCreationDS.getPassword(),
-                salted: salted,
+                password: hashPassword.getHashedPassword(),
+                salted: hashPassword.getSalt(),
                 access: false,
                 name: userCreationDS.getName(),
                 firstName: userCreationDS.getFirstName(),
                 customerId: userCreationDS.getCustomerId()
             });
+        });
+    }
+    findUserByEmailAndCustomer(email, customerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserEntity_1.default.findOne({
+                where: {
+                    email: email,
+                    customerId: customerId
+                }
+            });
+        });
+    }
+    findActiveUserOnEmail(email, customerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserEntity_1.default.findOne({
+                where: {
+                    email: email,
+                    customerId: customerId,
+                    access: true
+                }
+            });
+        });
+    }
+    findUserById(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserEntity_1.default.findByPk(userId);
         });
     }
 }

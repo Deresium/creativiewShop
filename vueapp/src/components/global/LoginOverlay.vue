@@ -1,0 +1,64 @@
+<template>
+    <v-overlay v-model="showLoginOverlay" class="overlay">
+        <div class="bgTabs">
+            <v-tabs grow v-model="tab" :bg-color="firstColor">
+                <v-tab value="login">{{ t('login') }}</v-tab>
+                <v-tab value="createAccount">{{ t('createAccount') }}</v-tab>
+            </v-tabs>
+            <v-window class="insideTab" v-model="tab">
+                <v-window-item value="login">
+                    <LoginForm/>
+                </v-window-item>
+                <v-window-item value="createAccount">
+                    <create-account-form/>
+                </v-window-item>
+            </v-window>
+        </div>
+    </v-overlay>
+</template>
+
+<script setup lang="ts">
+import {computed, ref} from "vue";
+import useCustomer from "../../compositionfunctions/customer.ts";
+import {useI18n} from "vue-i18n";
+import LoginForm from "./LoginForm.vue";
+import CreateAccountForm from "./CreateAccountForm.vue";
+import {useGlobalStore} from "../../pinia/global/GlobalStore.ts";
+
+const props = defineProps({
+    openTab: String
+});
+
+const tab = ref(props.openTab);
+
+const {firstColor} = useCustomer();
+const {t} = useI18n({useScope: 'global'});
+const globalStore = useGlobalStore();
+
+const showLoginOverlay = computed({
+    get(): boolean {
+        return globalStore.getShowLoginOverlay;
+    },
+    set(value: boolean) {
+        globalStore.setShowLoginOverlay(value);
+    }
+});
+
+</script>
+
+<style scoped>
+.overlay {
+    display: flex;
+    justify-content: center;
+    margin-top: 20vh;
+}
+
+.bgTabs {
+    background-color: white;
+    width: 90vw;
+}
+
+.insideTab {
+    padding: 10px;
+}
+</style>

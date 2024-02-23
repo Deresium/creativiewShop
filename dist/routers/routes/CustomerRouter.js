@@ -14,19 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
 class CustomerRouter extends ApplicationRouter_1.default {
-    constructor(customerRequester) {
+    constructor() {
         super();
-        this.customerRequester = customerRequester;
     }
     initRoutes() {
         this.getRouter().get('/customerInfo', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const customerId = req.customerId;
-            if (!customerId) {
-                res.status(400).send();
-                return;
-            }
-            const customer = yield this.customerRequester.getCustomerInfo(customerId);
-            res.status(200).send(customer);
+            res.status(200).send(req.customer);
         }));
     }
 }

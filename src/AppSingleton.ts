@@ -17,6 +17,7 @@ import ExtractCustomerMiddleware from "./routers/middlewares/ExtractCustomerMidd
 import InternalizationFacade from "./business/facades/InternalizationFacade";
 import InternalizationDataMapper from "./database/datamappers/InternalizationDataMapper";
 import InternalizationRouter from "./routers/routes/InternalizationRouter";
+import ExtractLanguageMiddleware from "./routers/middlewares/ExtractLanguageMiddleware";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -72,9 +73,10 @@ export default class AppSingleton {
 
         this.expressApp.use(new ExtractTokenMiddleware().getRequestHandler());
         this.expressApp.use(new ExtractCustomerMiddleware().getRequestHandler());
+        this.expressApp.use(new ExtractLanguageMiddleware().getRequestHandler());
 
         this.expressApp.use('/api', new UserRouter(userFacade).getRouter());
-        this.expressApp.use('/api', new CustomerRouter(customerFacade).getRouter());
+        this.expressApp.use('/api', new CustomerRouter().getRouter());
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
 
     }

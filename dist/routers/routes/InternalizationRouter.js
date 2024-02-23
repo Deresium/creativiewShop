@@ -20,7 +20,7 @@ class InternalizationRouter extends ApplicationRouter_1.default {
     }
     initRoutes() {
         this.getRouter().get('/internalizationMessages', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            res.status(200).send(yield this.internalizationRequester.getInternalizationMessagesForCustomer(req.customerId));
+            res.status(200).send(yield this.internalizationRequester.getInternalizationMessagesForCustomer(req.customer.getCustomerId()));
         }));
     }
 }

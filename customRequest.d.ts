@@ -1,7 +1,10 @@
 declare module 'express-serve-static-core' {
+    import CustomerVM from "./src/business/models/viewmodels/CustomerVM";
+
     interface Request {
         userId: number,
         userRole: string,
-        customerId: number
+        customer: CustomerVM,
+        language: string
     }
 }

@@ -23,12 +23,6 @@ class CustomerFacade {
             return customersEntities.map(customer => this.customerToVM(customer));
         });
     }
-    getCustomerInfo(customerId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const customerEntity = yield this.customerGateway.getCustomer(customerId);
-            return this.customerToVM(customerEntity);
-        });
-    }
     customerToVM(customerEntity) {
         return new CustomerVM_1.default(customerEntity.getCustomerId(), customerEntity.getName(), customerEntity.getDnsName(), customerEntity.getStoreProtectionCode(), customerEntity.getFirstColor(), customerEntity.getSecondColor(), customerEntity.getThirdColor());
     }

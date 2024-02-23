@@ -20,10 +20,15 @@ import {useCustomerStore} from "./pinia/customer/CustomerStore.ts";
 import {computed, ref, watch} from "vue";
 import InternalizationRequester from "./requesters/InternalizationRequester.ts";
 import I18nMessagesMerger from "./i18n/i18nMessagesMerger.ts";
+import {useI18n} from "vue-i18n";
+import axiosServer from "./axios/axiosServer.ts";
+import {useUserStore} from "./pinia/user/UserStore.ts";
 
 const initDone = ref(false);
 const customerStore = useCustomerStore();
+const userStore = useUserStore();
 const customerName = computed(() => customerStore.getCustomerName);
+const {locale} = useI18n({useScope: "global"});
 
 watch(customerName, () => {
     document.title = `${customerName.value} - ${document.title}`;
@@ -33,10 +38,15 @@ watch(customerName, () => {
     }
 });
 
+watch(locale, () => {
+    axiosServer.defaults.params['language'] = locale.value;
+}, {immediate: true});
+
 const initApp = async () => {
     await customerStore.retrieveCustomer();
     const messages = await InternalizationRequester.getInternalizationMessages();
     new I18nMessagesMerger().addMessages(messages);
+    await userStore.retrieveLoginUserInfo();
 };
 
 initApp().then(() => {
@@ -49,6 +59,12 @@ initApp().then(() => {
 body {
     margin: 0;
     padding: 0;
+}
+
+h1, h2, h3 {
+    font-family: "Anton", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .app {

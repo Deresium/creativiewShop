@@ -19,11 +19,6 @@ class CustomerDataMapper {
             return yield CustomerEntity_1.default.findAll();
         });
     }
-    getCustomer(customerId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield CustomerEntity_1.default.findByPk(customerId);
-        });
-    }
 }
 exports.default = CustomerDataMapper;
 //# sourceMappingURL=CustomerDataMapper.js.map

@@ -11,12 +11,10 @@
 
 <script setup lang="ts">
 import {useI18n} from "vue-i18n";
-import {useCustomerStore} from "../../pinia/customer/CustomerStore.ts";
-import {computed} from "vue";
+import useCustomer from "../../compositionfunctions/customer.ts";
 
 const {t, availableLocales, locale} = useI18n({useScope: 'global'});
-const customerStore = useCustomerStore();
-const firstColor = computed(() => customerStore.getFirstColorHex);
+const {firstColor} = useCustomer();
 
 const selectLang = (value: any) => {
     locale.value = value;

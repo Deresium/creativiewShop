@@ -10,7 +10,7 @@ const i18n = createI18n({
     legacy: false,
     locale: language,
     messages,
-    missing: (locale, key) => `${locale}.${key}`,
+    missing: (locale, key) => '',
     datetimeFormats: {
         'fr': {
             short: {

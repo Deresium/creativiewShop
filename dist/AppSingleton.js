@@ -22,6 +22,7 @@ const ExtractCustomerMiddleware_1 = __importDefault(require("./routers/middlewar
 const InternalizationFacade_1 = __importDefault(require("./business/facades/InternalizationFacade"));
 const InternalizationDataMapper_1 = __importDefault(require("./database/datamappers/InternalizationDataMapper"));
 const InternalizationRouter_1 = __importDefault(require("./routers/routes/InternalizationRouter"));
+const ExtractLanguageMiddleware_1 = __importDefault(require("./routers/middlewares/ExtractLanguageMiddleware"));
 class AppSingleton {
     constructor() {
         this.expressApp = (0, express_1.default)();
@@ -61,8 +62,9 @@ class AppSingleton {
         this.expressApp.use(express_1.default.json());
         this.expressApp.use(new ExtractTokenMiddleware_1.default().getRequestHandler());
         this.expressApp.use(new ExtractCustomerMiddleware_1.default().getRequestHandler());
+        this.expressApp.use(new ExtractLanguageMiddleware_1.default().getRequestHandler());
         this.expressApp.use('/api', new UserRouter_1.default(userFacade).getRouter());
-        this.expressApp.use('/api', new CustomerRouter_1.default(customerFacade).getRouter());
+        this.expressApp.use('/api', new CustomerRouter_1.default().getRouter());
         this.expressApp.use('/api', new InternalizationRouter_1.default(internalizationFacade).getRouter());
     }
 }

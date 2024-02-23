@@ -2,12 +2,12 @@ import cookie from "cookie";
 import jwt from "jsonwebtoken";
 
 export default class CookiesGenerator {
-    private readonly userId: number;
+    private readonly userId: bigint;
     private readonly userRole: string;
     private signatureCookie: string;
     private payloadCookie: string;
 
-    constructor(userId?: number, userRole?: string) {
+    constructor(userId?: bigint, userRole?: string) {
         if (userId && userRole) {
             this.userId = userId;
             this.userRole = userRole;
@@ -57,7 +57,7 @@ export default class CookiesGenerator {
     private generateAuthenticationCookies(): void {
         const token = jwt.sign({
             userId: this.userId,
-            role: this.userRole
+            role: this.userRole,
         }, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24}).split('.');
         const signatureCookieValue = token[2];
         const payloadCookieValue = `${token[0]}.${token[1]}`;

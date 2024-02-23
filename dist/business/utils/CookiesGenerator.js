@@ -50,7 +50,7 @@ class CookiesGenerator {
     generateAuthenticationCookies() {
         const token = jsonwebtoken_1.default.sign({
             userId: this.userId,
-            role: this.userRole
+            role: this.userRole,
         }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 }).split('.');
         const signatureCookieValue = token[2];
         const payloadCookieValue = `${token[0]}.${token[1]}`;
