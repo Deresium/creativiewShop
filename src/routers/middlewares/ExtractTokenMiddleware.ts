@@ -18,9 +18,9 @@ export default class ExtractTokenMiddleware extends ApplicationMiddleware{
             if(sign && payload) {
                 const token = `${payload}.${sign}`;
                 const decrypt = <any>jwt.verify(token, process.env.JWT_SECRET);
-                req.userRole = decrypt.role;
+                req.userGroups = decrypt.userGroups;
                 req.userId = decrypt.userId;
-                const cookieGenerator = new CookiesGenerator(req.userId, req.userRole);
+                const cookieGenerator = new CookiesGenerator(req.userId, req.userGroups);
                 res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
             }
             next();

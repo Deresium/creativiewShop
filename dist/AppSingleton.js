@@ -23,6 +23,13 @@ const InternalizationFacade_1 = __importDefault(require("./business/facades/Inte
 const InternalizationDataMapper_1 = __importDefault(require("./database/datamappers/InternalizationDataMapper"));
 const InternalizationRouter_1 = __importDefault(require("./routers/routes/InternalizationRouter"));
 const ExtractLanguageMiddleware_1 = __importDefault(require("./routers/middlewares/ExtractLanguageMiddleware"));
+const UserGroupDataMapper_1 = __importDefault(require("./database/datamappers/UserGroupDataMapper"));
+const UserGroupFacade_1 = __importDefault(require("./business/facades/UserGroupFacade"));
+const CategoryDataMapper_1 = __importDefault(require("./database/datamappers/CategoryDataMapper"));
+const CategoryFacade_1 = __importDefault(require("./business/facades/CategoryFacade"));
+const AwsFileDataMapper_1 = __importDefault(require("./external/aws/files/AwsFileDataMapper"));
+const AwsOperations_1 = __importDefault(require("./external/aws/files/AwsOperations"));
+const CategoryRouter_1 = __importDefault(require("./routers/routes/CategoryRouter"));
 class AppSingleton {
     constructor() {
         this.expressApp = (0, express_1.default)();
@@ -43,9 +50,14 @@ class AppSingleton {
         const customerDataMapper = new CustomerDataMapper_1.default();
         const userDataMapper = new UserDataMapper_1.default();
         const internalizationDataMapper = new InternalizationDataMapper_1.default();
+        const userGroupDataMapper = new UserGroupDataMapper_1.default();
+        const categoryDataMapper = new CategoryDataMapper_1.default();
+        const fileDataMapper = new AwsFileDataMapper_1.default(new AwsOperations_1.default());
         const customerFacade = new CustomerFacade_1.default(customerDataMapper);
-        const userFacade = new UserFacade_1.default(userDataMapper);
+        const userGroupFacade = new UserGroupFacade_1.default(userGroupDataMapper);
+        const userFacade = new UserFacade_1.default(userDataMapper, userGroupFacade);
         const internalizationFacade = new InternalizationFacade_1.default(internalizationDataMapper);
+        const categoryFacade = new CategoryFacade_1.default(categoryDataMapper, fileDataMapper);
         CustomerCacheSingleton_1.default.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
         });
@@ -66,6 +78,7 @@ class AppSingleton {
         this.expressApp.use('/api', new UserRouter_1.default(userFacade).getRouter());
         this.expressApp.use('/api', new CustomerRouter_1.default().getRouter());
         this.expressApp.use('/api', new InternalizationRouter_1.default(internalizationFacade).getRouter());
+        this.expressApp.use('/api', new CategoryRouter_1.default(categoryFacade).getRouter());
     }
 }
 exports.default = AppSingleton;

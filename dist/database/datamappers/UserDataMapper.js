@@ -18,7 +18,6 @@ class UserDataMapper {
         return __awaiter(this, void 0, void 0, function* () {
             yield UserEntity_1.default.create({
                 email: userCreationDS.getEmail(),
-                role: 'USER',
                 password: hashPassword.getHashedPassword(),
                 salted: hashPassword.getSalt(),
                 access: false,

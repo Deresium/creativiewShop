@@ -2,7 +2,7 @@ import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 
 export default class InternalizationEntity extends Model {
-    private internalizationId: bigint;
+    private internalizationId: string;
     private internalizationKey: string;
     private textFR: string;
     private textEN: string;

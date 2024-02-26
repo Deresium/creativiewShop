@@ -1,13 +1,13 @@
 import {RequestHandler} from "express";
 
-export default abstract class ApplicationMiddleware{
+export default abstract class ApplicationMiddleware {
     private readonly requestHandler: RequestHandler;
 
     protected constructor() {
         this.requestHandler = this.defineMiddlewareFunction();
     }
 
-    getRequestHandler(){
+    getRequestHandler() {
         return this.requestHandler;
     }
 

@@ -5,12 +5,12 @@ const useUser = () => {
     const userStore = useUserStore();
     const nameFirstName = computed(() => userStore.getNameFirstName);
     const isLoggedIn = computed(() => userStore.isLoggedIn);
-    const isAdmin = computed(() => userStore.isAdmin);
+    const isAdminStore = computed(() => userStore.isAdminStore);
 
     return {
         nameFirstName,
         isLoggedIn,
-        isAdmin
+        isAdminStore
     }
 };
 

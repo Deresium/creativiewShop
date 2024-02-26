@@ -45,7 +45,7 @@ class UserRouter extends ApplicationRouter_1.default {
             try {
                 const user = yield this.userRequester.loginUser(new LoginInfoDS_1.default(email, customerId, password));
                 if (user) {
-                    const cookieGenerator = new CookiesGenerator_1.default(user.getUserId(), user.getRole());
+                    const cookieGenerator = new CookiesGenerator_1.default(user.getUserId(), user.getUserGroups());
                     res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
                     res.send();
                 }
@@ -66,10 +66,10 @@ class UserRouter extends ApplicationRouter_1.default {
         this.getRouter().get('/user', (req, res) => __awaiter(this, void 0, void 0, function* () {
             const userId = req.userId;
             if (!userId) {
-                res.status(400).send();
+                res.status(200).send();
                 return;
             }
-            const user = yield this.userRequester.getUser(userId);
+            const user = yield this.userRequester.getUser(userId, req.userGroups);
             res.status(200).send(user);
         }));
     }

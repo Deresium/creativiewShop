@@ -1,6 +1,6 @@
 <template>
     <header>
-        <img class="imgLogo" :src="srcImg" alt="logo"/>
+        <img @click="clickOnLogo" class="imgLogo" :src="srcImg" alt="logo"/>
         <v-btn @click="clickOnMenu" icon="mdi-menu" size="large" :color="firstColor"/>
         <CsMenu/>
     </header>
@@ -12,6 +12,7 @@ import {useCustomerStore} from "../../pinia/customer/CustomerStore.ts";
 import CsMenu from "./CsMenu.vue";
 import useCustomer from "../../compositionfunctions/customer.ts";
 import {useGlobalStore} from "../../pinia/global/GlobalStore.ts";
+import router from "../../router/router.ts";
 
 const customerStore = useCustomerStore();
 const globalStore = useGlobalStore();
@@ -21,6 +22,10 @@ const {firstColor} = useCustomer();
 
 const clickOnMenu = () => {
     globalStore.setShowMenuOverlay(true);
+};
+
+const clickOnLogo = async() => {
+    await router.push({name: 'home'});
 }
 
 </script>

@@ -3,7 +3,7 @@ declare module 'express-serve-static-core' {
 
     interface Request {
         userId: number,
-        userRole: string,
+        userGroups: Array<string>,
         customer: CustomerVM,
         language: string
     }

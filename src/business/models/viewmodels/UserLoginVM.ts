@@ -1,19 +1,19 @@
 export default class UserLoginVM {
-    private readonly userId: bigint;
-    private readonly role: string;
+    private readonly userId: string;
+    private readonly userGroups: Array<string>;
 
 
-    constructor(userId: bigint, role: string) {
+    constructor(userId: string, userGroups: Array<string>) {
         this.userId = userId;
-        this.role = role;
+        this.userGroups = userGroups;
     }
 
 
-    public getUserId(): bigint {
+    public getUserId(): string {
         return this.userId;
     }
 
-    public getRole(): string {
-        return this.role;
+    public getUserGroups() {
+        return this.userGroups;
     }
 }

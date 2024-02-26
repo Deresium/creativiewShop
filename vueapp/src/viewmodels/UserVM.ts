@@ -2,15 +2,15 @@ export default class UserVM {
     private readonly email: string;
     private readonly name: string;
     private readonly firstName: string;
-    private readonly isAdmin: boolean;
-    private readonly isLoggedIn: boolean
+    private readonly isAdminStore: boolean;
+    private readonly isLoggedIn: boolean;
 
 
-    constructor(email: string, name: string, firstName: string, isAdmin: boolean, isLoggedIn: boolean) {
+    constructor(email: string, name: string, firstName: string, isAdminStore: boolean, isLoggedIn: boolean) {
         this.email = email;
         this.name = name;
         this.firstName = firstName;
-        this.isAdmin = isAdmin;
+        this.isAdminStore = isAdminStore;
         this.isLoggedIn = isLoggedIn;
     }
 
@@ -27,8 +27,8 @@ export default class UserVM {
         return this.firstName;
     }
 
-    public getIsAdmin(): boolean {
-        return this.isAdmin;
+    public getIsAdminStore(): boolean {
+        return this.isAdminStore;
     }
 
     public getIsLoggedIn(): boolean {

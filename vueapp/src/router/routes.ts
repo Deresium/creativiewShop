@@ -1,8 +1,6 @@
 import {RouteRecordRaw} from "vue-router";
 import CsHome from "../components/routes/CsHome.vue";
-import CsLogin from "../components/routes/CsLogin.vue";
-import CsCreateAccount from "../components/routes/CsCreateAccount.vue";
-
+import CsAdmin from "../components/routes/CsAdmin.vue";
 export const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
@@ -11,15 +9,9 @@ export const routes: Array<RouteRecordRaw> = [
         meta: {title: 'Home'}
     },
     {
-        path: '/login',
-        name: 'login',
-        component: CsLogin,
-        meta: {title: 'Login'}
-    },
-    {
-        path: '/createAccount',
-        name: 'createAccount',
-        component: CsCreateAccount,
-        meta: {title: 'Create account'}
+        path: '/admin',
+        name: 'admin',
+        component: CsAdmin,
+        meta: {title: 'Admin'}
     }
 ];

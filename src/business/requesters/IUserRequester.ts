@@ -8,5 +8,5 @@ export default interface IUserRequester {
 
     loginUser(loginInfoDS: LoginInfoDS): Promise<UserLoginVM>;
 
-    getUser(userId: bigint): Promise<UserVM>;
+    getUser(userId: string, userGroups: Array<string>): Promise<UserVM>;
 }

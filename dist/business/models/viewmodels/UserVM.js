@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class UserVM {
-    constructor(name, firstName, email, isAdmin, isLoggedIn) {
+    constructor(name, firstName, email, isAdminStore, isLoggedIn) {
         this.name = name;
         this.firstName = firstName;
         this.email = email;
-        this.isAdmin = isAdmin;
+        this.isAdminStore = isAdminStore;
         this.isLoggedIn = isLoggedIn;
     }
 }

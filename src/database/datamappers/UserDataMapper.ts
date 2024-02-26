@@ -7,7 +7,6 @@ export default class UserDataMapper implements IUserDataGateway {
     public async createUser(userCreationDS: UserCreationDS, hashPassword: PasswordHashDS): Promise<void> {
         await UserEntity.create({
             email: userCreationDS.getEmail(),
-            role: 'USER',
             password: hashPassword.getHashedPassword(),
             salted: hashPassword.getSalt(),
             access: false,
@@ -36,7 +35,7 @@ export default class UserDataMapper implements IUserDataGateway {
         })
     }
 
-    public async findUserById(userId: bigint): Promise<UserEntity> {
+    public async findUserById(userId: string): Promise<UserEntity> {
         return await UserEntity.findByPk(userId);
     }
 }

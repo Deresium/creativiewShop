@@ -7,7 +7,7 @@ export default class InternalizationDataMapper implements IInternalizationDataGa
         return await InternalizationEntity.findAll({
             where: {
                 customerId: {
-                    [Op.or]: [0, customerId]
+                    [Op.or]: [null, customerId]
                 }
             }
         });

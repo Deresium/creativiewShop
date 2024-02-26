@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class UserLoginVM {
-    constructor(userId, role) {
+    constructor(userId, userGroups) {
         this.userId = userId;
-        this.role = role;
+        this.userGroups = userGroups;
     }
     getUserId() {
         return this.userId;
     }
-    getRole() {
-        return this.role;
+    getUserGroups() {
+        return this.userGroups;
     }
 }
 exports.default = UserLoginVM;

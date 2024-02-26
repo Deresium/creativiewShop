@@ -5,12 +5,16 @@ import PasswordHasher from "../utils/PasswordHasher";
 import LoginInfoDS from "../models/datastores/LoginInfoDS";
 import UserLoginVM from "../models/viewmodels/UserLoginVM";
 import UserVM from "../models/viewmodels/UserVM";
+import IUserGroupRequester from "../requesters/IUserGroupRequester";
+import GroupConst from "../utils/GroupConst";
 
 export default class UserFacade implements IUserRequester {
     private readonly userDataGateway: IUserDataGateway;
+    private readonly userGroupRequester: IUserGroupRequester;
 
-    constructor(userDataGateway: IUserDataGateway) {
+    constructor(userDataGateway: IUserDataGateway, userGroupRequester: IUserGroupRequester) {
         this.userDataGateway = userDataGateway;
+        this.userGroupRequester = userGroupRequester;
     }
 
     public async createUser(userCreationDS: UserCreationDS): Promise<void> {
@@ -35,13 +39,14 @@ export default class UserFacade implements IUserRequester {
         const passwordHashed = await PasswordHasher.hashPassword(loginInfoDS.getPassword(), user.getSalted());
 
         if (passwordHashed.getHashedPassword() === user.getPassword()) {
-            return new UserLoginVM(user.getUserId(), user.getRole());
+            const userGroups = await this.userGroupRequester.getAllGroupsForUser(user.getUserId());
+            return new UserLoginVM(user.getUserId(), userGroups);
         }
         return null;
     }
 
-    public async getUser(userId: bigint): Promise<UserVM> {
+    public async getUser(userId: string, userGroups: Array<string>): Promise<UserVM> {
         const userEntity = await this.userDataGateway.findUserById(userId);
-        return new UserVM(userEntity.getName(), userEntity.getFirstName(), userEntity.getEmail(), userEntity.getRole() === 'ADMIN', true);
+        return new UserVM(userEntity.getName(), userEntity.getFirstName(), userEntity.getEmail(), GroupConst.hasAccessTo(GroupConst.ADMIN_STORE, userGroups), true);
     }
 }

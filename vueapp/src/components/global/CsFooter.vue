@@ -12,12 +12,15 @@
 <script setup lang="ts">
 import {useI18n} from "vue-i18n";
 import useCustomer from "../../compositionfunctions/customer.ts";
+import {useLocale} from "vuetify";
 
 const {t, availableLocales, locale} = useI18n({useScope: 'global'});
 const {firstColor} = useCustomer();
+const {current} = useLocale();
 
 const selectLang = (value: any) => {
     locale.value = value;
+    current.value = value;
 }
 </script>
 

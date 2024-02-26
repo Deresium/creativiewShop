@@ -18,6 +18,13 @@ import InternalizationFacade from "./business/facades/InternalizationFacade";
 import InternalizationDataMapper from "./database/datamappers/InternalizationDataMapper";
 import InternalizationRouter from "./routers/routes/InternalizationRouter";
 import ExtractLanguageMiddleware from "./routers/middlewares/ExtractLanguageMiddleware";
+import UserGroupDataMapper from "./database/datamappers/UserGroupDataMapper";
+import UserGroupFacade from "./business/facades/UserGroupFacade";
+import CategoryDataMapper from "./database/datamappers/CategoryDataMapper";
+import CategoryFacade from "./business/facades/CategoryFacade";
+import AwsFileDataMapper from "./external/aws/files/AwsFileDataMapper";
+import AwsOperations from "./external/aws/files/AwsOperations";
+import CategoryRouter from "./routers/routes/CategoryRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -45,10 +52,15 @@ export default class AppSingleton {
         const customerDataMapper = new CustomerDataMapper();
         const userDataMapper = new UserDataMapper();
         const internalizationDataMapper = new InternalizationDataMapper();
+        const userGroupDataMapper = new UserGroupDataMapper();
+        const categoryDataMapper = new CategoryDataMapper();
+        const fileDataMapper = new AwsFileDataMapper(new AwsOperations());
 
         const customerFacade = new CustomerFacade(customerDataMapper);
-        const userFacade = new UserFacade(userDataMapper);
+        const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
+        const userFacade = new UserFacade(userDataMapper, userGroupFacade);
         const internalizationFacade = new InternalizationFacade(internalizationDataMapper);
+        const categoryFacade = new CategoryFacade(categoryDataMapper, fileDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -78,6 +90,7 @@ export default class AppSingleton {
         this.expressApp.use('/api', new UserRouter(userFacade).getRouter());
         this.expressApp.use('/api', new CustomerRouter().getRouter());
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
+        this.expressApp.use('/api', new CategoryRouter(categoryFacade).getRouter());
 
     }
 }

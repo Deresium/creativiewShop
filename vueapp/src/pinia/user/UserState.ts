@@ -2,7 +2,7 @@ export default class UserState {
     private email: string;
     private name: string;
     private firstName: string;
-    private isAdmin: boolean;
+    private isAdminStore: boolean;
     private isLoggedIn: boolean;
 
 
@@ -26,12 +26,12 @@ export default class UserState {
         this.firstName = value;
     }
 
-    public getIsAdmin(): boolean {
-        return this.isAdmin;
+    public getIsAdminStore(): boolean {
+        return this.isAdminStore;
     }
 
-    public setIsAdmin(value: boolean) {
-        this.isAdmin = value;
+    public setIsAdminStore(value: boolean) {
+        this.isAdminStore = value;
     }
 
     public getIsLoggedIn(): boolean {

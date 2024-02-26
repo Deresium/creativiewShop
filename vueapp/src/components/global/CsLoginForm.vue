@@ -70,5 +70,7 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
-
+.alertError {
+    margin-bottom: 10px;
+}
 </style>

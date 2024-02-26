@@ -21,7 +21,7 @@
 import {useCustomerStore} from "../../pinia/customer/CustomerStore.ts";
 import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
-import LoginOverlay from "../global/LoginOverlay.vue";
+import LoginOverlay from "../global/CsLoginOverlay.vue";
 import {useGlobalStore} from "../../pinia/global/GlobalStore.ts";
 import useUser from "../../compositionfunctions/user.ts";
 

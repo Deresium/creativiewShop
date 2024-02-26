@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cookie_1 = __importDefault(require("cookie"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class CookiesGenerator {
-    constructor(userId, userRole) {
-        if (userId && userRole) {
+    constructor(userId, userGroups) {
+        if (userId && userGroups) {
             this.userId = userId;
-            this.userRole = userRole;
+            this.userGroups = userGroups;
             this.generateAuthenticationCookies();
         }
         else {
@@ -50,7 +50,7 @@ class CookiesGenerator {
     generateAuthenticationCookies() {
         const token = jsonwebtoken_1.default.sign({
             userId: this.userId,
-            role: this.userRole,
+            userGroups: this.userGroups
         }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 }).split('.');
         const signatureCookieValue = token[2];
         const payloadCookieValue = `${token[0]}.${token[1]}`;

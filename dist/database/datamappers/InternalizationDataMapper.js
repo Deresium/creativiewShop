@@ -20,7 +20,7 @@ class InternalizationDataMapper {
             return yield InternalizationEntity_1.default.findAll({
                 where: {
                     customerId: {
-                        [sequelize_1.Op.or]: [0, customerId]
+                        [sequelize_1.Op.or]: [null, customerId]
                     }
                 }
             });

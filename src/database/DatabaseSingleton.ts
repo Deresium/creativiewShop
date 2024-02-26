@@ -5,7 +5,7 @@ export default class DatabaseSingleton {
     private readonly sequelize: Sequelize;
 
     private constructor() {
-        let dialectOptions = {};
+        let dialectOptions: any = {};
         if (process.env.NODE_ENV === 'production') {
             dialectOptions = {
                 ssl: {

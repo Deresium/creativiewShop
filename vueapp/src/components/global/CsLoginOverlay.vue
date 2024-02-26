@@ -21,8 +21,8 @@
 import {computed, ref} from "vue";
 import useCustomer from "../../compositionfunctions/customer.ts";
 import {useI18n} from "vue-i18n";
-import LoginForm from "./LoginForm.vue";
-import CreateAccountForm from "./CreateAccountForm.vue";
+import LoginForm from "./CsLoginForm.vue";
+import CreateAccountForm from "./CsCreateAccountForm.vue";
 import {useGlobalStore} from "../../pinia/global/GlobalStore.ts";
 
 const props = defineProps({

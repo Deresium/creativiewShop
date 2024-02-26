@@ -39,7 +39,7 @@ export default class UserRouter extends ApplicationRouter {
             try {
                 const user: UserLoginVM = await this.userRequester.loginUser(new LoginInfoDS(email, customerId, password));
                 if (user) {
-                    const cookieGenerator = new CookiesGenerator(user.getUserId(), user.getRole());
+                    const cookieGenerator = new CookiesGenerator(user.getUserId(), user.getUserGroups());
                     res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
                     res.send();
                 } else {
@@ -60,10 +60,10 @@ export default class UserRouter extends ApplicationRouter {
         this.getRouter().get('/user', async (req, res) => {
             const userId = req.userId;
             if (!userId) {
-                res.status(400).send();
+                res.status(200).send();
                 return;
             }
-            const user = await this.userRequester.getUser(userId);
+            const user = await this.userRequester.getUser(userId, req.userGroups);
             res.status(200).send(user);
         });
     }

@@ -12,9 +12,6 @@ class UserEntity extends sequelize_1.Model {
     getEmail() {
         return this.email;
     }
-    getRole() {
-        return this.role;
-    }
     getPassword() {
         return this.password;
     }
@@ -38,7 +35,6 @@ exports.default = UserEntity;
 UserEntity.init({
     userId: { type: sequelize_1.DataTypes.BIGINT, primaryKey: true, autoIncrement: true },
     email: sequelize_1.DataTypes.STRING,
-    role: sequelize_1.DataTypes.STRING,
     password: sequelize_1.DataTypes.STRING,
     salted: sequelize_1.DataTypes.STRING,
     access: sequelize_1.DataTypes.BOOLEAN,
