@@ -17,11 +17,16 @@ const useRules = () => {
         return new Ruler({compareTo: password}).isSamePassword;
     };
 
+    const isSameValue = (fieldName: string, value: any, valueTxt: string) => {
+        return new Ruler({fieldName, compareTo: value, valueTxt}).isSameValue;
+    };
+
     return {
         notEmpty,
         isEmail,
         isStrongPassword,
-        isSamePassword
+        isSamePassword,
+        isSameValue
     }
 };
 

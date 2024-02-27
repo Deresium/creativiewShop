@@ -38,4 +38,14 @@ export default class Ruler {
         }
         return true;
     };
+
+    public isSameValue = (value: any) => {
+        if (value && value === this.rulerOptions.compareTo) {
+            return Ruler.t('error.sameValue', {
+                field: this.rulerOptions.fieldName,
+                valueTxt: this.rulerOptions.valueTxt
+            });
+        }
+        return true;
+    }
 }

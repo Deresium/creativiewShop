@@ -6,12 +6,13 @@
         items-per-page="10"
     >
         <template v-slot:item.actions="{ item }">
-            <v-btn @click="deleteItemConfirm(item.categoryId)" size="25px" color="red" icon="mdi-delete-empty"/>
-            <v-btn @click="showEditOverlay(item.categoryId)" size="25px" color="white" icon="mdi-pencil"/>
+            <v-btn color="red" icon="mdi-delete-empty" size="25px" @click="deleteItemConfirm(item.categoryId)"/>
+            <v-btn color="white" icon="mdi-pencil" size="25px" @click="showEditOverlay(item.categoryId)"/>
+            <v-btn color="white" icon="mdi-image" size="25px" @click="clickImage(item.categoryId)"/>
         </template>
     </v-data-table>
     <v-dialog v-model="confirmDelete">
-        <v-card :title="t('confirmDelete.title')" :text="t('confirmDelete.text')">
+        <v-card :text="t('confirmDelete.text')" :title="t('confirmDelete.title')">
             <template #actions>
                 <v-btn :loading="loading" @click="handleConfirm">
                     {{ t('confirm') }}
@@ -22,14 +23,18 @@
             </template>
         </v-card>
     </v-dialog>
+    <v-overlay v-if="showImage" v-model="showImage" class="overlay">
+        <CsCategoryImageUploader :category-id="categoryIdSelected"/>
+    </v-overlay>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {Ref, ref} from "vue";
 import CategoryFlatVM from "../../viewmodels/CategoryFlatVM.ts";
 import CategoryFlatRequester from "../../requesters/CategoryFlatRequester.ts";
 import {useI18n} from "vue-i18n";
 import axiosServer from "../../axios/axiosServer.ts";
+import CsCategoryImageUploader from "./CsCategoryImageUploader.vue";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -45,6 +50,8 @@ const headers = ref([
 const confirmDelete = ref(false);
 const tempCategoryId = ref();
 const loading = ref(false);
+const showImage = ref(false);
+const categoryIdSelected = ref();
 
 const categoriesFlat = ref(new Array<CategoryFlatVM>()) as Ref<Array<CategoryFlatVM>>;
 CategoryFlatRequester.requestCategoriesFlat().then(response => {
@@ -77,8 +84,17 @@ const handleRefuse = () => {
     tempCategoryId.value = null;
 };
 
+const clickImage = (categoryId: string) => {
+    showImage.value = true;
+    categoryIdSelected.value = categoryId;
+};
+
 </script>
 
 <style scoped>
-
+.overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>

@@ -1,12 +1,25 @@
 import ApplicationRouter from "./ApplicationRouter";
+import ICategoryRequester from "../../business/requesters/ICategoryRequester";
 
 export default class PublicFileRouter extends ApplicationRouter {
+    private readonly categoryRequester: ICategoryRequester;
 
-    constructor() {
+    constructor(categoryRequester: ICategoryRequester) {
         super();
+        this.categoryRequester = categoryRequester;
     }
 
     public initRoutes() {
-        // init public files get routes (images, pdf, ...)
+        this.getRouter().get('/category/:categoryId', async (req: any, res: any) => {
+            const categoryId = String(req.params.categoryId);
+            const fileVM = await this.categoryRequester.getCategoryImage(categoryId);
+            if (fileVM) {
+                res.setHeader('Content-Type', fileVM.getContentType());
+                res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(fileVM.getFileName())}`);
+                res.end(fileVM.getFile(), 'base64');
+            } else {
+                res.status(404).send();
+            }
+        });
     }
 }

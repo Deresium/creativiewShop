@@ -78,7 +78,7 @@ export default class AppSingleton {
 
         this.expressApp.use(new ReturnIndexMiddleware().getRequestHandler());
 
-        this.expressApp.use('/api', new PublicFileRouter().getRouter());
+        this.expressApp.use('/api', new PublicFileRouter(categoryFacade).getRouter());
 
 
         this.expressApp.use(express.json());

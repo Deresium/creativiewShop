@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const CategoryVM_1 = __importDefault(require("../models/viewmodels/CategoryVM"));
 const CategoryFlatVM_1 = __importDefault(require("../models/viewmodels/CategoryFlatVM"));
+const FileVM_1 = __importDefault(require("../models/viewmodels/FileVM"));
+const ContentType_1 = __importDefault(require("../utils/ContentType"));
 class CategoryFacade {
     constructor(categoryDataGateway, fileDataGateway) {
         this.categoryDataGateway = categoryDataGateway;
@@ -21,12 +23,7 @@ class CategoryFacade {
     }
     addCategory(categoryCreationDS) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.categoryDataGateway.addCategory(categoryCreationDS);
-            }
-            catch (error) {
-                console.error('facade operation aborded');
-            }
+            yield this.categoryDataGateway.addCategory(categoryCreationDS);
         });
     }
     updateCategoryImage(image, imageName, categoryId, customerId) {
@@ -92,10 +89,21 @@ class CategoryFacade {
                     const flatName = `${childrenListCategory.get(category.getParentCategoryId())} > ${category.getNameFr()}`;
                     childrenListCategory.set(category.getCategoryId(), flatName);
                 }
-                const categoryFlatVM = new CategoryFlatVM_1.default(category.getCategoryId(), category.getNameFr(), category.getNameEn(), category.getImageName(), childrenListCategory.get(category.getCategoryId()), childrenListCategory.get(category.getParentCategoryId()));
+                const categoryFlatVM = new CategoryFlatVM_1.default(category.getCategoryId(), category.getNameFr(), category.getNameEn(), category.getImageName(), childrenListCategory.get(category.getCategoryId()), childrenListCategory.get(category.getParentCategoryId()), category.getParentCategoryId());
                 returnCategories.push(categoryFlatVM);
             }
             return returnCategories;
+        });
+    }
+    getCategoryImage(categoryId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const category = yield this.categoryDataGateway.getCategoryById(categoryId);
+            if (category && category.getImageName()) {
+                const file = yield this.fileDataGateway.getCategoryPicture(categoryId);
+                const extension = ContentType_1.default.determinateContentType(category.getImageName());
+                return new FileVM_1.default(file, extension, category.getImageName());
+            }
+            return null;
         });
     }
 }

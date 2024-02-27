@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
 const OnlyAdminMiddleware_1 = __importDefault(require("../middlewares/OnlyAdminMiddleware"));
 const CategoryCreationDS_1 = __importDefault(require("../../business/models/datastores/CategoryCreationDS"));
+const CategoryUpdateDS_1 = __importDefault(require("../../business/models/datastores/CategoryUpdateDS"));
+const multer_1 = __importDefault(require("multer"));
 class CategoryRouter extends ApplicationRouter_1.default {
     constructor(categoryRequester) {
         super();
@@ -40,10 +42,29 @@ class CategoryRouter extends ApplicationRouter_1.default {
             const categoriesFlat = yield this.categoryRequester.getAllCategoriesFlat(customerId);
             res.status(200).send(categoriesFlat);
         }));
-        this.getRouter().delete('/category/:categoryId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().delete('/category/:categoryId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
             const categoryId = String(req.params.categoryId);
             const customerId = req.customer.getCustomerId();
             yield this.categoryRequester.deleteCategory(categoryId, customerId);
+            res.status(200).send();
+        }));
+        this.getRouter().put('/category/:categoryId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const categoryId = String(req.params.categoryId);
+            const customerId = req.customer.getCustomerId();
+            const nameFr = req.body.nameFr;
+            const nameEn = req.body.nameEn;
+            const parentCategoryId = req.body.parentCategoryId;
+            const categoryUpdateDS = new CategoryUpdateDS_1.default(nameFr, nameEn, parentCategoryId, categoryId, customerId);
+            yield this.categoryRequester.updateCategory(categoryUpdateDS);
+            res.status(200).send();
+        }));
+        const upload = (0, multer_1.default)();
+        this.getRouter().put('/category/image/:categoryId', new OnlyAdminMiddleware_1.default().getRequestHandler(), upload.single('file'), (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const categoryId = String(req.params.categoryId);
+            const customerId = req.customer.getCustomerId();
+            const image = req.file.buffer;
+            const imageName = req.file.originalname;
+            yield this.categoryRequester.updateCategoryImage(image, imageName, categoryId, customerId);
             res.status(200).send();
         }));
     }

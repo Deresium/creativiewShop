@@ -1,8 +1,9 @@
 <template>
     <h2>{{ t('category') }}</h2>
     <v-btn @click="showAddCategory">{{ t('addCategory') }}</v-btn>
-    <CategoryForm v-model="showCategoryForm" :categoryId="categoryToEdit" :key="counterRefresh" @add-success="onSuccess"/>
-    <CsCategoryList @delete-success="deleteSuccess" @show-edit-overlay="showEditOverlay" :key="counterRefresh"/>
+    <CategoryForm v-if="showCategoryForm" :key="counterRefresh" v-model="showCategoryForm" :categoryId="categoryToEdit"
+                  @add-success="onAddSuccess" @update-success="onUpdateSuccess"/>
+    <CsCategoryList :key="counterRefresh" @delete-success="deleteSuccess" @show-edit-overlay="showEditOverlay"/>
 
     <v-snackbar v-model="showSnackbar">
         {{ textSnackbar }}
@@ -18,7 +19,7 @@
     </v-snackbar>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useI18n} from "vue-i18n";
 import CategoryForm from "./CsCategoryForm.vue";
 import {ref} from "vue";
@@ -36,12 +37,20 @@ const categoryToEdit = ref();
 const showAddCategory = () => {
     categoryToEdit.value = null;
     showCategoryForm.value = true;
-}
-const onSuccess = () => {
+};
+const onAddSuccess = () => {
     counterRefresh.value++;
     showSnackbar.value = true;
     showCategoryForm.value = false;
     textSnackbar.value = t('createCategory.success');
+};
+
+const onUpdateSuccess = () => {
+    counterRefresh.value++;
+    showSnackbar.value = true;
+    showCategoryForm.value = false;
+    categoryToEdit.value = null;
+    textSnackbar.value = t('updateCategory.success');
 };
 
 const deleteSuccess = () => {

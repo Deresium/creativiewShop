@@ -70,7 +70,7 @@ class AppSingleton {
         const publicDirectoryPath = path_1.default.join(__dirname, '../public');
         this.expressApp.use(express_1.default.static(publicDirectoryPath));
         this.expressApp.use(new ReturnIndexMiddleware_1.default().getRequestHandler());
-        this.expressApp.use('/api', new PublicFileRouter_1.default().getRouter());
+        this.expressApp.use('/api', new PublicFileRouter_1.default(categoryFacade).getRouter());
         this.expressApp.use(express_1.default.json());
         this.expressApp.use(new ExtractTokenMiddleware_1.default().getRequestHandler());
         this.expressApp.use(new ExtractCustomerMiddleware_1.default().getRequestHandler());

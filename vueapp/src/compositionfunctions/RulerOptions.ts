@@ -1,5 +1,6 @@
-export default interface RulerOptions{
+export default interface RulerOptions {
     fieldName?: string;
     min?: number;
     compareTo?: any;
+    valueTxt?: string;
 }

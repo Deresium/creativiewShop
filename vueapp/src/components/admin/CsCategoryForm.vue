@@ -1,21 +1,21 @@
 <template>
-    <v-overlay class="overlay" v-model="localModelValue">
+    <v-overlay v-model="localModelValue" class="overlay">
         <div class="form">
-            <p v-if="categoryId">{{ categoryId }}</p>
-            <v-alert class="alertError" v-model="showAlert" type="error" :text="t('error.form')"/>
-            <v-alert class="alertError" v-model="showBackendError" type="error" :text="t(backendError)"/>
-            <v-form v-model="formValid" validate-on="blur" @submit.prevent="submitForm">
-                <v-text-field name="nameFR" type="text" v-model="nameFr" :rules="nameFrRules" :label="t('frenchName')"/>
-                <v-text-field name="nameEN" type="text" v-model="nameEn" :rules="nameEnRules"
-                              :label="t('englishName')"/>
-                <v-autocomplete v-model="selectedParentCategory" :items="categoriesFlat" :label="t('parentCategory')"/>
-                <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('submit') }}</v-btn>
+            <v-alert v-model="showAlert" :text="t('error.form')" class="alertError" type="error"/>
+            <v-alert v-model="showBackendError" :text="t(backendError)" class="alertError" type="error"/>
+            <v-form v-model="formValid" validate-on="input" @submit.prevent="submitForm">
+                <v-text-field v-model="nameFr" :label="t('frenchName')" :rules="nameFrRules" name="nameFR" type="text"/>
+                <v-text-field v-model="nameEn" :label="t('englishName')" :rules="nameEnRules" name="nameEN"
+                              type="text"/>
+                <v-autocomplete v-model="selectedParentCategory" :items="categoriesFlat" :label="t('parentCategory')"
+                                :rules="selectedParentCategoryRules" name="categoryParentId"/>
+                <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ textButton }}</v-btn>
             </v-form>
         </div>
     </v-overlay>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useI18n} from "vue-i18n";
 import useRules from "../../compositionfunctions/rules.ts";
 import {computed, ref} from "vue";
@@ -25,9 +25,9 @@ import CategoryFlatRequester from "../../requesters/CategoryFlatRequester.ts";
 import TitleValueVM from "../../viewmodels/TitleValueVM.ts";
 
 const {t} = useI18n({useScope: "global"});
-const {notEmpty} = useRules();
+const {notEmpty, isSameValue} = useRules();
 
-const emit = defineEmits(['addSuccess', 'update:modelValue']);
+const emit = defineEmits(['addSuccess', 'updateSuccess', 'update:modelValue']);
 
 const props = defineProps({
     modelValue: {
@@ -55,34 +55,64 @@ const successAddCategory = ref(false);
 const backendError = ref('');
 const showBackendError = computed(() => !validator.isEmpty(backendError.value));
 
+const isUpdate = computed(() => props.categoryId);
+const txtCategoryId = ref();
+
 const nameFr = ref('');
 const nameFrRules = [notEmpty(t('frenchName'))];
 const nameEn = ref('');
 const nameEnRules = [notEmpty(t('englishName'))];
 const selectedParentCategory = ref(null);
+const selectedParentCategoryRules = [isSameValue(t('parentCategory'), props.categoryId, txtCategoryId.value)];
+
+const textButton = computed(() => {
+    if (isUpdate.value) {
+        return t('update');
+    }
+    return t('submit');
+});
 
 const categoriesFlat = ref(new Array<TitleValueVM<string, string>>());
 CategoryFlatRequester.requestCategoriesFlat().then(response => {
-    categoriesFlat.value = response.map(category => new TitleValueVM(category.getFullNameAriane(), category.getCategoryId()));
+    for (const category of response) {
+        categoriesFlat.value.push(new TitleValueVM(category.getFullNameAriane(), category.getCategoryId()));
+        if (isUpdate.value && category.getCategoryId() === props.categoryId) {
+            nameFr.value = category.getNameFr();
+            nameEn.value = category.getNameEn();
+            selectedParentCategory.value = category.getParentCategoryId();
+            txtCategoryId.value = category.getFullNameAriane();
+            formValid.value = true;
+        }
+    }
 });
 
 const submitForm = async () => {
     isSending.value = true;
     firstSubmit.value = true;
-    if (!formValid.value) {
+    if (formValid.value === false) {
         isSending.value = false;
         return;
     }
 
     try {
-        await axiosServer.post('/category', {
-            nameFr: nameFr.value,
-            nameEn: nameEn.value,
-            parentCategoryId: selectedParentCategory.value
-        });
+        if (isUpdate.value) {
+            await axiosServer.put(`/category/${props.categoryId}`, {
+                nameFr: nameFr.value,
+                nameEn: nameEn.value,
+                parentCategoryId: selectedParentCategory.value
+            });
+            emit('updateSuccess');
+        } else {
+            await axiosServer.post('/category', {
+                nameFr: nameFr.value,
+                nameEn: nameEn.value,
+                parentCategoryId: selectedParentCategory.value
+            });
+            emit('addSuccess');
+        }
+
         backendError.value = '';
         successAddCategory.value = true;
-        emit('addSuccess');
     } catch (error: any) {
         backendError.value = error.response.data;
     }

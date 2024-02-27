@@ -10,6 +10,6 @@ export default class CategoryFlatParser {
     }
 
     private static parseCategoryFlat(category: any): CategoryFlatVM {
-        return new CategoryFlatVM(category.categoryId, category.nameFr, category.nameEn, category.imageName, category.fullNameAriane, category.parentsAriane);
+        return new CategoryFlatVM(category.categoryId, category.nameFr, category.nameEn, category.imageName, category.fullNameAriane, category.parentsAriane, category.parentCategoryId);
     }
 }

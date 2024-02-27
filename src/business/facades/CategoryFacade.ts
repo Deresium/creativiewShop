@@ -5,6 +5,8 @@ import CategoryUpdateDS from "../models/datastores/CategoryUpdateDS";
 import ICategoryDataGateway from "../../database/gateways/ICategoryDataGateway";
 import IFileDataGateway from "../../external/aws/files/IFileDataGateway";
 import CategoryFlatVM from "../models/viewmodels/CategoryFlatVM";
+import FileVM from "../models/viewmodels/FileVM";
+import ContentType from "../utils/ContentType";
 
 export default class CategoryFacade implements ICategoryRequester {
     private readonly categoryDataGateway: ICategoryDataGateway;
@@ -16,11 +18,7 @@ export default class CategoryFacade implements ICategoryRequester {
     }
 
     public async addCategory(categoryCreationDS: CategoryCreationDS): Promise<void> {
-        try {
-            await this.categoryDataGateway.addCategory(categoryCreationDS);
-        } catch (error) {
-            console.error('facade operation aborded');
-        }
+        await this.categoryDataGateway.addCategory(categoryCreationDS);
     }
 
     public async updateCategoryImage(image: any, imageName: string, categoryId: string, customerId: number): Promise<void> {
@@ -81,9 +79,20 @@ export default class CategoryFacade implements ICategoryRequester {
                 childrenListCategory.set(category.getCategoryId(), flatName);
             }
 
-            const categoryFlatVM = new CategoryFlatVM(category.getCategoryId(), category.getNameFr(), category.getNameEn(), category.getImageName(), childrenListCategory.get(category.getCategoryId()), childrenListCategory.get(category.getParentCategoryId()));
+            const categoryFlatVM = new CategoryFlatVM(category.getCategoryId(), category.getNameFr(), category.getNameEn(),
+                category.getImageName(), childrenListCategory.get(category.getCategoryId()), childrenListCategory.get(category.getParentCategoryId()), category.getParentCategoryId());
             returnCategories.push(categoryFlatVM);
         }
         return returnCategories;
+    }
+
+    public async getCategoryImage(categoryId: string): Promise<FileVM> {
+        const category = await this.categoryDataGateway.getCategoryById(categoryId);
+        if (category && category.getImageName()) {
+            const file = await this.fileDataGateway.getCategoryPicture(categoryId);
+            const extension = ContentType.determinateContentType(category.getImageName());
+            return new FileVM(file, extension, category.getImageName());
+        }
+        return null;
     }
 }
