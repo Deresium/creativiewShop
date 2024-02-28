@@ -41,8 +41,15 @@ export default class ManufacturerRouter extends ApplicationRouter {
 
         this.getRouter().get('/manufacturer', async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
-            const customers = await this.manufacturerRequester.getAllManufacturer(customerId);
-            res.status(200).send(customers);
+            const manufacturers = await this.manufacturerRequester.getAllManufacturer(customerId);
+            res.status(200).send(manufacturers);
+        });
+
+        this.getRouter().get('/manufacturer/:manufacturerId', async (req: any, res: any) => {
+            const manufacturerId = String(req.params.manufacturerId);
+            const customerId = req.customer.getCustomerId();
+            const manufacturer = await this.manufacturerRequester.getManufacturerById(manufacturerId, customerId);
+            res.status(200).send(manufacturer);
         });
     }
 }

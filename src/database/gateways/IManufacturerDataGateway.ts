@@ -9,5 +9,7 @@ export default interface IManufacturerDataGateway {
 
     getAllManufacturer(customerId: number): Promise<Array<ManufacturerEntity>>;
 
+    getManufacturerById(manufacturerId: string, customerId: number): Promise<ManufacturerEntity>;
+
     updateManufacturer(manufacturerUpdateDS: ManufacturerUpdateDS): Promise<void>;
 }

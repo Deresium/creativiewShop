@@ -45,4 +45,12 @@ export default class ManufacturerDataMapper implements IManufacturerDataGateway 
         });
     }
 
+    public async getManufacturerById(manufacturerId: string, customerId: number): Promise<ManufacturerEntity> {
+        return await ManufacturerEntity.findOne({
+            where: {
+                customerId: customerId,
+                manufacturerId: manufacturerId
+            }
+        });
+    }
 }

@@ -12,7 +12,7 @@
         </template>
     </v-data-table>
     <v-dialog v-model="confirmDelete">
-        <v-card :text="t('confirmDelete.text')" :title="t('confirmDelete.title')">
+        <v-card :text="t('confirmDeleteCategory.text')" :title="t('confirmDelete.title')">
             <template #actions>
                 <v-btn :loading="loading" @click="handleConfirm">
                     {{ t('confirm') }}

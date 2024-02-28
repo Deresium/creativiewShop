@@ -27,4 +27,9 @@ export default class ManufacturerFacade implements IManufacturerRequester {
     public async updateManufacturer(manufacturerUpdateDS: ManufacturerUpdateDS): Promise<void> {
         await this.manufacturerDataGateway.updateManufacturer(manufacturerUpdateDS);
     }
+
+    public async getManufacturerById(manufacturerId: string, customerId: number): Promise<ManufacturerVM> {
+        const manufacturer = await this.manufacturerDataGateway.getManufacturerById(manufacturerId, customerId);
+        return new ManufacturerVM(manufacturer.getManufacturerId(), manufacturer.getName());
+    }
 }

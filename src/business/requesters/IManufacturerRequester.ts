@@ -9,5 +9,7 @@ export default interface IManufacturerRequester {
 
     getAllManufacturer(customerId: number): Promise<Array<ManufacturerVM>>;
 
+    getManufacturerById(manufacturerId: string, customerId: number): Promise<ManufacturerVM>;
+
     updateManufacturer(manufacturerUpdateDS: ManufacturerUpdateDS): Promise<void>;
 }

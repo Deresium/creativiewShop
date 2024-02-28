@@ -30,6 +30,9 @@ const CategoryFacade_1 = __importDefault(require("./business/facades/CategoryFac
 const AwsFileDataMapper_1 = __importDefault(require("./external/aws/files/AwsFileDataMapper"));
 const AwsOperations_1 = __importDefault(require("./external/aws/files/AwsOperations"));
 const CategoryRouter_1 = __importDefault(require("./routers/routes/CategoryRouter"));
+const ManufacturerDataMapper_1 = __importDefault(require("./database/datamappers/ManufacturerDataMapper"));
+const ManufacturerFacade_1 = __importDefault(require("./business/facades/ManufacturerFacade"));
+const ManufacturerRouter_1 = __importDefault(require("./routers/routes/ManufacturerRouter"));
 class AppSingleton {
     constructor() {
         this.expressApp = (0, express_1.default)();
@@ -53,11 +56,13 @@ class AppSingleton {
         const userGroupDataMapper = new UserGroupDataMapper_1.default();
         const categoryDataMapper = new CategoryDataMapper_1.default();
         const fileDataMapper = new AwsFileDataMapper_1.default(new AwsOperations_1.default());
+        const manufacturerDataMapper = new ManufacturerDataMapper_1.default();
         const customerFacade = new CustomerFacade_1.default(customerDataMapper);
         const userGroupFacade = new UserGroupFacade_1.default(userGroupDataMapper);
         const userFacade = new UserFacade_1.default(userDataMapper, userGroupFacade);
         const internalizationFacade = new InternalizationFacade_1.default(internalizationDataMapper);
         const categoryFacade = new CategoryFacade_1.default(categoryDataMapper, fileDataMapper);
+        const manufacturerFacade = new ManufacturerFacade_1.default(manufacturerDataMapper);
         CustomerCacheSingleton_1.default.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
         });
@@ -79,6 +84,7 @@ class AppSingleton {
         this.expressApp.use('/api', new CustomerRouter_1.default().getRouter());
         this.expressApp.use('/api', new InternalizationRouter_1.default(internalizationFacade).getRouter());
         this.expressApp.use('/api', new CategoryRouter_1.default(categoryFacade).getRouter());
+        this.expressApp.use('/api', new ManufacturerRouter_1.default(manufacturerFacade).getRouter());
     }
 }
 exports.default = AppSingleton;

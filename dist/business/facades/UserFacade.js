@@ -51,6 +51,9 @@ class UserFacade {
     getUser(userId, userGroups) {
         return __awaiter(this, void 0, void 0, function* () {
             const userEntity = yield this.userDataGateway.findUserById(userId);
+            if (!userEntity) {
+                return null;
+            }
             return new UserVM_1.default(userEntity.getName(), userEntity.getFirstName(), userEntity.getEmail(), GroupConst_1.default.hasAccessTo(GroupConst_1.default.ADMIN_STORE, userGroups), true);
         });
     }
