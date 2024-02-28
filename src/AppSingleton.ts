@@ -25,6 +25,9 @@ import CategoryFacade from "./business/facades/CategoryFacade";
 import AwsFileDataMapper from "./external/aws/files/AwsFileDataMapper";
 import AwsOperations from "./external/aws/files/AwsOperations";
 import CategoryRouter from "./routers/routes/CategoryRouter";
+import ManufacturerDataMapper from "./database/datamappers/ManufacturerDataMapper";
+import ManufacturerFacade from "./business/facades/ManufacturerFacade";
+import ManufacturerRouter from "./routers/routes/ManufacturerRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -55,12 +58,14 @@ export default class AppSingleton {
         const userGroupDataMapper = new UserGroupDataMapper();
         const categoryDataMapper = new CategoryDataMapper();
         const fileDataMapper = new AwsFileDataMapper(new AwsOperations());
+        const manufacturerDataMapper = new ManufacturerDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
         const userFacade = new UserFacade(userDataMapper, userGroupFacade);
         const internalizationFacade = new InternalizationFacade(internalizationDataMapper);
         const categoryFacade = new CategoryFacade(categoryDataMapper, fileDataMapper);
+        const manufacturerFacade = new ManufacturerFacade(manufacturerDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -91,6 +96,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new CustomerRouter().getRouter());
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
         this.expressApp.use('/api', new CategoryRouter(categoryFacade).getRouter());
-
+        this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade).getRouter());
     }
 }
