@@ -63,24 +63,26 @@ export default class CategoryDataMapper implements ICategoryDataGateway {
         })
     }
 
-    public async getCategoryById(categoryId: string): Promise<CategoryEntity> {
+    public async getCategoryById(categoryId: string, customerId: number): Promise<CategoryEntity> {
         return await CategoryEntity.findOne({
             where: {
                 deletedAt: {
                     [Op.eq]: null
                 },
-                categoryId: categoryId
+                categoryId: categoryId,
+                customerId: customerId
             }
         });
     }
 
-    public async getAllChildrenCategories(categoryId: string): Promise<Array<CategoryEntity>> {
+    public async getAllChildrenCategories(categoryId: string, customerId: number): Promise<Array<CategoryEntity>> {
         return await CategoryEntity.findAll({
             where: {
                 deletedAt: {
                     [Op.eq]: null
                 },
-                parentCategoryId: categoryId
+                parentCategoryId: categoryId,
+                customerId: customerId
             }
         });
     }

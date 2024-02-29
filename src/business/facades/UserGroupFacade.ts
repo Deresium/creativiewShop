@@ -8,8 +8,8 @@ export default class UserGroupFacade implements IUserGroupRequester {
         this.userGroupDataGateway = userGroupDataGateway;
     }
 
-    public async getAllGroupsForUser(userId: string): Promise<Array<string>> {
-        const userGroups = await this.userGroupDataGateway.getAllGroupsForUser(userId);
+    public async getAllGroupsForUser(userId: string, customerId: number): Promise<Array<string>> {
+        const userGroups = await this.userGroupDataGateway.getAllGroupsForUser(userId, customerId);
         return userGroups.map(userGroup => userGroup.getGroupId());
     }
 }

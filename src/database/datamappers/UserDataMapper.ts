@@ -35,7 +35,12 @@ export default class UserDataMapper implements IUserDataGateway {
         })
     }
 
-    public async findUserById(userId: string): Promise<UserEntity> {
-        return await UserEntity.findByPk(userId);
+    public async findUserById(userId: string, customerId: number): Promise<UserEntity> {
+        return await UserEntity.findOne({
+            where: {
+                userId: userId,
+                customerId: customerId
+            }
+        });
     }
 }

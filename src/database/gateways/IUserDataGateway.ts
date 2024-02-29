@@ -9,5 +9,5 @@ export default interface IUserDataGateway {
 
     findActiveUserOnEmail(email: string, customerId: number): Promise<UserEntity>;
 
-    findUserById(userId: string): Promise<UserEntity>;
+    findUserById(userId: string, customerId: number): Promise<UserEntity>;
 }

@@ -11,9 +11,9 @@ export default interface ICategoryDataGateway {
 
     getAllCategoriesOrderByParent(customerId: number): Promise<Array<CategoryEntity>>;
 
-    getCategoryById(categoryId: string): Promise<CategoryEntity>;
+    getCategoryById(categoryId: string, customerId: number): Promise<CategoryEntity>;
 
-    getAllChildrenCategories(categoryId: string): Promise<Array<CategoryEntity>>;
+    getAllChildrenCategories(categoryId: string, customerId: number): Promise<Array<CategoryEntity>>;
 
     updateCategoryImageInfo(imageName: string, categoryId: string, customerId: number): Promise<void>;
 }

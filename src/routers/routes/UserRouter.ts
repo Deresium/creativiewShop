@@ -57,13 +57,14 @@ export default class UserRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().get('/user', async (req, res) => {
+        this.getRouter().get('/user', async (req: any, res: any) => {
             const userId = req.userId;
+            const customerId = req.customer.getCustomerId();
             if (!userId) {
                 res.status(200).send();
                 return;
             }
-            const user = await this.userRequester.getUser(userId, req.userGroups);
+            const user = await this.userRequester.getUser(userId, customerId, req.userGroups);
             res.status(200).send(user);
         });
     }

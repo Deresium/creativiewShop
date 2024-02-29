@@ -17,5 +17,5 @@ export default interface ICategoryRequester {
 
     getAllCategoriesFlat(customerId: number): Promise<Array<CategoryFlatVM>>;
 
-    getCategoryImage(categoryId: string): Promise<FileVM>;
+    getCategoryImage(categoryId: string, customerId: number): Promise<FileVM>;
 }

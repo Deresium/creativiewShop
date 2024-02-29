@@ -1,5 +1,5 @@
 import UserGroupEntity from "../entities/UserGroupEntity";
 
 export default interface IUserGroupDataGateway {
-    getAllGroupsForUser(userId: string): Promise<Array<UserGroupEntity>>;
+    getAllGroupsForUser(userId: string, customerId: number): Promise<Array<UserGroupEntity>>;
 }

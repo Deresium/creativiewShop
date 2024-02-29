@@ -39,14 +39,14 @@ export default class UserFacade implements IUserRequester {
         const passwordHashed = await PasswordHasher.hashPassword(loginInfoDS.getPassword(), user.getSalted());
 
         if (passwordHashed.getHashedPassword() === user.getPassword()) {
-            const userGroups = await this.userGroupRequester.getAllGroupsForUser(user.getUserId());
+            const userGroups = await this.userGroupRequester.getAllGroupsForUser(user.getUserId(), loginInfoDS.getCustomerId());
             return new UserLoginVM(user.getUserId(), userGroups);
         }
         return null;
     }
 
-    public async getUser(userId: string, userGroups: Array<string>): Promise<UserVM> {
-        const userEntity = await this.userDataGateway.findUserById(userId);
+    public async getUser(userId: string, customerId: number, userGroups: Array<string>): Promise<UserVM> {
+        const userEntity = await this.userDataGateway.findUserById(userId, customerId);
         if (!userEntity) {
             return null;
         }

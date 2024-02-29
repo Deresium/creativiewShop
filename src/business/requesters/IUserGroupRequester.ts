@@ -1,3 +1,3 @@
 export default interface IUserGroupRequester {
-    getAllGroupsForUser(userId: string): Promise<Array<string>>;
+    getAllGroupsForUser(userId: string, customerId: number): Promise<Array<string>>;
 }

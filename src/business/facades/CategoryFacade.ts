@@ -34,7 +34,7 @@ export default class CategoryFacade implements ICategoryRequester {
         try {
             await this.categoryDataGateway.deleteCategory(categoryId, customerId);
             await this.fileDataGateway.deleteCategoryPicture(categoryId);
-            const children = await this.categoryDataGateway.getAllChildrenCategories(categoryId);
+            const children = await this.categoryDataGateway.getAllChildrenCategories(categoryId, customerId);
             for (const child of children) {
                 await this.deleteCategory(child.getCategoryId(), customerId);
             }
@@ -86,8 +86,8 @@ export default class CategoryFacade implements ICategoryRequester {
         return returnCategories;
     }
 
-    public async getCategoryImage(categoryId: string): Promise<FileVM> {
-        const category = await this.categoryDataGateway.getCategoryById(categoryId);
+    public async getCategoryImage(categoryId: string, customerId: number): Promise<FileVM> {
+        const category = await this.categoryDataGateway.getCategoryById(categoryId, customerId);
         if (category && category.getImageName()) {
             const file = await this.fileDataGateway.getCategoryPicture(categoryId);
             const extension = ContentType.determinateContentType(category.getImageName());

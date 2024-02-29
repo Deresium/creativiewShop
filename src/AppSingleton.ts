@@ -82,6 +82,7 @@ export default class AppSingleton {
         this.expressApp.use(express.static(publicDirectoryPath));
 
         this.expressApp.use(new ReturnIndexMiddleware().getRequestHandler());
+        this.expressApp.use(new ExtractCustomerMiddleware().getRequestHandler());
 
         this.expressApp.use('/api', new PublicFileRouter(categoryFacade).getRouter());
 
@@ -89,7 +90,6 @@ export default class AppSingleton {
         this.expressApp.use(express.json());
 
         this.expressApp.use(new ExtractTokenMiddleware().getRequestHandler());
-        this.expressApp.use(new ExtractCustomerMiddleware().getRequestHandler());
         this.expressApp.use(new ExtractLanguageMiddleware().getRequestHandler());
 
         this.expressApp.use('/api', new UserRouter(userFacade).getRouter());
