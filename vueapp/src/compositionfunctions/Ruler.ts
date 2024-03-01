@@ -26,7 +26,9 @@ export default class Ruler {
 
     public isStrongPassword = (value: any) => {
         const minLength = 8;
-        if (!validator.isStrongPassword(value, {minLength: minLength, minUppercase: 1, minNumbers: 1})) {
+        console.log(value);
+        if (!validator.isStrongPassword(value, {minLength: minLength, minUppercase: 1, minNumbers: 1, minSymbols: 0})) {
+            console.log(value);
             return Ruler.t('error.password', {field: this.rulerOptions.fieldName, min: minLength});
         }
         return true;
