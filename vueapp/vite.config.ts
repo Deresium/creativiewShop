@@ -6,7 +6,7 @@ export default defineConfig({
     plugins: [vue()],
     server: {
         port: 8080,
-        host: 'ribrashop.be'
+        host: 'www.ribrashop.be'
     },
     build: {
         outDir: '../public/vueapp'

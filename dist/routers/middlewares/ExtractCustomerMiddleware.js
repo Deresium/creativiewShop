@@ -11,7 +11,10 @@ class ExtractCustomerMiddleware extends ApplicationMiddleware_1.default {
     }
     defineMiddlewareFunction() {
         return (req, res, next) => {
-            const dnsName = req.get('host').split(':')[0];
+            let dnsName = req.get('host').split(':')[0];
+            if (dnsName.startsWith('www.')) {
+                dnsName = dnsName.replace('www.', '');
+            }
             req.customer = CustomerCacheSingleton_1.default.getInstance().getCustomer(dnsName);
             next();
         };
