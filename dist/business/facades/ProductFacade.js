@@ -19,7 +19,7 @@ class ProductFacade {
     }
     createProduct(customerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.productDataGateway.createProduct(customerId);
+            return yield this.productDataGateway.createProduct(customerId);
         });
     }
     deleteProduct(productId, customerId) {
@@ -50,7 +50,7 @@ class ProductFacade {
         });
     }
     productEntityToProductVM(productEntity) {
-        return new ProductVM_1.default(productEntity.getProductId(), productEntity.getCustomerId(), productEntity.getManufacturerId(), productEntity.getCode(), productEntity.getNameFr(), productEntity.getNameEn(), productEntity.getDescriptionFr(), productEntity.getDescriptionEn());
+        return new ProductVM_1.default(productEntity.getProductId(), productEntity.getCustomerId(), productEntity.getManufacturerId(), productEntity.getManufacturerName(), productEntity.getCode(), productEntity.getNameFr(), productEntity.getNameEn(), productEntity.getDescriptionFr(), productEntity.getDescriptionEn());
     }
 }
 exports.default = ProductFacade;

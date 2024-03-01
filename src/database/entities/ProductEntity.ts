@@ -1,10 +1,11 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import ManufacturerEntity from "./ManufacturerEntity";
 
 export default class ProductEntity extends Model {
     private productId: string;
     private customerId: number;
-    private manufacturerId: string;
+    private manufacturer: ManufacturerEntity;
     private code: string;
     private nameFr: string;
     private nameEn: string;
@@ -22,7 +23,17 @@ export default class ProductEntity extends Model {
     }
 
     public getManufacturerId(): string {
-        return this.manufacturerId;
+        if (this.manufacturer) {
+            return this.manufacturer.getManufacturerId();
+        }
+        return null;
+    }
+
+    public getManufacturerName(): string {
+        if (this.manufacturer) {
+            return this.manufacturer.getName();
+        }
+        return null
     }
 
     public getCode(): string {
@@ -59,4 +70,10 @@ ProductEntity.init({
 }, {
     tableName: 'Product',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
+});
+
+ProductEntity.hasOne(ManufacturerEntity, {
+    sourceKey: 'manufacturerId',
+    foreignKey: 'manufacturerId',
+    as: 'manufacturer'
 });

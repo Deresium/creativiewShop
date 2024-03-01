@@ -21,4 +21,42 @@ export default class ProductVM {
         this.descriptionFr = descriptionFr;
         this.descriptionEn = descriptionEn;
     }
+
+
+    public getProductId(): string {
+        return this.productId;
+    }
+
+    public getCustomerId(): number {
+        return this.customerId;
+    }
+
+    public getManufacturerId(): string {
+        return this.manufacturerId;
+    }
+
+
+    public getManufacturerName(): string {
+        return this.manufacturerName;
+    }
+
+    public getCode(): string {
+        return this.code;
+    }
+
+    public getNameFr(): string {
+        return this.nameFr;
+    }
+
+    public getNameEn(): string {
+        return this.nameEn;
+    }
+
+    public getDescriptionFr(): string {
+        return this.descriptionFr;
+    }
+
+    public getDescriptionEn(): string {
+        return this.descriptionEn;
+    }
 }

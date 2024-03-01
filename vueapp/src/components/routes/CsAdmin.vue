@@ -3,11 +3,11 @@
         <h1>{{ t('adminZone') }}</h1>
         <div>
             <v-tabs v-model="tab" :bg-color="firstColor" grow>
-                <v-tab value="product">{{ t('product') }}</v-tab>
+                <v-tab value="product">{{ t('products') }}</v-tab>
                 <v-tab value="category">{{ t('category') }}</v-tab>
                 <v-tab value="manufacturer">{{ t('manufacturer') }}</v-tab>
             </v-tabs>
-            <v-window v-model="tab" class="window">
+            <v-window v-model="tab" :touch="false" class="window">
                 <v-window-item value="product">
                     <ProductTab/>
                 </v-window-item>

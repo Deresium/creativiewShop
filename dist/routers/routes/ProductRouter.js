@@ -23,8 +23,8 @@ class ProductRouter extends ApplicationRouter_1.default {
     initRoutes() {
         this.getRouter().post('/product', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
             const customerId = req.customer.getCustomerId();
-            yield this.productRequester.createProduct(customerId);
-            res.send();
+            const productId = yield this.productRequester.createProduct(customerId);
+            res.send(productId);
         }));
         this.getRouter().delete('/product/:productId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
             const productId = String(req.params.productId);
@@ -32,7 +32,7 @@ class ProductRouter extends ApplicationRouter_1.default {
             yield this.productRequester.deleteProduct(productId, customerId);
             res.send();
         }));
-        this.getRouter().update('/product/:productId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().put('/product/:productId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
             const productId = String(req.params.productId);
             const customerId = req.customer.getCustomerId();
             const manufacturerId = req.body.manufacturerId;

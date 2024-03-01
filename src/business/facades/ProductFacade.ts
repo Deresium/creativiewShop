@@ -11,8 +11,8 @@ export default class ProductFacade implements IProductRequester {
         this.productDataGateway = productDataGateway;
     }
 
-    public async createProduct(customerId: number): Promise<void> {
-        await this.productDataGateway.createProduct(customerId);
+    public async createProduct(customerId: number): Promise<string> {
+        return await this.productDataGateway.createProduct(customerId);
     }
 
     public async deleteProduct(productId: string, customerId: number): Promise<void> {
@@ -38,6 +38,6 @@ export default class ProductFacade implements IProductRequester {
     }
 
     private productEntityToProductVM(productEntity: ProductEntity): ProductVM {
-        return new ProductVM(productEntity.getProductId(), productEntity.getCustomerId(), productEntity.getManufacturerId(), productEntity.getCode(), productEntity.getNameFr(), productEntity.getNameEn(), productEntity.getDescriptionFr(), productEntity.getDescriptionEn());
+        return new ProductVM(productEntity.getProductId(), productEntity.getCustomerId(), productEntity.getManufacturerId(), productEntity.getManufacturerName(), productEntity.getCode(), productEntity.getNameFr(), productEntity.getNameEn(), productEntity.getDescriptionFr(), productEntity.getDescriptionEn());
     }
 }

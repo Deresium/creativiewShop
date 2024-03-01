@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const DatabaseSingleton_1 = __importDefault(require("../DatabaseSingleton"));
+const ManufacturerEntity_1 = __importDefault(require("./ManufacturerEntity"));
 class ProductEntity extends sequelize_1.Model {
     getProductId() {
         return this.productId;
@@ -13,7 +14,16 @@ class ProductEntity extends sequelize_1.Model {
         return this.customerId;
     }
     getManufacturerId() {
-        return this.manufacturerId;
+        if (this.manufacturer) {
+            return this.manufacturer.getManufacturerId();
+        }
+        return null;
+    }
+    getManufacturerName() {
+        if (this.manufacturer) {
+            return this.manufacturer.getName();
+        }
+        return null;
     }
     getCode() {
         return this.code;
@@ -45,5 +55,10 @@ ProductEntity.init({
 }, {
     tableName: 'Product',
     sequelize: DatabaseSingleton_1.default.getInstance().getSequelize()
+});
+ProductEntity.hasOne(ManufacturerEntity_1.default, {
+    sourceKey: 'manufacturerId',
+    foreignKey: 'manufacturerId',
+    as: 'manufacturer'
 });
 //# sourceMappingURL=ProductEntity.js.map

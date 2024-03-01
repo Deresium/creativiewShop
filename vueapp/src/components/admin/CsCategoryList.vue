@@ -6,9 +6,9 @@
         items-per-page="10"
     >
         <template v-slot:item.actions="{ item }">
-            <v-btn color="red" icon="mdi-delete-empty" size="25px" @click="deleteItemConfirm(item.categoryId)"/>
-            <v-btn color="white" icon="mdi-pencil" size="25px" @click="showEditOverlay(item.categoryId)"/>
-            <v-btn color="white" icon="mdi-image" size="25px" @click="clickImage(item.categoryId)"/>
+            <v-btn color="white" icon="mdi-pencil" size="25px" @click="showEditOverlay(item.getCategoryId())"/>
+            <v-btn color="red" icon="mdi-delete-empty" size="25px" @click="deleteItemConfirm(item.getCategoryId())"/>
+            <v-btn color="white" icon="mdi-image" size="25px" @click="clickImage(item.getCategoryId())"/>
         </template>
     </v-data-table>
     <v-dialog v-model="confirmDelete">

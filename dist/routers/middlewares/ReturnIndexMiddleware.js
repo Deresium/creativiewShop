@@ -15,7 +15,7 @@ class ReturnIndexMiddleware extends ApplicationMiddleware_1.default {
                 next();
             }
             else {
-                const publicDirectoryPath = path_1.default.join(__dirname, `../../public/vueapp`);
+                const publicDirectoryPath = path_1.default.join(__dirname, `../../../public/vueapp`);
                 res.sendFile(publicDirectoryPath + '/index.html');
             }
         };

@@ -8,11 +8,11 @@ export default class ReturnIndexMiddleware extends ApplicationMiddleware {
     }
 
     defineMiddlewareFunction(): RequestHandler {
-        return (req, res, next) => {
+        return (req: any, res: any, next: any) => {
             if (req.path.includes('/api/')) {
                 next();
             } else {
-                const publicDirectoryPath = path.join(__dirname, `../../public/vueapp`);
+                const publicDirectoryPath = path.join(__dirname, `../../../public/vueapp`);
                 res.sendFile(publicDirectoryPath + '/index.html');
             }
         }

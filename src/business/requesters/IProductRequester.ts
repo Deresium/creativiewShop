@@ -12,5 +12,5 @@ export default interface IProductRequester {
 
     deleteProduct(productId: string, customerId: number): Promise<void>;
 
-    createProduct(customerId: number): Promise<void>;
+    createProduct(customerId: number): Promise<string>;
 }

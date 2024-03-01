@@ -2,12 +2,14 @@ import IProductDataGateway from "../gateways/IProductDataGateway";
 import ProductEntity from "../entities/ProductEntity";
 import ProductUpdateDS from "../../business/models/datastores/ProductUpdateDS";
 import {Op} from "sequelize";
+import ManufacturerEntity from "../entities/ManufacturerEntity";
 
 export default class ProductDataMapper implements IProductDataGateway {
-    public async createProduct(customerId: number): Promise<void> {
-        await ProductEntity.create({
+    public async createProduct(customerId: number): Promise<string> {
+        const product = await ProductEntity.create({
             customerId: customerId
         });
+        return product.getProductId()
     }
 
     public async deleteProduct(productId: string, customerId: number): Promise<void> {
@@ -28,7 +30,8 @@ export default class ProductDataMapper implements IProductDataGateway {
                 deletedAt: {
                     [Op.eq]: null
                 }
-            }
+            },
+            include: {model: ManufacturerEntity, as: 'manufacturer'}
         });
     }
 
@@ -37,7 +40,8 @@ export default class ProductDataMapper implements IProductDataGateway {
             where: {
                 customerId: customerId,
                 productId: productId
-            }
+            },
+            include: {model: ManufacturerEntity, as: 'manufacturer'}
         });
     }
 

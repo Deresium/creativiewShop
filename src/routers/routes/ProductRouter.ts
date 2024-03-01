@@ -15,8 +15,8 @@ export default class ProductRouter extends ApplicationRouter {
     public initRoutes() {
         this.getRouter().post('/product', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
-            await this.productRequester.createProduct(customerId);
-            res.send();
+            const productId = await this.productRequester.createProduct(customerId);
+            res.send(productId);
         });
 
         this.getRouter().delete('/product/:productId', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
@@ -26,7 +26,7 @@ export default class ProductRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().update('/product/:productId', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().put('/product/:productId', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
             const productId = String(req.params.productId);
             const customerId = req.customer.getCustomerId();
             const manufacturerId = req.body.manufacturerId;

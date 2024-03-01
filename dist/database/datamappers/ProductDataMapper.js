@@ -14,12 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductEntity_1 = __importDefault(require("../entities/ProductEntity"));
 const sequelize_1 = require("sequelize");
+const ManufacturerEntity_1 = __importDefault(require("../entities/ManufacturerEntity"));
 class ProductDataMapper {
     createProduct(customerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield ProductEntity_1.default.create({
+            const product = yield ProductEntity_1.default.create({
                 customerId: customerId
             });
+            return product.getProductId();
         });
     }
     deleteProduct(productId, customerId) {
@@ -42,7 +44,8 @@ class ProductDataMapper {
                     deletedAt: {
                         [sequelize_1.Op.eq]: null
                     }
-                }
+                },
+                include: { model: ManufacturerEntity_1.default, as: 'manufacturer' }
             });
         });
     }
@@ -52,7 +55,8 @@ class ProductDataMapper {
                 where: {
                     customerId: customerId,
                     productId: productId
-                }
+                },
+                include: { model: ManufacturerEntity_1.default, as: 'manufacturer' }
             });
         });
     }
