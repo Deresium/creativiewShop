@@ -42,7 +42,7 @@ class CategoryFacade {
             try {
                 yield this.categoryDataGateway.deleteCategory(categoryId, customerId);
                 yield this.fileDataGateway.deleteCategoryPicture(categoryId);
-                const children = yield this.categoryDataGateway.getAllChildrenCategories(categoryId);
+                const children = yield this.categoryDataGateway.getAllChildrenCategories(categoryId, customerId);
                 for (const child of children) {
                     yield this.deleteCategory(child.getCategoryId(), customerId);
                 }
@@ -95,9 +95,9 @@ class CategoryFacade {
             return returnCategories;
         });
     }
-    getCategoryImage(categoryId) {
+    getCategoryImage(categoryId, customerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const category = yield this.categoryDataGateway.getCategoryById(categoryId);
+            const category = yield this.categoryDataGateway.getCategoryById(categoryId, customerId);
             if (category && category.getImageName()) {
                 const file = yield this.fileDataGateway.getCategoryPicture(categoryId);
                 const extension = ContentType_1.default.determinateContentType(category.getImageName());

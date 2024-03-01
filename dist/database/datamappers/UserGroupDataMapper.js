@@ -14,8 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserGroupEntity_1 = __importDefault(require("../entities/UserGroupEntity"));
 const sequelize_1 = require("sequelize");
+const UserEntity_1 = __importDefault(require("../entities/UserEntity"));
 class UserGroupDataMapper {
-    getAllGroupsForUser(userId) {
+    getAllGroupsForUser(userId, customerId) {
         return __awaiter(this, void 0, void 0, function* () {
             const date = new Date();
             return yield UserGroupEntity_1.default.findAll({
@@ -26,7 +27,8 @@ class UserGroupDataMapper {
                         { endDate: { [sequelize_1.Op.gte]: date } },
                         { endDate: { [sequelize_1.Op.is]: null } }
                     ]
-                }
+                },
+                include: [{ model: UserEntity_1.default, where: { customerId: customerId } }]
             });
         });
     }

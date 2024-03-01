@@ -28,6 +28,12 @@ import CategoryRouter from "./routers/routes/CategoryRouter";
 import ManufacturerDataMapper from "./database/datamappers/ManufacturerDataMapper";
 import ManufacturerFacade from "./business/facades/ManufacturerFacade";
 import ManufacturerRouter from "./routers/routes/ManufacturerRouter";
+import ProductDataMapper from "./database/datamappers/ProductDataMapper";
+import ProductFacade from "./business/facades/ProductFacade";
+import ProductRouter from "./routers/routes/ProductRouter";
+import ProductOptionDataMapper from "./database/datamappers/ProductOptionDataMapper";
+import ProductOptionFacade from "./business/facades/ProductOptionFacade";
+import ProductOptionRouter from "./routers/routes/ProductOptionRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -59,6 +65,8 @@ export default class AppSingleton {
         const categoryDataMapper = new CategoryDataMapper();
         const fileDataMapper = new AwsFileDataMapper(new AwsOperations());
         const manufacturerDataMapper = new ManufacturerDataMapper();
+        const productDataMapper = new ProductDataMapper();
+        const productOptionDataMapper = new ProductOptionDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
@@ -66,6 +74,8 @@ export default class AppSingleton {
         const internalizationFacade = new InternalizationFacade(internalizationDataMapper);
         const categoryFacade = new CategoryFacade(categoryDataMapper, fileDataMapper);
         const manufacturerFacade = new ManufacturerFacade(manufacturerDataMapper);
+        const productFacade = new ProductFacade(productDataMapper);
+        const productOptionFacade = new ProductOptionFacade(productOptionDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -97,5 +107,7 @@ export default class AppSingleton {
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
         this.expressApp.use('/api', new CategoryRouter(categoryFacade).getRouter());
         this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade).getRouter());
+        this.expressApp.use('/api', new ProductRouter(productFacade).getRouter());
+        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, productFacade).getRouter());
     }
 }

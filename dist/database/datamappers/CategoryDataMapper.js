@@ -78,26 +78,28 @@ class CategoryDataMapper {
             });
         });
     }
-    getCategoryById(categoryId) {
+    getCategoryById(categoryId, customerId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield CategoryEntity_1.default.findOne({
                 where: {
                     deletedAt: {
                         [sequelize_1.Op.eq]: null
                     },
-                    categoryId: categoryId
+                    categoryId: categoryId,
+                    customerId: customerId
                 }
             });
         });
     }
-    getAllChildrenCategories(categoryId) {
+    getAllChildrenCategories(categoryId, customerId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield CategoryEntity_1.default.findAll({
                 where: {
                     deletedAt: {
                         [sequelize_1.Op.eq]: null
                     },
-                    parentCategoryId: categoryId
+                    parentCategoryId: categoryId,
+                    customerId: customerId
                 }
             });
         });

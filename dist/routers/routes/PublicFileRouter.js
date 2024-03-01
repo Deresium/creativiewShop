@@ -21,7 +21,8 @@ class PublicFileRouter extends ApplicationRouter_1.default {
     initRoutes() {
         this.getRouter().get('/category/:categoryId', (req, res) => __awaiter(this, void 0, void 0, function* () {
             const categoryId = String(req.params.categoryId);
-            const fileVM = yield this.categoryRequester.getCategoryImage(categoryId);
+            const customerId = req.customer.getCustomerId();
+            const fileVM = yield this.categoryRequester.getCategoryImage(categoryId, customerId);
             if (fileVM) {
                 res.setHeader('Content-Type', fileVM.getContentType());
                 res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(fileVM.getFileName())}`);

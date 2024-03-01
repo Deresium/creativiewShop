@@ -4,7 +4,7 @@ import cookie from "cookie";
 import jwt from "jsonwebtoken"
 import CookiesGenerator from "../../business/utils/CookiesGenerator";
 
-export default class ExtractTokenMiddleware extends ApplicationMiddleware{
+export default class ExtractTokenMiddleware extends ApplicationMiddleware {
     constructor() {
         super();
     }
@@ -15,7 +15,7 @@ export default class ExtractTokenMiddleware extends ApplicationMiddleware{
             const cookies = cookie.parse(req.headers.cookie || '');
             const sign = cookies.signature;
             const payload = cookies.payload;
-            if(sign && payload) {
+            if (sign && payload) {
                 const token = `${payload}.${sign}`;
                 const decrypt = <any>jwt.verify(token, process.env.JWT_SECRET);
                 req.userGroups = decrypt.userGroups;

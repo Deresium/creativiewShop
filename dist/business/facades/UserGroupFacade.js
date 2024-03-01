@@ -13,9 +13,9 @@ class UserGroupFacade {
     constructor(userGroupDataGateway) {
         this.userGroupDataGateway = userGroupDataGateway;
     }
-    getAllGroupsForUser(userId) {
+    getAllGroupsForUser(userId, customerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userGroups = yield this.userGroupDataGateway.getAllGroupsForUser(userId);
+            const userGroups = yield this.userGroupDataGateway.getAllGroupsForUser(userId, customerId);
             return userGroups.map(userGroup => userGroup.getGroupId());
         });
     }

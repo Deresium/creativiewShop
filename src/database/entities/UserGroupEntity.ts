@@ -1,5 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import UserEntity from "./UserEntity";
 
 export default class UserGroupEntity extends Model {
     private userGroupId: string;
@@ -23,3 +24,5 @@ UserGroupEntity.init({
     tableName: 'UserGroup',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
 });
+
+UserGroupEntity.hasOne(UserEntity, {sourceKey: 'userId', foreignKey: 'userId'});

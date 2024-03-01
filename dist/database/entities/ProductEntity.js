@@ -6,6 +6,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const DatabaseSingleton_1 = __importDefault(require("../DatabaseSingleton"));
 class ProductEntity extends sequelize_1.Model {
+    getProductId() {
+        return this.productId;
+    }
+    getCustomerId() {
+        return this.customerId;
+    }
+    getManufacturerId() {
+        return this.manufacturerId;
+    }
+    getCode() {
+        return this.code;
+    }
+    getNameFr() {
+        return this.nameFr;
+    }
+    getNameEn() {
+        return this.nameEn;
+    }
+    getDescriptionFr() {
+        return this.descriptionFr;
+    }
+    getDescriptionEn() {
+        return this.descriptionEn;
+    }
 }
 exports.default = ProductEntity;
 ProductEntity.init({

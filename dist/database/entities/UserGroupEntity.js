@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const DatabaseSingleton_1 = __importDefault(require("../DatabaseSingleton"));
+const UserEntity_1 = __importDefault(require("./UserEntity"));
 class UserGroupEntity extends sequelize_1.Model {
     getGroupId() {
         return this.groupId;
@@ -21,4 +22,5 @@ UserGroupEntity.init({
     tableName: 'UserGroup',
     sequelize: DatabaseSingleton_1.default.getInstance().getSequelize()
 });
+UserGroupEntity.hasOne(UserEntity_1.default, { sourceKey: 'userId', foreignKey: 'userId' });
 //# sourceMappingURL=UserGroupEntity.js.map

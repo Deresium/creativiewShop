@@ -42,15 +42,15 @@ class UserFacade {
             }
             const passwordHashed = yield PasswordHasher_1.default.hashPassword(loginInfoDS.getPassword(), user.getSalted());
             if (passwordHashed.getHashedPassword() === user.getPassword()) {
-                const userGroups = yield this.userGroupRequester.getAllGroupsForUser(user.getUserId());
+                const userGroups = yield this.userGroupRequester.getAllGroupsForUser(user.getUserId(), loginInfoDS.getCustomerId());
                 return new UserLoginVM_1.default(user.getUserId(), userGroups);
             }
             return null;
         });
     }
-    getUser(userId, userGroups) {
+    getUser(userId, customerId, userGroups) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userEntity = yield this.userDataGateway.findUserById(userId);
+            const userEntity = yield this.userDataGateway.findUserById(userId, customerId);
             if (!userEntity) {
                 return null;
             }

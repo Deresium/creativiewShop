@@ -65,11 +65,12 @@ class UserRouter extends ApplicationRouter_1.default {
         }));
         this.getRouter().get('/user', (req, res) => __awaiter(this, void 0, void 0, function* () {
             const userId = req.userId;
+            const customerId = req.customer.getCustomerId();
             if (!userId) {
                 res.status(200).send();
                 return;
             }
-            const user = yield this.userRequester.getUser(userId, req.userGroups);
+            const user = yield this.userRequester.getUser(userId, customerId, req.userGroups);
             res.status(200).send(user);
         }));
     }

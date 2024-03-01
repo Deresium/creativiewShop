@@ -33,6 +33,12 @@ const CategoryRouter_1 = __importDefault(require("./routers/routes/CategoryRoute
 const ManufacturerDataMapper_1 = __importDefault(require("./database/datamappers/ManufacturerDataMapper"));
 const ManufacturerFacade_1 = __importDefault(require("./business/facades/ManufacturerFacade"));
 const ManufacturerRouter_1 = __importDefault(require("./routers/routes/ManufacturerRouter"));
+const ProductDataMapper_1 = __importDefault(require("./database/datamappers/ProductDataMapper"));
+const ProductFacade_1 = __importDefault(require("./business/facades/ProductFacade"));
+const ProductRouter_1 = __importDefault(require("./routers/routes/ProductRouter"));
+const ProductOptionDataMapper_1 = __importDefault(require("./database/datamappers/ProductOptionDataMapper"));
+const ProductOptionFacade_1 = __importDefault(require("./business/facades/ProductOptionFacade"));
+const ProductOptionRouter_1 = __importDefault(require("./routers/routes/ProductOptionRouter"));
 class AppSingleton {
     constructor() {
         this.expressApp = (0, express_1.default)();
@@ -57,12 +63,16 @@ class AppSingleton {
         const categoryDataMapper = new CategoryDataMapper_1.default();
         const fileDataMapper = new AwsFileDataMapper_1.default(new AwsOperations_1.default());
         const manufacturerDataMapper = new ManufacturerDataMapper_1.default();
+        const productDataMapper = new ProductDataMapper_1.default();
+        const productOptionDataMapper = new ProductOptionDataMapper_1.default();
         const customerFacade = new CustomerFacade_1.default(customerDataMapper);
         const userGroupFacade = new UserGroupFacade_1.default(userGroupDataMapper);
         const userFacade = new UserFacade_1.default(userDataMapper, userGroupFacade);
         const internalizationFacade = new InternalizationFacade_1.default(internalizationDataMapper);
         const categoryFacade = new CategoryFacade_1.default(categoryDataMapper, fileDataMapper);
         const manufacturerFacade = new ManufacturerFacade_1.default(manufacturerDataMapper);
+        const productFacade = new ProductFacade_1.default(productDataMapper);
+        const productOptionFacade = new ProductOptionFacade_1.default(productOptionDataMapper);
         CustomerCacheSingleton_1.default.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
         });
@@ -75,16 +85,18 @@ class AppSingleton {
         const publicDirectoryPath = path_1.default.join(__dirname, '../public');
         this.expressApp.use(express_1.default.static(publicDirectoryPath));
         this.expressApp.use(new ReturnIndexMiddleware_1.default().getRequestHandler());
+        this.expressApp.use(new ExtractCustomerMiddleware_1.default().getRequestHandler());
         this.expressApp.use('/api', new PublicFileRouter_1.default(categoryFacade).getRouter());
         this.expressApp.use(express_1.default.json());
         this.expressApp.use(new ExtractTokenMiddleware_1.default().getRequestHandler());
-        this.expressApp.use(new ExtractCustomerMiddleware_1.default().getRequestHandler());
         this.expressApp.use(new ExtractLanguageMiddleware_1.default().getRequestHandler());
         this.expressApp.use('/api', new UserRouter_1.default(userFacade).getRouter());
         this.expressApp.use('/api', new CustomerRouter_1.default().getRouter());
         this.expressApp.use('/api', new InternalizationRouter_1.default(internalizationFacade).getRouter());
         this.expressApp.use('/api', new CategoryRouter_1.default(categoryFacade).getRouter());
         this.expressApp.use('/api', new ManufacturerRouter_1.default(manufacturerFacade).getRouter());
+        this.expressApp.use('/api', new ProductRouter_1.default(productFacade).getRouter());
+        this.expressApp.use('/api', new ProductOptionRouter_1.default(productOptionFacade, productFacade).getRouter());
     }
 }
 exports.default = AppSingleton;
