@@ -34,7 +34,7 @@ watch(customerName, () => {
     document.title = `${customerName.value} - ${document.title}`;
     const link = document.getElementById('favIconLink');
     if (link) {
-        link.setAttribute('href', `${import.meta.env.BASE_URL}/icos/${customerStore.getCustomerId}.ico`);
+        link.setAttribute('href', `${import.meta.env.BASE_URL}icos/${customerStore.getCustomerId}.ico`);
     }
 });
 

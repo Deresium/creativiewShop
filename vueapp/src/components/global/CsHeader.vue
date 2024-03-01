@@ -17,7 +17,7 @@ import router from "../../router/router.ts";
 const customerStore = useCustomerStore();
 const globalStore = useGlobalStore();
 
-const srcImg = computed((() => `${import.meta.env.BASE_URL}/logos/${customerStore.getCustomerId}.png`));
+const srcImg = computed((() => `${import.meta.env.BASE_URL}logos/${customerStore.getCustomerId}.png`));
 const {firstColor} = useCustomer();
 
 const clickOnMenu = () => {
