@@ -13,7 +13,7 @@
     </v-app>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import CsHeader from "./components/global/CsHeader.vue";
 import CsFooter from "./components/global/CsFooter.vue";
 import {useCustomerStore} from "./pinia/customer/CustomerStore.ts";
@@ -34,7 +34,7 @@ watch(customerName, () => {
     document.title = `${customerName.value} - ${document.title}`;
     const link = document.getElementById('favIconLink');
     if (link) {
-        link.setAttribute('href', `/icos/${customerStore.getCustomerId}.ico`);
+        link.setAttribute('href', `${import.meta.env.BASE_URL}/icos/${customerStore.getCustomerId}.ico`);
     }
 });
 
