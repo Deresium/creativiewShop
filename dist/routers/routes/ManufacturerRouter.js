@@ -13,23 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
-const OnlyAdminMiddleware_1 = __importDefault(require("../middlewares/OnlyAdminMiddleware"));
 const ManufacturerDS_1 = __importDefault(require("../../business/models/datastores/ManufacturerDS"));
 const ManufacturerUpdateDS_1 = __importDefault(require("../../business/models/datastores/ManufacturerUpdateDS"));
 class ManufacturerRouter extends ApplicationRouter_1.default {
-    constructor(manufacturerRequester) {
+    constructor(manufacturerRequester, onlyAdminStoreMiddleware) {
         super();
         this.manufacturerRequester = manufacturerRequester;
+        this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
+        this.initRoutes();
     }
     initRoutes() {
-        this.getRouter().post('/manufacturer', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().post('/manufacturer', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const customerId = req.customer.getCustomerId();
             const name = req.body.name;
             const manufacturer = new ManufacturerDS_1.default(name, customerId);
             yield this.manufacturerRequester.addManufacturer(manufacturer);
             res.send();
         }));
-        this.getRouter().put('/manufacturer/:manufacturerId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().put('/manufacturer/:manufacturerId', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const manufacturerId = String(req.params.manufacturerId);
             const customerId = req.customer.getCustomerId();
             const name = req.body.name;
@@ -37,7 +38,7 @@ class ManufacturerRouter extends ApplicationRouter_1.default {
             yield this.manufacturerRequester.updateManufacturer(manufacturer);
             res.send();
         }));
-        this.getRouter().delete('/manufacturer/:manufacturerId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().delete('/manufacturer/:manufacturerId', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const manufacturerId = String(req.params.manufacturerId);
             const customerId = req.customer.getCustomerId();
             yield this.manufacturerRequester.removeManufacturer(manufacturerId, customerId);

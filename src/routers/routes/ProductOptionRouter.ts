@@ -1,24 +1,26 @@
 import ApplicationRouter from "./ApplicationRouter";
 import IProductOptionRequester from "../../business/requesters/IProductOptionRequester";
-import OnlyAdminStoreMiddleware from "../middlewares/OnlyAdminMiddleware";
-import CheckProductOwnerMiddleware from "../middlewares/CheckProductOwnerMiddleware";
-import IProductRequester from "../../business/requesters/IProductRequester";
+import {RequestHandler} from "express";
 
 export default class ProductOptionRouter extends ApplicationRouter {
     private readonly productOptionRequester: IProductOptionRequester;
-    private readonly productRequester: IProductRequester;
+    private readonly onlyAdminStoreMiddleware: RequestHandler;
+    private readonly checkProductOwnerMiddleware: RequestHandler;
 
-    constructor(productOptionRequester: IProductOptionRequester, productRequester: IProductRequester) {
+
+    constructor(productOptionRequester: IProductOptionRequester, onlyAdminStoreMiddleware: RequestHandler, checkProductOwnerMiddleware: RequestHandler) {
         super();
         this.productOptionRequester = productOptionRequester;
-        this.productRequester = productRequester;
+        this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
+        this.checkProductOwnerMiddleware = checkProductOwnerMiddleware;
+        this.initRoutes();
     }
 
     public initRoutes() {
-        this.getRouter().post('/product/:productId/productOption', new OnlyAdminStoreMiddleware().getRequestHandler(), new CheckProductOwnerMiddleware(this.productRequester).getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().post('/product/:productId/productOption', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productId = String(req.params.productId);
-
             await this.productOptionRequester.createProductOption(productId);
+            res.send();
         });
     }
 }

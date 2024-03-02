@@ -17,6 +17,7 @@ class InternalizationRouter extends ApplicationRouter_1.default {
     constructor(internalizationRequester) {
         super();
         this.internalizationRequester = internalizationRequester;
+        this.initRoutes();
     }
     initRoutes() {
         this.getRouter().get('/internalizationMessages', (req, res) => __awaiter(this, void 0, void 0, function* () {

@@ -7,6 +7,7 @@ export default class PublicFileRouter extends ApplicationRouter {
     constructor(categoryRequester: ICategoryRequester) {
         super();
         this.categoryRequester = categoryRequester;
+        this.initRoutes();
     }
 
     public initRoutes() {

@@ -2,7 +2,7 @@
     <v-data-table
         :headers="headers"
         :items="products"
-        item-key="manufacturerId"
+        item-key="productId"
         items-per-page="10"
     >
         <template v-slot:item.actions="{ item }">
@@ -27,10 +27,10 @@
 <script lang="ts" setup>
 import {useI18n} from "vue-i18n";
 import {ref} from "vue";
-import ProductVM from "../../../viewmodels/ProductVM.ts";
-import ProductRequester from "../../../requesters/ProductRequester.ts";
-import router from "../../../router/router.ts";
-import axiosServer from "../../../axios/axiosServer.ts";
+import ProductVM from "../../viewmodels/ProductVM.ts";
+import ProductRequester from "../../requesters/ProductRequester.ts";
+import router from "../../router/router.ts";
+import axiosServer from "../../axios/axiosServer.ts";
 
 const {t} = useI18n({useScope: "global"});
 

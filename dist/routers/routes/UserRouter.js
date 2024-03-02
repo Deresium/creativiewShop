@@ -20,6 +20,7 @@ class UserRouter extends ApplicationRouter_1.default {
     constructor(userRequester) {
         super();
         this.userRequester = userRequester;
+        this.initRoutes();
     }
     initRoutes() {
         this.getRouter().post('/user', (req, res) => __awaiter(this, void 0, void 0, function* () {

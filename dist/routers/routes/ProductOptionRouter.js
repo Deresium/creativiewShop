@@ -13,18 +13,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
-const OnlyAdminMiddleware_1 = __importDefault(require("../middlewares/OnlyAdminMiddleware"));
-const CheckProductOwnerMiddleware_1 = __importDefault(require("../middlewares/CheckProductOwnerMiddleware"));
 class ProductOptionRouter extends ApplicationRouter_1.default {
-    constructor(productOptionRequester, productRequester) {
+    constructor(productOptionRequester, onlyAdminStoreMiddleware, checkProductOwnerMiddleware) {
         super();
         this.productOptionRequester = productOptionRequester;
-        this.productRequester = productRequester;
+        this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
+        this.checkProductOwnerMiddleware = checkProductOwnerMiddleware;
+        this.initRoutes();
     }
     initRoutes() {
-        this.getRouter().post('/product/:productId/productOption', new OnlyAdminMiddleware_1.default().getRequestHandler(), new CheckProductOwnerMiddleware_1.default(this.productRequester).getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().post('/product/:productId/productOption', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const productId = String(req.params.productId);
             yield this.productOptionRequester.createProductOption(productId);
+            res.send();
         }));
     }
 }

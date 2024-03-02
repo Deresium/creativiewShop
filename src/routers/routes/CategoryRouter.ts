@@ -1,20 +1,24 @@
 import ApplicationRouter from "./ApplicationRouter";
 import ICategoryRequester from "../../business/requesters/ICategoryRequester";
-import OnlyAdminStoreMiddleware from "../middlewares/OnlyAdminMiddleware";
 import CategoryCreationDS from "../../business/models/datastores/CategoryCreationDS";
 import CategoryUpdateDS from "../../business/models/datastores/CategoryUpdateDS";
 import multer from "multer";
+import {RequestHandler} from "express";
 
 export default class CategoryRouter extends ApplicationRouter {
     private readonly categoryRequester: ICategoryRequester;
+    private readonly onlyAdminStoreMiddleware: RequestHandler;
 
-    constructor(categoryRequester: ICategoryRequester) {
+
+    constructor(categoryRequester: ICategoryRequester, onlyAdminStoreMiddleware: RequestHandler) {
         super();
         this.categoryRequester = categoryRequester;
+        this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
+        this.initRoutes();
     }
 
     public initRoutes(): void {
-        this.getRouter().post('/category', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().post('/category', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
             const nameFr = req.body.nameFr;
             const nameEn = req.body.nameEn;
@@ -36,14 +40,14 @@ export default class CategoryRouter extends ApplicationRouter {
             res.status(200).send(categoriesFlat);
         });
 
-        this.getRouter().delete('/category/:categoryId', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().delete('/category/:categoryId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const categoryId = String(req.params.categoryId);
             const customerId = req.customer.getCustomerId();
             await this.categoryRequester.deleteCategory(categoryId, customerId);
             res.status(200).send();
         });
 
-        this.getRouter().put('/category/:categoryId', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().put('/category/:categoryId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const categoryId = String(req.params.categoryId);
             const customerId = req.customer.getCustomerId();
             const nameFr = req.body.nameFr;
@@ -55,7 +59,7 @@ export default class CategoryRouter extends ApplicationRouter {
         });
 
         const upload = multer();
-        this.getRouter().put('/category/image/:categoryId', new OnlyAdminStoreMiddleware().getRequestHandler(), upload.single('file'), async (req: any, res: any) => {
+        this.getRouter().put('/category/image/:categoryId', this.onlyAdminStoreMiddleware, upload.single('file'), async (req: any, res: any) => {
             const categoryId = String(req.params.categoryId);
             const customerId = req.customer.getCustomerId();
             const image = req.file.buffer;

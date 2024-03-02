@@ -13,26 +13,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
-const OnlyAdminMiddleware_1 = __importDefault(require("../middlewares/OnlyAdminMiddleware"));
 const ProductUpdateDS_1 = __importDefault(require("../../business/models/datastores/ProductUpdateDS"));
 class ProductRouter extends ApplicationRouter_1.default {
-    constructor(productRequester) {
+    constructor(productRequester, onlyAdminStoreMiddleware) {
         super();
         this.productRequester = productRequester;
+        this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
+        this.initRoutes();
     }
     initRoutes() {
-        this.getRouter().post('/product', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().post('/product', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const customerId = req.customer.getCustomerId();
             const productId = yield this.productRequester.createProduct(customerId);
             res.send(productId);
         }));
-        this.getRouter().delete('/product/:productId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().delete('/product/:productId', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const productId = String(req.params.productId);
             const customerId = req.customer.getCustomerId();
             yield this.productRequester.deleteProduct(productId, customerId);
             res.send();
         }));
-        this.getRouter().put('/product/:productId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().put('/product/:productId', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const productId = String(req.params.productId);
             const customerId = req.customer.getCustomerId();
             const manufacturerId = req.body.manufacturerId;
@@ -45,13 +46,13 @@ class ProductRouter extends ApplicationRouter_1.default {
             yield this.productRequester.updateProduct(productUpdateDS);
             res.send();
         }));
-        this.getRouter().get('/product/:productId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().get('/product/:productId', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const productId = String(req.params.productId);
             const customerId = req.customer.getCustomerId();
             const product = yield this.productRequester.getProduct(productId, customerId);
             res.status(200).send(product);
         }));
-        this.getRouter().get('/product', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().get('/product', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const customerId = req.customer.getCustomerId();
             const products = yield this.productRequester.getAllProduct(customerId);
             res.status(200).send(products);

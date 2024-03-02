@@ -17,6 +17,7 @@ class PublicFileRouter extends ApplicationRouter_1.default {
     constructor(categoryRequester) {
         super();
         this.categoryRequester = categoryRequester;
+        this.initRoutes();
     }
     initRoutes() {
         this.getRouter().get('/category/:categoryId', (req, res) => __awaiter(this, void 0, void 0, function* () {

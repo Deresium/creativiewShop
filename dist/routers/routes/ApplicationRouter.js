@@ -7,7 +7,6 @@ const express_1 = __importDefault(require("express"));
 class ApplicationRouter {
     constructor() {
         this.router = express_1.default.Router();
-        this.initRoutes();
     }
     getRouter() {
         return this.router;

@@ -72,7 +72,7 @@ if (isUpdate.value) {
 const submitForm = async () => {
     isSending.value = true;
     firstSubmit.value = true;
-    if (formValid.value === false) {
+    if (!formValid.value) {
         isSending.value = false;
         return;
     }

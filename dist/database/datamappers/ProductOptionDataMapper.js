@@ -19,7 +19,10 @@ class ProductOptionDataMapper {
     createProductOption(productId) {
         return __awaiter(this, void 0, void 0, function* () {
             yield ProductOptionEntity_1.default.create({
-                productId: productId
+                productId: productId,
+                preorder: false,
+                featured: false,
+                active: false
             });
         });
     }

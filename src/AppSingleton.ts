@@ -34,6 +34,8 @@ import ProductRouter from "./routers/routes/ProductRouter";
 import ProductOptionDataMapper from "./database/datamappers/ProductOptionDataMapper";
 import ProductOptionFacade from "./business/facades/ProductOptionFacade";
 import ProductOptionRouter from "./routers/routes/ProductOptionRouter";
+import OnlyAdminStoreMiddleware from "./routers/middlewares/OnlyAdminMiddleware";
+import CheckProductOwnerMiddleware from "./routers/middlewares/CheckProductOwnerMiddleware";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -102,12 +104,16 @@ export default class AppSingleton {
         this.expressApp.use(new ExtractTokenMiddleware().getRequestHandler());
         this.expressApp.use(new ExtractLanguageMiddleware().getRequestHandler());
 
+        const onlyAdminMiddleware = new OnlyAdminStoreMiddleware().getRequestHandler();
+        const checkProductOwnerMiddleware = new CheckProductOwnerMiddleware(productFacade).getRequestHandler();
+        console.log('app', checkProductOwnerMiddleware);
+
         this.expressApp.use('/api', new UserRouter(userFacade).getRouter());
         this.expressApp.use('/api', new CustomerRouter().getRouter());
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
-        this.expressApp.use('/api', new CategoryRouter(categoryFacade).getRouter());
-        this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade).getRouter());
-        this.expressApp.use('/api', new ProductRouter(productFacade).getRouter());
-        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, productFacade).getRouter());
+        this.expressApp.use('/api', new CategoryRouter(categoryFacade, onlyAdminMiddleware).getRouter());
+        this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade, onlyAdminMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductRouter(productFacade, onlyAdminMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
     }
 }

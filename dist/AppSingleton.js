@@ -39,6 +39,8 @@ const ProductRouter_1 = __importDefault(require("./routers/routes/ProductRouter"
 const ProductOptionDataMapper_1 = __importDefault(require("./database/datamappers/ProductOptionDataMapper"));
 const ProductOptionFacade_1 = __importDefault(require("./business/facades/ProductOptionFacade"));
 const ProductOptionRouter_1 = __importDefault(require("./routers/routes/ProductOptionRouter"));
+const OnlyAdminMiddleware_1 = __importDefault(require("./routers/middlewares/OnlyAdminMiddleware"));
+const CheckProductOwnerMiddleware_1 = __importDefault(require("./routers/middlewares/CheckProductOwnerMiddleware"));
 class AppSingleton {
     constructor() {
         this.expressApp = (0, express_1.default)();
@@ -90,13 +92,16 @@ class AppSingleton {
         this.expressApp.use(express_1.default.json());
         this.expressApp.use(new ExtractTokenMiddleware_1.default().getRequestHandler());
         this.expressApp.use(new ExtractLanguageMiddleware_1.default().getRequestHandler());
+        const onlyAdminMiddleware = new OnlyAdminMiddleware_1.default().getRequestHandler();
+        const checkProductOwnerMiddleware = new CheckProductOwnerMiddleware_1.default(productFacade).getRequestHandler();
+        console.log('app', checkProductOwnerMiddleware);
         this.expressApp.use('/api', new UserRouter_1.default(userFacade).getRouter());
         this.expressApp.use('/api', new CustomerRouter_1.default().getRouter());
         this.expressApp.use('/api', new InternalizationRouter_1.default(internalizationFacade).getRouter());
-        this.expressApp.use('/api', new CategoryRouter_1.default(categoryFacade).getRouter());
-        this.expressApp.use('/api', new ManufacturerRouter_1.default(manufacturerFacade).getRouter());
-        this.expressApp.use('/api', new ProductRouter_1.default(productFacade).getRouter());
-        this.expressApp.use('/api', new ProductOptionRouter_1.default(productOptionFacade, productFacade).getRouter());
+        this.expressApp.use('/api', new CategoryRouter_1.default(categoryFacade, onlyAdminMiddleware).getRouter());
+        this.expressApp.use('/api', new ManufacturerRouter_1.default(manufacturerFacade, onlyAdminMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductRouter_1.default(productFacade, onlyAdminMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductOptionRouter_1.default(productOptionFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
     }
 }
 exports.default = AppSingleton;

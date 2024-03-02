@@ -5,6 +5,7 @@ export default class CustomerRouter extends ApplicationRouter {
 
     constructor() {
         super();
+        this.initRoutes();
     }
 
     public initRoutes() {

@@ -12,6 +12,7 @@ export default class UserRouter extends ApplicationRouter {
     constructor(userRequester: IUserRequester) {
         super();
         this.userRequester = userRequester;
+        this.initRoutes();
     }
 
     public initRoutes(): void {
@@ -51,7 +52,7 @@ export default class UserRouter extends ApplicationRouter {
             }
         });
 
-        this.getRouter().post('/logout', async(req: any, res: any) => {
+        this.getRouter().post('/logout', async (req: any, res: any) => {
             const cookieGenerator = new CookiesGenerator(null);
             res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
             res.send();

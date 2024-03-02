@@ -20,7 +20,7 @@
 import {useI18n} from "vue-i18n";
 import axiosServer from "../../axios/axiosServer.ts";
 import router from "../../router/router.ts";
-import CsProductList from "./product/CsProductList.vue";
+import CsProductList from "./CsProductList.vue";
 import {ref} from "vue";
 
 const {t} = useI18n({useScope: 'global'});

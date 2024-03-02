@@ -16,6 +16,7 @@ const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
 class CustomerRouter extends ApplicationRouter_1.default {
     constructor() {
         super();
+        this.initRoutes();
     }
     initRoutes() {
         this.getRouter().get('/customerInfo', (req, res) => __awaiter(this, void 0, void 0, function* () {

@@ -7,7 +7,10 @@ import ProductEntity from "../entities/ProductEntity";
 export default class ProductOptionDataMapper implements IProductOptionDataGateway {
     public async createProductOption(productId: string): Promise<void> {
         await ProductOptionEntity.create({
-            productId: productId
+            productId: productId,
+            preorder: false,
+            featured: false,
+            active: false
         });
     }
 

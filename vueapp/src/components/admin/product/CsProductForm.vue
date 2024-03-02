@@ -15,6 +15,11 @@
             <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('update') }}</v-btn>
         </v-form>
     </div>
+
+    <h2>{{ t('productOptions') }}</h2>
+    <v-btn @click="addProductOption">{{ t('addProductOption') }}</v-btn>
+    <CsProductOptionList :key="counterRefresh"/>
+
     <v-snackbar v-model="showSnackbar">
         {{ t('updateProduct.success') }}
         <template v-slot:actions>
@@ -38,6 +43,7 @@ import TitleValueVM from "../../../viewmodels/TitleValueVM.ts";
 import ManufacturerRequester from "../../../requesters/ManufacturerRequester.ts";
 import {useRoute} from "vue-router";
 import ProductRequester from "../../../requesters/ProductRequester.ts";
+import CsProductOptionList from "./CsProductOptionList.vue";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -52,6 +58,7 @@ const successUpdate = ref(false);
 const backendError = ref('');
 const showBackendError = computed(() => !validator.isEmpty(backendError.value));
 const showSnackbar = ref(false);
+const counterRefresh = ref(0);
 
 const manufacturerId = ref(null);
 const code = ref(null);
@@ -102,8 +109,15 @@ const submitForm = async () => {
     isSending.value = false;
 };
 
+const addProductOption = async () => {
+    await axiosServer.post(`/product/${productIdString}/productOption`);
+    counterRefresh.value++;
+};
+
 </script>
 
 <style scoped>
-
+h2 {
+    margin-top: 50px;
+}
 </style>

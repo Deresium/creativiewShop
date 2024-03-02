@@ -1,32 +1,35 @@
 import ApplicationRouter from "./ApplicationRouter";
 import IProductRequester from "../../business/requesters/IProductRequester";
-import OnlyAdminStoreMiddleware from "../middlewares/OnlyAdminMiddleware";
 import ProductUpdateDS from "../../business/models/datastores/ProductUpdateDS";
+import {RequestHandler} from "express";
 
 export default class ProductRouter extends ApplicationRouter {
     private readonly productRequester: IProductRequester;
+    private readonly onlyAdminStoreMiddleware: RequestHandler;
 
 
-    constructor(productRequester: IProductRequester) {
+    constructor(productRequester: IProductRequester, onlyAdminStoreMiddleware: RequestHandler) {
         super();
         this.productRequester = productRequester;
+        this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
+        this.initRoutes();
     }
 
     public initRoutes() {
-        this.getRouter().post('/product', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().post('/product', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
             const productId = await this.productRequester.createProduct(customerId);
             res.send(productId);
         });
 
-        this.getRouter().delete('/product/:productId', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().delete('/product/:productId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const productId = String(req.params.productId);
             const customerId = req.customer.getCustomerId();
             await this.productRequester.deleteProduct(productId, customerId);
             res.send();
         });
 
-        this.getRouter().put('/product/:productId', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().put('/product/:productId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const productId = String(req.params.productId);
             const customerId = req.customer.getCustomerId();
             const manufacturerId = req.body.manufacturerId;
@@ -41,7 +44,7 @@ export default class ProductRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().get('/product/:productId', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().get('/product/:productId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const productId = String(req.params.productId);
             const customerId = req.customer.getCustomerId();
 
@@ -49,7 +52,7 @@ export default class ProductRouter extends ApplicationRouter {
             res.status(200).send(product);
         });
 
-        this.getRouter().get('/product', new OnlyAdminStoreMiddleware().getRequestHandler(), async (req: any, res: any) => {
+        this.getRouter().get('/product', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
 
             const products = await this.productRequester.getAllProduct(customerId);

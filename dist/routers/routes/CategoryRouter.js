@@ -13,17 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
-const OnlyAdminMiddleware_1 = __importDefault(require("../middlewares/OnlyAdminMiddleware"));
 const CategoryCreationDS_1 = __importDefault(require("../../business/models/datastores/CategoryCreationDS"));
 const CategoryUpdateDS_1 = __importDefault(require("../../business/models/datastores/CategoryUpdateDS"));
 const multer_1 = __importDefault(require("multer"));
 class CategoryRouter extends ApplicationRouter_1.default {
-    constructor(categoryRequester) {
+    constructor(categoryRequester, onlyAdminStoreMiddleware) {
         super();
         this.categoryRequester = categoryRequester;
+        this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
+        this.initRoutes();
     }
     initRoutes() {
-        this.getRouter().post('/category', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().post('/category', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const customerId = req.customer.getCustomerId();
             const nameFr = req.body.nameFr;
             const nameEn = req.body.nameEn;
@@ -42,13 +43,13 @@ class CategoryRouter extends ApplicationRouter_1.default {
             const categoriesFlat = yield this.categoryRequester.getAllCategoriesFlat(customerId);
             res.status(200).send(categoriesFlat);
         }));
-        this.getRouter().delete('/category/:categoryId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().delete('/category/:categoryId', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const categoryId = String(req.params.categoryId);
             const customerId = req.customer.getCustomerId();
             yield this.categoryRequester.deleteCategory(categoryId, customerId);
             res.status(200).send();
         }));
-        this.getRouter().put('/category/:categoryId', new OnlyAdminMiddleware_1.default().getRequestHandler(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().put('/category/:categoryId', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const categoryId = String(req.params.categoryId);
             const customerId = req.customer.getCustomerId();
             const nameFr = req.body.nameFr;
@@ -59,7 +60,7 @@ class CategoryRouter extends ApplicationRouter_1.default {
             res.status(200).send();
         }));
         const upload = (0, multer_1.default)();
-        this.getRouter().put('/category/image/:categoryId', new OnlyAdminMiddleware_1.default().getRequestHandler(), upload.single('file'), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getRouter().put('/category/image/:categoryId', this.onlyAdminStoreMiddleware, upload.single('file'), (req, res) => __awaiter(this, void 0, void 0, function* () {
             const categoryId = String(req.params.categoryId);
             const customerId = req.customer.getCustomerId();
             const image = req.file.buffer;

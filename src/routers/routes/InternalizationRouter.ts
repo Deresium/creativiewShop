@@ -7,6 +7,7 @@ export default class InternalizationRouter extends ApplicationRouter {
     constructor(internalizationRequester: IInternalizationRequester) {
         super();
         this.internalizationRequester = internalizationRequester;
+        this.initRoutes();
     }
 
     public initRoutes() {
