@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class ProductOptionUpdateDS {
-    constructor(productOptionId, productId, code, nameFr, nameEn, weight, stock, active, preorder, featured) {
+    constructor(productOptionId, code, nameFr, nameEn, weight, stock, active, preorder, featured) {
         this.productOptionId = productOptionId;
-        this.productId = productId;
         this.code = code;
         this.nameFr = nameFr;
         this.nameEn = nameEn;
@@ -15,9 +14,6 @@ class ProductOptionUpdateDS {
     }
     getProductOptionId() {
         return this.productOptionId;
-    }
-    getProductId() {
-        return this.productId;
     }
     getCode() {
         return this.code;

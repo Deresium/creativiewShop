@@ -5,13 +5,14 @@ import {Op} from "sequelize";
 import ProductEntity from "../entities/ProductEntity";
 
 export default class ProductOptionDataMapper implements IProductOptionDataGateway {
-    public async createProductOption(productId: string): Promise<void> {
-        await ProductOptionEntity.create({
+    public async createProductOption(productId: string): Promise<string> {
+        const productOption = await ProductOptionEntity.create({
             productId: productId,
             preorder: false,
             featured: false,
             active: false
         });
+        return productOption.getProductOptionId();
     }
 
     public async deleteProductOption(productOptionId: string): Promise<void> {

@@ -11,8 +11,8 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         this.productOptionDataGateway = productOptionDataGateway;
     }
 
-    public async createProductOption(productId: string): Promise<void> {
-        await this.productOptionDataGateway.createProductOption(productId);
+    public async createProductOption(productId: string): Promise<string> {
+        return await this.productOptionDataGateway.createProductOption(productId);
     }
 
     public async deleteProductOption(productOptionId: string): Promise<void> {

@@ -1,5 +1,5 @@
 <template>
-    <h2>{{ t('product', {code: code}) }}</h2>
+    <h2>{{ t('productOption', {code: code}) }}</h2>
     <div class="form">
         <v-alert v-model="showAlert" :text="t('error.form')" class="alertError" type="error"/>
         <v-alert v-model="showBackendError" :text="t(backendError)" class="alertError"
@@ -8,31 +8,41 @@
             <v-text-field v-model="code" :label="t('code')" name="code"/>
             <v-text-field v-model="nameFr" :label="t('nameFr')" name="nameFr"/>
             <v-text-field v-model="nameEn" :label="t('nameEn')" name="nameEn"/>
-            <v-textarea v-model="descriptionFr" :label="t('descriptionFr')" name="descriptionFr"/>
-            <v-textarea v-model="descriptionEn" :label="t('descriptionEn')" name="descriptionEn"/>
-            <v-autocomplete v-model="manufacturerId" :items="manufacturerList" :label="t('manufacturer')"
-                            name="manufacturer"/>
+            <v-text-field v-model="stock" :label="t('stock')" name="stock" type="number"/>
+            <v-text-field v-model="weight" :label="t('weight')" name="weight" type="number"/>
+            <v-switch v-model="active" :color="firstColor" :label="t('active')" name="active"/>
+            <v-switch v-model="preorder" :color="firstColor" :label="t('preorder')" name="preorder"/>
+            <v-switch v-model="featured" :color="firstColor" :label="t('featured')" name="featured"/>
             <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('update') }}</v-btn>
         </v-form>
     </div>
 </template>
 
 <script lang="ts" setup>
+
 import {useI18n} from "vue-i18n";
+import {useRoute} from "vue-router";
 import {computed, ref} from "vue";
 import * as validator from "validator";
+import ProductOptionRequester from "../../../requesters/ProductOptionRequester.ts";
 import axiosServer from "../../../axios/axiosServer.ts";
-import TitleValueVM from "../../../viewmodels/TitleValueVM.ts";
-import ManufacturerRequester from "../../../requesters/ManufacturerRequester.ts";
-import {useRoute} from "vue-router";
-import ProductRequester from "../../../requesters/ProductRequester.ts";
+import useCustomer from "../../../compositionfunctions/customer.ts";
 
-const {t} = useI18n({useScope: "global"});
-
-const emit = defineEmits(['updateSuccess']);
+const {t} = useI18n({useScope: 'global'});
 
 const {params: {productId}} = useRoute();
 const productIdString = String(productId);
+
+const props = defineProps({
+    productOptionId: {
+        type: String,
+        required: true
+    }
+});
+
+const emit = defineEmits(['updateInfoSuccess']);
+
+const {firstColor} = useCustomer();
 
 const formValid = ref();
 const firstSubmit = ref(false);
@@ -42,27 +52,24 @@ const successUpdate = ref(false);
 const backendError = ref('');
 const showBackendError = computed(() => !validator.isEmpty(backendError.value));
 
-const manufacturerId = ref(null);
 const code = ref(null);
 const nameFr = ref(null);
 const nameEn = ref(null);
-const descriptionFr = ref(null);
-const descriptionEn = ref(null);
+const stock = ref(null);
+const weight = ref(null);
+const active = ref(false);
+const preorder = ref(false);
+const featured = ref(false);
 
-const manufacturerList = ref(new Array<TitleValueVM<string, string>>());
-ManufacturerRequester.getManufacturers().then(response => {
-    for (const manufacturer of response) {
-        manufacturerList.value.push(new TitleValueVM(manufacturer.getName(), manufacturer.getManufacturerId()));
-    }
-});
-
-ProductRequester.requestProduct(productIdString).then(response => {
-    manufacturerId.value = response.getManufacturerId();
+ProductOptionRequester.requestProductOption(productIdString, props.productOptionId).then(response => {
     code.value = response.getCode();
     nameFr.value = response.getNameFr();
     nameEn.value = response.getNameEn();
-    descriptionFr.value = response.getDescriptionFr();
-    descriptionEn.value = response.getDescriptionEn();
+    stock.value = response.getStock();
+    weight.value = response.getWeight();
+    active.value = response.getActive();
+    preorder.value = response.getPreorder();
+    featured.value = response.getFeatured();
 });
 
 const submitForm = async () => {
@@ -74,17 +81,19 @@ const submitForm = async () => {
     }
 
     try {
-        await axiosServer.put(`/product/${productIdString}`, {
-            manufacturerId: manufacturerId.value,
+        await axiosServer.put(`/product/${productIdString}/productOption/${props.productOptionId}`, {
             code: code.value,
             nameFr: nameFr.value,
             nameEn: nameEn.value,
-            descriptionFr: descriptionFr.value,
-            descriptionEn: descriptionEn.value
+            stock: stock.value,
+            weight: weight.value,
+            active: active.value,
+            preorder: preorder.value,
+            featured: featured.value
         });
         backendError.value = '';
         successUpdate.value = true;
-        emit('updateSuccess');
+        emit('updateInfoSuccess');
     } catch (error: any) {
         backendError.value = error.response.data;
     }
@@ -94,4 +103,7 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
+.form {
+    padding-bottom: 10px;
+}
 </style>

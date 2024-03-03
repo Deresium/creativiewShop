@@ -16,7 +16,6 @@ const ApplicationMiddleware_1 = __importDefault(require("./ApplicationMiddleware
 class CheckProductOwnerMiddleware extends ApplicationMiddleware_1.default {
     constructor(productRequester) {
         super();
-        console.log('middleware', productRequester);
         this.productRequester = productRequester;
     }
     defineMiddlewareFunction() {

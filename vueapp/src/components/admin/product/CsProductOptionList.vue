@@ -12,7 +12,7 @@
         </template>
     </v-data-table>
     <v-dialog v-model="askConfirmDelete">
-        <v-card :text="t('confirmDeleteProduct.text')" :title="t('confirmDelete.title')">
+        <v-card :text="t('confirmDeleteProductOption.text')" :title="t('confirmDelete.title')">
             <template #actions>
                 <v-btn :loading="loading" @click="handleConfirm">
                     {{ t('confirm') }}
@@ -38,7 +38,7 @@ const {t} = useI18n({useScope: "global"});
 const {params: {productId}} = useRoute();
 const productIdString = String(productId);
 
-const emit = defineEmits(['deleteSuccess']);
+const emit = defineEmits(['deleteSuccess', 'editProductOption']);
 
 const headers = ref([
     {title: t('code'), value: 'code'},
@@ -54,7 +54,6 @@ const headers = ref([
 const askConfirmDelete = ref(false);
 const tempProductOptionId = ref();
 const loading = ref(false);
-const showEditOverlay = ref(false);
 
 const productOptions = ref(new Array<ProductOptionVM>());
 ProductOptionRequester.requestProductOptions(productIdString).then(response => {
@@ -71,7 +70,7 @@ const handleConfirm = async () => {
     if (!tempProductOptionId.value) {
         return;
     }
-    await axiosServer.delete(`/product/${tempProductOptionId.value}`);
+    await axiosServer.delete(`/product/${productIdString}/productOption/${tempProductOptionId.value}`);
     askConfirmDelete.value = false;
     tempProductOptionId.value = null;
     loading.value = false;
@@ -83,8 +82,8 @@ const handleRefuse = () => {
     tempProductOptionId.value = null;
 };
 
-const goToEdit = async (productId: string) => {
-    showEditOverlay.value = true;
+const goToEdit = async (productOptionId: string) => {
+    emit('editProductOption', productOptionId);
 };
 
 </script>

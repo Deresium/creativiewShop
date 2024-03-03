@@ -2,7 +2,7 @@ import ProductOptionUpdateDS from "../models/datastores/ProductOptionUpdateDS";
 import ProductOptionVM from "../models/viewmodels/ProductOptionVM";
 
 export default interface IProductOptionRequester {
-    createProductOption(productId: string): Promise<void>;
+    createProductOption(productId: string): Promise<string>;
 
     updateProductOption(productOptionUpdate: ProductOptionUpdateDS): Promise<void>;
 

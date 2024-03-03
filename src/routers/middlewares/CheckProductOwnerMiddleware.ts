@@ -7,7 +7,6 @@ export default class CheckProductOwnerMiddleware extends ApplicationMiddleware {
 
     constructor(productRequester: IProductRequester) {
         super();
-        console.log('middleware', productRequester);
         this.productRequester = productRequester;
     }
 

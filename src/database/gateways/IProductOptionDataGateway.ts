@@ -2,7 +2,7 @@ import ProductOptionUpdateDS from "../../business/models/datastores/ProductOptio
 import ProductOptionEntity from "../entities/ProductOptionEntity";
 
 export default interface IProductOptionDataGateway {
-    createProductOption(productId: string): Promise<void>;
+    createProductOption(productId: string): Promise<string>;
 
     updateProductOption(productOptionUpdate: ProductOptionUpdateDS): Promise<void>;
 
