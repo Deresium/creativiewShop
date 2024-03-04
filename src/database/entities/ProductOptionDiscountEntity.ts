@@ -6,6 +6,7 @@ export default class ProductOptionDiscountEntity extends Model {
     private productOptionId: string;
     private groupId: string;
     private percent: number;
+    private minQuantity: number;
     private startDate: Date;
     private endDate: Date;
     private deletedAt: Date;
@@ -27,6 +28,10 @@ export default class ProductOptionDiscountEntity extends Model {
         return this.percent;
     }
 
+    getMinQuantity(): number {
+        return this.minQuantity;
+    }
+
     getStartDate(): Date {
         return this.startDate;
     }
@@ -45,6 +50,7 @@ ProductOptionDiscountEntity.init({
     productOptionId: DataTypes.BIGINT,
     groupId: DataTypes.BIGINT,
     percent: DataTypes.DECIMAL,
+    minQuantity: DataTypes.INTEGER,
     startDate: DataTypes.DATE,
     endDate: DataTypes.DATE,
     deletedAt: DataTypes.DATE
