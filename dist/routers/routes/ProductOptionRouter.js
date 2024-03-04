@@ -14,10 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
 const ProductOptionUpdateDS_1 = __importDefault(require("../../business/models/datastores/ProductOptionUpdateDS"));
+const multer_1 = __importDefault(require("multer"));
 class ProductOptionRouter extends ApplicationRouter_1.default {
-    constructor(productOptionRequester, onlyAdminStoreMiddleware, checkProductOwnerMiddleware) {
+    constructor(productOptionRequester, productOptionPriceRequester, productOptionCategoryRequester, productOptionPictureRequester, onlyAdminStoreMiddleware, checkProductOwnerMiddleware) {
         super();
         this.productOptionRequester = productOptionRequester;
+        this.productOptionPriceRequester = productOptionPriceRequester;
+        this.productOptionCategoryRequester = productOptionCategoryRequester;
+        this.productOptionPictureRequester = productOptionPictureRequester;
         this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
         this.checkProductOwnerMiddleware = checkProductOwnerMiddleware;
         this.initRoutes();
@@ -56,6 +60,46 @@ class ProductOptionRouter extends ApplicationRouter_1.default {
             const productOptionId = String(req.params.productOptionId);
             yield this.productOptionRequester.deleteProductOption(productOptionId);
             res.send();
+        }));
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/price', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const prices = yield this.productOptionPriceRequester.getPricesForProductOption(productOptionId);
+            res.send(prices);
+        }));
+        this.getRouter().post('/product/:productId/productOption/:productOptionId/price', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const price = req.body.price;
+            yield this.productOptionPriceRequester.updatePrice(productOptionId, price);
+            res.send();
+        }));
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/category', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const categoriesId = yield this.productOptionCategoryRequester.getProductOptionCategoriesId(productOptionId);
+            res.send(categoriesId);
+        }));
+        this.getRouter().put('/product/:productId/productOption/:productOptionId/category', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const categoriesId = req.body.categoriesId;
+            yield this.productOptionCategoryRequester.replaceCategories(productOptionId, categoriesId);
+            res.send();
+        }));
+        const upload = (0, multer_1.default)();
+        this.getRouter().post('/product/:productId/productOption/:productOptionId/image', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, upload.single('file'), (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const image = req.file.buffer;
+            const imageName = req.file.originalname;
+            yield this.productOptionPictureRequester.addProductOptionPicture(image, productOptionId, imageName);
+            res.send();
+        }));
+        this.getRouter().delete('/product/:productId/productOption/:productOptionId/image/:productOptionImageId', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionImageId = String(req.params.productOptionImageId);
+            yield this.productOptionPictureRequester.deleteProductOptionPicture(productOptionImageId);
+            res.send();
+        }));
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/image', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const productOptionPicturesId = yield this.productOptionPictureRequester.getPicturesForProductOption(productOptionId);
+            res.send(productOptionPicturesId);
         }));
     }
 }

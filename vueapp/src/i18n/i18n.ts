@@ -17,7 +17,7 @@ const i18n = createI18n({
                 year: 'numeric', month: 'numeric', day: 'numeric'
             },
             long: {
-                year: 'numeric', month: 'long', day: 'numeric'
+                year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'
             }
         },
         'en': {
@@ -25,7 +25,7 @@ const i18n = createI18n({
                 year: 'numeric', month: 'numeric', day: 'numeric'
             },
             long: {
-                year: 'numeric', month: 'long', day: 'numeric'
+                year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'
             }
         }
     }

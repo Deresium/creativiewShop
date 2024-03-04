@@ -1,5 +1,4 @@
 <template>
-    <h2>{{ t('product', {code: code}) }}</h2>
     <div class="form">
         <v-alert v-model="showAlert" :text="t('error.form')" class="alertError" type="error"/>
         <v-alert v-model="showBackendError" :text="t(backendError)" class="alertError"

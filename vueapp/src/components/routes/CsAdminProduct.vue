@@ -8,9 +8,14 @@
                              @edit-product-option="handleEditProductOption"/>
         <CsProductOptionTabs
             v-if="productOptionToEdit"
-            :key="`${counterRefresh}${productOptionToEdit}`"
+            :key="`${productOptionToEdit}`"
             :product-option-id="productOptionToEdit"
-            @update-info-success="handleUpdateInfoSuccess"/>
+            @updateCategorySuccess="handleUpdateCategorySuccess"
+            @update-info-success="handleUpdateInfoSuccess"
+            @add-price-success="handleAddPriceSuccess"
+            @add-picture-success="handleAddPictureSuccess"
+            @delete-picture-success="handleDeletePictureSuccess"
+        />
     </div>
 
     <v-snackbar v-model="showSnackbar">
@@ -76,6 +81,26 @@ const handleUpdateInfoSuccess = () => {
     textSnackbar.value = t('updateInfoOption.success');
     showSnackbar.value = true;
     counterRefresh.value++;
+};
+
+const handleUpdateCategorySuccess = () => {
+    textSnackbar.value = t('updateCategoryOption.success');
+    showSnackbar.value = true;
+};
+
+const handleAddPriceSuccess = () => {
+    textSnackbar.value = t('addPriceOption.success');
+    showSnackbar.value = true;
+};
+
+const handleAddPictureSuccess = () => {
+    textSnackbar.value = t('addPictureOption.success');
+    showSnackbar.value = true;
+};
+
+const handleDeletePictureSuccess = () => {
+    textSnackbar.value = t('deletePictureOption.success');
+    showSnackbar.value = true;
 }
 
 </script>

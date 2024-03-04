@@ -13,13 +13,13 @@ export default class ProductOptionPriceFacade implements IProductOptionPriceRequ
     public async getPricesForProductOption(productOptionId: string): Promise<Array<ProductOptionPriceVM>> {
         const pricesReturn = new Array<ProductOptionPriceVM>;
         const prices = await this.productOptionPriceDataGateway.getPricesForProductOption(productOptionId);
-        for(const price of prices){
+        for (const price of prices) {
             let startDate: string = null;
             let endDate: string = null;
-            if(price.getStartDate()){
+            if (price.getStartDate()) {
                 startDate = price.getStartDate().toISOString();
             }
-            if(price.getEndDate()){
+            if (price.getEndDate()) {
                 endDate = price.getEndDate().toISOString();
             }
             pricesReturn.push(new ProductOptionPriceVM(startDate, endDate, price.getPrice()));
@@ -28,7 +28,7 @@ export default class ProductOptionPriceFacade implements IProductOptionPriceRequ
     }
 
     public async updatePrice(productOptionId: string, price: number): Promise<void> {
-        return Promise.resolve(undefined);
+        await this.productOptionPriceDataGateway.updatePrice(productOptionId, price);
     }
 
 }

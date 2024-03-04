@@ -118,7 +118,6 @@ export default class AppSingleton {
 
         const onlyAdminMiddleware = new OnlyAdminStoreMiddleware().getRequestHandler();
         const checkProductOwnerMiddleware = new CheckProductOwnerMiddleware(productFacade).getRequestHandler();
-        console.log('app', checkProductOwnerMiddleware);
 
         this.expressApp.use('/api', new UserRouter(userFacade).getRouter());
         this.expressApp.use('/api', new CustomerRouter().getRouter());

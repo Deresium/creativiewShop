@@ -28,6 +28,21 @@ class AwsFileDataMapper {
             yield this.awsOperations.addFile(`category/${categoryId}`, picture);
         });
     }
+    deleteProductOptionPicture(productOptionPictureId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.awsOperations.deleteFile(`productoption/${productOptionPictureId}`);
+        });
+    }
+    getProductOptionPicture(productOptionPictureId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.awsOperations.getFile(`productoption/${productOptionPictureId}`);
+        });
+    }
+    saveProductOptionPicture(productOptionPictureId, picture) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.awsOperations.addFile(`productoption/${productOptionPictureId}`, picture);
+        });
+    }
 }
 exports.default = AwsFileDataMapper;
 //# sourceMappingURL=AwsFileDataMapper.js.map

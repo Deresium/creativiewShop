@@ -6,6 +6,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const DatabaseSingleton_1 = __importDefault(require("../DatabaseSingleton"));
 class ProductOptionPriceEntity extends sequelize_1.Model {
+    getProductOptionPriceId() {
+        return this.productOptionPriceId;
+    }
+    getProductOptionId() {
+        return this.productOptionId;
+    }
+    getPrice() {
+        return this.price;
+    }
+    getStartDate() {
+        return this.startDate;
+    }
+    getEndDate() {
+        return this.endDate;
+    }
 }
 exports.default = ProductOptionPriceEntity;
 ProductOptionPriceEntity.init({

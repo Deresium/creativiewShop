@@ -17,16 +17,16 @@ export default class ProductOptionPictureFacade implements IProductOptionPicture
         try {
             const productOptionPictureId = await this.productOptionPictureDataGateway.addProductOptionPicture(productOptionId, name);
             await this.fileDataGateway.saveProductOptionPicture(productOptionPictureId, image);
-        }catch(error){
+        } catch (error) {
             console.error(error);
         }
     }
 
     public async deleteProductOptionPicture(productOptionPictureId: string): Promise<void> {
-        try{
+        try {
             await this.productOptionPictureDataGateway.deleteProductOptionPicture(productOptionPictureId);
             await this.fileDataGateway.deleteProductOptionPicture(productOptionPictureId);
-        }catch(error){
+        } catch (error) {
             console.error(error);
         }
     }
@@ -38,7 +38,7 @@ export default class ProductOptionPictureFacade implements IProductOptionPicture
 
     public async getProductOptionPicture(productOptionPictureId: string): Promise<FileVM> {
         const picture = await this.productOptionPictureDataGateway.getProductOptionPicture(productOptionPictureId);
-        if(picture && picture.getName()){
+        if (picture && picture.getName()) {
             const file = await this.fileDataGateway.getProductOptionPicture(productOptionPictureId);
             const extension = ContentType.determinateContentType(picture.getName());
             return new FileVM(file, extension, picture.getName());

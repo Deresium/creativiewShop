@@ -14,9 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
 class PublicFileRouter extends ApplicationRouter_1.default {
-    constructor(categoryRequester) {
+    constructor(categoryRequester, productOptionPictureRequester) {
         super();
         this.categoryRequester = categoryRequester;
+        this.productOptionPictureRequester = productOptionPictureRequester;
         this.initRoutes();
     }
     initRoutes() {
@@ -24,6 +25,18 @@ class PublicFileRouter extends ApplicationRouter_1.default {
             const categoryId = String(req.params.categoryId);
             const customerId = req.customer.getCustomerId();
             const fileVM = yield this.categoryRequester.getCategoryImage(categoryId, customerId);
+            if (fileVM) {
+                res.setHeader('Content-Type', fileVM.getContentType());
+                res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(fileVM.getFileName())}`);
+                res.end(fileVM.getFile(), 'base64');
+            }
+            else {
+                res.status(404).send();
+            }
+        }));
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/image/:productOptionPictureId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionPictureId = String(req.params.productOptionPictureId);
+            const fileVM = yield this.productOptionPictureRequester.getProductOptionPicture(productOptionPictureId);
             if (fileVM) {
                 res.setHeader('Content-Type', fileVM.getContentType());
                 res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(fileVM.getFileName())}`);

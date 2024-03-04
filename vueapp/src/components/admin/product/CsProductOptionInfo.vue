@@ -1,5 +1,4 @@
 <template>
-    <h2>{{ t('productOption', {code: code}) }}</h2>
     <div class="form">
         <v-alert v-model="showAlert" :text="t('error.form')" class="alertError" type="error"/>
         <v-alert v-model="showBackendError" :text="t(backendError)" class="alertError"
@@ -104,6 +103,7 @@ const submitForm = async () => {
 
 <style scoped>
 .form {
+    margin-top: 30px;
     padding-bottom: 10px;
 }
 </style>

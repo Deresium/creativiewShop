@@ -19,7 +19,7 @@ class ProductOptionFacade {
     }
     createProductOption(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.productOptionDataGateway.createProductOption(productId);
+            return yield this.productOptionDataGateway.createProductOption(productId);
         });
     }
     deleteProductOption(productOptionId) {

@@ -28,14 +28,14 @@ export default class PublicFileRouter extends ApplicationRouter {
             }
         });
 
-        this.getRouter().get('/product/:productId/productOption/:productOptionId/image/:productOptionPictureId', async(req: any, res: any) => {
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/image/:productOptionPictureId', async (req: any, res: any) => {
             const productOptionPictureId = String(req.params.productOptionPictureId);
             const fileVM = await this.productOptionPictureRequester.getProductOptionPicture(productOptionPictureId);
-            if(fileVM) {
+            if (fileVM) {
                 res.setHeader('Content-Type', fileVM.getContentType());
                 res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(fileVM.getFileName())}`);
                 res.end(fileVM.getFile(), 'base64');
-            }else{
+            } else {
                 res.status(404).send();
             }
         });

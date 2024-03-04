@@ -68,26 +68,26 @@ export default class ProductOptionRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().get('/product/:productId/productOption/:productOptionId/price', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/price', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const prices = await this.productOptionPriceRequester.getPricesForProductOption(productOptionId);
             res.send(prices);
         });
 
-        this.getRouter().post('/product/:productId/productOption/:productOptionId/price', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().post('/product/:productId/productOption/:productOptionId/price', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const price = req.body.price;
             await this.productOptionPriceRequester.updatePrice(productOptionId, price);
             res.send();
         });
 
-        this.getRouter().get('/product/:productId/productOption/:productOptionId/category', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/category', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const categoriesId = await this.productOptionCategoryRequester.getProductOptionCategoriesId(productOptionId);
             res.send(categoriesId);
         });
 
-        this.getRouter().put('/product/:productId/productOption/:productOptionId/category', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().put('/product/:productId/productOption/:productOptionId/category', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const categoriesId = req.body.categoriesId;
             await this.productOptionCategoryRequester.replaceCategories(productOptionId, categoriesId);
@@ -95,7 +95,7 @@ export default class ProductOptionRouter extends ApplicationRouter {
         });
 
         const upload = multer();
-        this.getRouter().post('/product/:productId/productOption/:productOptionId/image', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, upload.single('file'), async(req: any, res: any) => {
+        this.getRouter().post('/product/:productId/productOption/:productOptionId/image', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, upload.single('file'), async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const image = req.file.buffer;
             const imageName = req.file.originalname;
@@ -103,13 +103,13 @@ export default class ProductOptionRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().delete('/product/:productId/productOption/:productOptionId/image/:productOptionImageId', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
-            const productOptionId = String(req.params.productOptionId);
-            await this.productOptionPictureRequester.deleteProductOptionPicture(productOptionId);
+        this.getRouter().delete('/product/:productId/productOption/:productOptionId/image/:productOptionImageId', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
+            const productOptionImageId = String(req.params.productOptionImageId);
+            await this.productOptionPictureRequester.deleteProductOptionPicture(productOptionImageId);
             res.send();
         });
 
-        this.getRouter().get('/product/:productId/productOption/:productOptionId/image', async(req: any, res: any) => {
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/image', async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const productOptionPicturesId = await this.productOptionPictureRequester.getPicturesForProductOption(productOptionId);
             res.send(productOptionPicturesId);

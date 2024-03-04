@@ -18,12 +18,13 @@ const ProductEntity_1 = __importDefault(require("../entities/ProductEntity"));
 class ProductOptionDataMapper {
     createProductOption(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield ProductOptionEntity_1.default.create({
+            const productOption = yield ProductOptionEntity_1.default.create({
                 productId: productId,
                 preorder: false,
                 featured: false,
                 active: false
             });
+            return productOption.getProductOptionId();
         });
     }
     deleteProductOption(productOptionId) {
