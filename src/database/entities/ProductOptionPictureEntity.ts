@@ -5,6 +5,19 @@ export default class ProductOptionPictureEntity extends Model {
     private productOptionPictureId: string;
     private productOptionId: string;
     private name: string;
+
+
+    getProductOptionPictureId(): string {
+        return this.productOptionPictureId;
+    }
+
+    getProductOptionId(): string {
+        return this.productOptionId;
+    }
+
+    getName(): string {
+        return this.name;
+    }
 }
 
 ProductOptionPictureEntity.init({

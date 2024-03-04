@@ -4,6 +4,16 @@ import DatabaseSingleton from "../DatabaseSingleton";
 export default class ProductOptionCategoryEntity extends Model {
     private categoryId: string;
     private productOptionId: string;
+
+
+    public getProductOptionId(): string {
+        return this.productOptionId;
+    }
+
+
+    getCategoryId(): string {
+        return this.categoryId;
+    }
 }
 
 ProductOptionCategoryEntity.init({

@@ -8,15 +8,29 @@ export default class AwsFileDataMapper implements IFileDataGateway {
         this.awsOperations = awsOperations;
     }
 
-    async getCategoryPicture(categoryId: string): Promise<string> {
+    public async getCategoryPicture(categoryId: string): Promise<string> {
         return await this.awsOperations.getFile(`category/${categoryId}`);
     }
 
-    async deleteCategoryPicture(categoryId: string): Promise<void> {
+    public async deleteCategoryPicture(categoryId: string): Promise<void> {
         await this.awsOperations.deleteFile(`category/${categoryId}`);
     }
 
-    async saveCategoryPicture(categoryId: string, picture: Buffer): Promise<void> {
+    public async saveCategoryPicture(categoryId: string, picture: Buffer): Promise<void> {
         await this.awsOperations.addFile(`category/${categoryId}`, picture);
     }
+
+    public async deleteProductOptionPicture(productOptionPictureId: string): Promise<void> {
+        await this.awsOperations.deleteFile(`productoption/${productOptionPictureId}`);
+    }
+
+    public async getProductOptionPicture(productOptionPictureId: string): Promise<string> {
+        return await this.awsOperations.getFile(`productoption/${productOptionPictureId}`);
+    }
+
+    public async saveProductOptionPicture(productOptionPictureId: string, picture: Buffer): Promise<void> {
+        await this.awsOperations.addFile(`productoption/${productOptionPictureId}`, picture);
+    }
+
+
 }

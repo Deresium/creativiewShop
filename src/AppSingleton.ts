@@ -36,6 +36,12 @@ import ProductOptionFacade from "./business/facades/ProductOptionFacade";
 import ProductOptionRouter from "./routers/routes/ProductOptionRouter";
 import OnlyAdminStoreMiddleware from "./routers/middlewares/OnlyAdminMiddleware";
 import CheckProductOwnerMiddleware from "./routers/middlewares/CheckProductOwnerMiddleware";
+import ProductOptionCategoryDataMapper from "./database/datamappers/ProductOptionCategoryDataMapper";
+import ProductOptionPictureDataMapper from "./database/datamappers/ProductOptionPictureDataMapper";
+import ProductOptionPriceFacade from "./business/facades/ProductOptionPriceFacade";
+import ProductOptionPriceDataMapper from "./database/datamappers/ProductOptionPriceDataMapper";
+import ProductOptionCategoryFacade from "./business/facades/ProductOptionCategoryFacade";
+import ProductOptionPictureFacade from "./business/facades/ProductOptionPictureFacade";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -69,6 +75,9 @@ export default class AppSingleton {
         const manufacturerDataMapper = new ManufacturerDataMapper();
         const productDataMapper = new ProductDataMapper();
         const productOptionDataMapper = new ProductOptionDataMapper();
+        const productOptionPriceDataMapper = new ProductOptionPriceDataMapper();
+        const productOptionCategoryDataMapper = new ProductOptionCategoryDataMapper();
+        const productOptionPictureDataMapper = new ProductOptionPictureDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
@@ -78,6 +87,9 @@ export default class AppSingleton {
         const manufacturerFacade = new ManufacturerFacade(manufacturerDataMapper);
         const productFacade = new ProductFacade(productDataMapper);
         const productOptionFacade = new ProductOptionFacade(productOptionDataMapper);
+        const productOptionPriceFacade = new ProductOptionPriceFacade(productOptionPriceDataMapper);
+        const productOptionCategoryFacade = new ProductOptionCategoryFacade(productOptionCategoryDataMapper);
+        const productOptionPictureFacade = new ProductOptionPictureFacade(productOptionPictureDataMapper, fileDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -96,7 +108,7 @@ export default class AppSingleton {
         this.expressApp.use(new ReturnIndexMiddleware().getRequestHandler());
         this.expressApp.use(new ExtractCustomerMiddleware().getRequestHandler());
 
-        this.expressApp.use('/api', new PublicFileRouter(categoryFacade).getRouter());
+        this.expressApp.use('/api', new PublicFileRouter(categoryFacade, productOptionPictureFacade).getRouter());
 
 
         this.expressApp.use(express.json());
@@ -114,6 +126,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new CategoryRouter(categoryFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new ProductRouter(productFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, productOptionPriceFacade, productOptionCategoryFacade, productOptionPictureFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
     }
 }

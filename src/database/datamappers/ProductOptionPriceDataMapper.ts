@@ -1,15 +1,18 @@
-import IPriceDataGateway from "../gateways/IPriceDataGateway";
+import IProductOptionPriceDataGateway from "../gateways/IProductOptionPriceDataGateway";
 import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
 import {Op, Transaction} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 
-export default class PriceDataMapper implements IPriceDataGateway {
+export default class ProductOptionPriceDataMapper implements IProductOptionPriceDataGateway {
 
     public async getPricesForProductOption(productOptionId: string): Promise<Array<ProductOptionPriceEntity>> {
         return await ProductOptionPriceEntity.findAll({
             where: {
                 productOptionId: productOptionId
-            }
+            },
+            order: [
+                ['startDate', 'DESC']
+            ]
         });
     }
 
