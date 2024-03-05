@@ -47,6 +47,7 @@ import CurrencyRateDataMapper from "./database/datamappers/CurrencyRateDataMappe
 import ProductOptionDiscountFacade from "./business/facades/ProductOptionDiscountFacade";
 import CurrencyRateFacade from "./business/facades/CurrencyRateFacade";
 import CurrencyRateRouter from "./routers/routes/CurrencyRateRouter";
+import rateLimit from "express-rate-limit";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -103,6 +104,17 @@ export default class AppSingleton {
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
         });
+
+        // rate-limiting
+        const limiter = rateLimit({
+            windowMs: 10 * 60 * 1000, // 10 minutes
+            limit: 100,
+            standardHeaders: 'draft-7',
+            legacyHeaders: false,
+            message: ('rateLimitReached')
+        });
+
+        this.expressApp.use(limiter);
 
 
         if (process.env.NODE_ENV === 'production') {
