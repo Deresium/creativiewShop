@@ -8,6 +8,23 @@ export default class CurrencyRateEntity extends Model {
     private customerId: number;
     private startDate: Date;
     private endDate: Date;
+
+
+    getCurrencyCode(): string {
+        return this.currencyCode;
+    }
+
+    getRate(): number {
+        return this.rate;
+    }
+
+    getStartDate(): Date {
+        return this.startDate;
+    }
+
+    getEndDate(): Date {
+        return this.endDate;
+    }
 }
 
 CurrencyRateEntity.init({

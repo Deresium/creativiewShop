@@ -5,6 +5,19 @@ export default class CurrencyEntity extends Model {
     private currencyCode: string;
     private name: string;
     private symbol: string;
+
+
+    getCurrencyCode(): string {
+        return this.currencyCode;
+    }
+
+    getName(): string {
+        return this.name;
+    }
+
+    getSymbol(): string {
+        return this.symbol;
+    }
 }
 
 CurrencyEntity.init({

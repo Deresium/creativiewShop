@@ -6,22 +6,26 @@ import IProductOptionPriceRequester from "../../business/requesters/IProductOpti
 import IProductOptionCategoryRequester from "../../business/requesters/IProductOptionCategoryRequester";
 import IProductOptionPictureRequester from "../../business/requesters/IProductOptionPictureRequester";
 import multer from "multer";
+import ProductOptionDiscountDS from "../../business/models/datastores/ProductOptionDiscountDS";
+import IProductOptionDiscountRequester from "../../business/requesters/IProductOptionDiscountRequester";
 
 export default class ProductOptionRouter extends ApplicationRouter {
     private readonly productOptionRequester: IProductOptionRequester;
     private readonly productOptionPriceRequester: IProductOptionPriceRequester;
     private readonly productOptionCategoryRequester: IProductOptionCategoryRequester;
     private readonly productOptionPictureRequester: IProductOptionPictureRequester;
+    private readonly productOptionDiscountRequester: IProductOptionDiscountRequester;
     private readonly onlyAdminStoreMiddleware: RequestHandler;
     private readonly checkProductOwnerMiddleware: RequestHandler;
 
 
-    constructor(productOptionRequester: IProductOptionRequester, productOptionPriceRequester: IProductOptionPriceRequester, productOptionCategoryRequester: IProductOptionCategoryRequester, productOptionPictureRequester: IProductOptionPictureRequester, onlyAdminStoreMiddleware: e.RequestHandler, checkProductOwnerMiddleware: e.RequestHandler) {
+    constructor(productOptionRequester: IProductOptionRequester, productOptionPriceRequester: IProductOptionPriceRequester, productOptionCategoryRequester: IProductOptionCategoryRequester, productOptionPictureRequester: IProductOptionPictureRequester, productOptionDiscountRequester: IProductOptionDiscountRequester, onlyAdminStoreMiddleware: e.RequestHandler, checkProductOwnerMiddleware: e.RequestHandler) {
         super();
         this.productOptionRequester = productOptionRequester;
         this.productOptionPriceRequester = productOptionPriceRequester;
         this.productOptionCategoryRequester = productOptionCategoryRequester;
         this.productOptionPictureRequester = productOptionPictureRequester;
+        this.productOptionDiscountRequester = productOptionDiscountRequester;
         this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
         this.checkProductOwnerMiddleware = checkProductOwnerMiddleware;
         this.initRoutes();
@@ -113,6 +117,29 @@ export default class ProductOptionRouter extends ApplicationRouter {
             const productOptionId = String(req.params.productOptionId);
             const productOptionPicturesId = await this.productOptionPictureRequester.getPicturesForProductOption(productOptionId);
             res.send(productOptionPicturesId);
+        });
+
+        this.getRouter().post('/product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+            const productOptionId = String(req.params.productOptionId);
+            const groupId = req.body.groupId;
+            const percent = req.body.percent;
+            const startDate = req.body.startDate;
+            const endDate = req.body.endDate;
+            const productOptionDiscount = new ProductOptionDiscountDS(productOptionId, groupId, percent, startDate, endDate);
+            await this.productOptionDiscountRequester.addProductOptionDiscount(productOptionDiscount);
+            res.send();
+        });
+
+        this.getRouter().delete('/product/:productId/productOption/:productOptionId/discount/:productOptionDiscountId', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+            const productOptionDiscountId = String(req.params.productOptionDiscountId);
+            await this.productOptionDiscountRequester.deleteProductOptionDiscount(productOptionDiscountId);
+            res.send();
+        });
+
+        this.getRouter().get(' /product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+            const productOptionId = String(req.params.productOptionId);
+            const discounts = await this.productOptionDiscountRequester.getDiscountsForProductOption(productOptionId);
+            res.send(discounts);
         });
     }
 }

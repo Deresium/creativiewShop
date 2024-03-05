@@ -42,6 +42,11 @@ import ProductOptionPriceFacade from "./business/facades/ProductOptionPriceFacad
 import ProductOptionPriceDataMapper from "./database/datamappers/ProductOptionPriceDataMapper";
 import ProductOptionCategoryFacade from "./business/facades/ProductOptionCategoryFacade";
 import ProductOptionPictureFacade from "./business/facades/ProductOptionPictureFacade";
+import ProductOptionDiscountDataMapper from "./database/datamappers/ProductOptionDiscountDataMapper";
+import CurrencyRateDataMapper from "./database/datamappers/CurrencyRateDataMapper";
+import ProductOptionDiscountFacade from "./business/facades/ProductOptionDiscountFacade";
+import CurrencyRateFacade from "./business/facades/CurrencyRateFacade";
+import CurrencyRateRouter from "./routers/routes/CurrencyRateRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -78,6 +83,8 @@ export default class AppSingleton {
         const productOptionPriceDataMapper = new ProductOptionPriceDataMapper();
         const productOptionCategoryDataMapper = new ProductOptionCategoryDataMapper();
         const productOptionPictureDataMapper = new ProductOptionPictureDataMapper();
+        const productOptionDiscountDataMapper = new ProductOptionDiscountDataMapper();
+        const currencyRateDataMapper = new CurrencyRateDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
@@ -90,6 +97,8 @@ export default class AppSingleton {
         const productOptionPriceFacade = new ProductOptionPriceFacade(productOptionPriceDataMapper);
         const productOptionCategoryFacade = new ProductOptionCategoryFacade(productOptionCategoryDataMapper);
         const productOptionPictureFacade = new ProductOptionPictureFacade(productOptionPictureDataMapper, fileDataMapper);
+        const productOptionDiscountFacade = new ProductOptionDiscountFacade(productOptionDiscountDataMapper);
+        const currencyRateFacade = new CurrencyRateFacade(currencyRateDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -125,6 +134,7 @@ export default class AppSingleton {
         this.expressApp.use('/api', new CategoryRouter(categoryFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new ProductRouter(productFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, productOptionPriceFacade, productOptionCategoryFacade, productOptionPictureFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, productOptionPriceFacade, productOptionCategoryFacade, productOptionPictureFacade, productOptionDiscountFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new CurrencyRateRouter(currencyRateFacade, onlyAdminMiddleware).getRouter());
     }
 }
