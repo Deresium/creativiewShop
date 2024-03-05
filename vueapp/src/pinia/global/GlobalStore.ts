@@ -7,7 +7,8 @@ export const useGlobalStore = defineStore('global', {
     }),
     getters: {
         getShowMenuOverlay: state => state.global.getShowMenuOverlay(),
-        getShowLoginOverlay: state => state.global.getShowLoginOverlay()
+        getShowLoginOverlay: state => state.global.getShowLoginOverlay(),
+        getRecaptcheReady: state => state.global.getRecaptchaReady()
     },
     actions: {
         setShowMenuOverlay(value: boolean) {
@@ -15,6 +16,9 @@ export const useGlobalStore = defineStore('global', {
         },
         setShowLoginOverlay(value: boolean) {
             this.global.setShowLoginOverlay(value);
+        },
+        setRecaptchaReady(value: boolean) {
+            this.global.setRecaptchaReady(value);
         }
     }
 });

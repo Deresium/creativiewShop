@@ -28,9 +28,11 @@ import {computed, ref, watch} from "vue";
 import useRules from "../../compositionfunctions/rules.ts";
 import axiosServer from "../../axios/axiosServer.ts";
 import * as validator from "validator";
+import useGoogleRecaptcha from "../../compositionfunctions/googleRecaptcha.ts";
 
 const {t} = useI18n({useScope: "global"});
 const {notEmpty, isEmail, isStrongPassword, isSamePassword} = useRules();
+const {getToken} = useGoogleRecaptcha();
 
 const formValid = ref();
 const firstSubmit = ref(false);
@@ -62,6 +64,8 @@ const submitForm = async () => {
         isSending.value = false;
         return;
     }
+
+    const token = await getToken('CREATE ACCOUNT');
 
     try {
         await axiosServer.post('/user', {

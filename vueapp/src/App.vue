@@ -23,10 +23,12 @@ import I18nMessagesMerger from "./i18n/i18nMessagesMerger.ts";
 import {useI18n} from "vue-i18n";
 import axiosServer from "./axios/axiosServer.ts";
 import {useUserStore} from "./pinia/user/UserStore.ts";
+import {useGlobalStore} from "./pinia/global/GlobalStore.ts";
 
 const initDone = ref(false);
 const customerStore = useCustomerStore();
 const userStore = useUserStore();
+const globalStore = useGlobalStore();
 const customerName = computed(() => customerStore.getCustomerName);
 const {locale} = useI18n({useScope: "global"});
 
@@ -47,6 +49,10 @@ const initApp = async () => {
     const messages = await InternalizationRequester.getInternalizationMessages();
     new I18nMessagesMerger().addMessages(messages);
     await userStore.retrieveLoginUserInfo();
+    //@ts-ignore
+    grecaptcha.enterprise.ready(() => {
+        globalStore.setRecaptchaReady(true);
+    });
 };
 
 initApp().then(() => {

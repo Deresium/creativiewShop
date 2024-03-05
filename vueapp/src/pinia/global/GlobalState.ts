@@ -1,6 +1,7 @@
 export default class GlobalState {
     private showMenuOverlay: boolean;
     private showLoginOverlay: boolean;
+    private recaptchaReady: boolean;
 
 
     public getShowMenuOverlay(): boolean {
@@ -17,5 +18,14 @@ export default class GlobalState {
 
     public setShowLoginOverlay(value: boolean) {
         this.showLoginOverlay = value;
+    }
+
+
+    getRecaptchaReady(): boolean {
+        return this.recaptchaReady;
+    }
+
+    setRecaptchaReady(value: boolean) {
+        this.recaptchaReady = value;
     }
 }
