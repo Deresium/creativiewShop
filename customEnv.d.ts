@@ -6,6 +6,8 @@ declare namespace NodeJS {
         JWT_SECRET,
         AWS_KEY_ID,
         AWS_KEY_SECRET,
-        AWS_BUCKET_NAME
+        AWS_BUCKET_NAME,
+        GOOGLE_PROJECT_ID,
+        GOOGLE_RECAPTCHA_KEY
     }
 }
