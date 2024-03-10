@@ -1,6 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
-import ProductEntity from "./ProductEntity";
+import ProductOptionPriceEntity from "./ProductOptionPriceEntity";
 
 export default class ProductOptionEntity extends Model {
     private productOptionId: string;
@@ -15,6 +15,8 @@ export default class ProductOptionEntity extends Model {
     private weight: number;
     private preorder: boolean;
     private deletedAt: Date;
+
+    private productOptionPrices: Array<ProductOptionPriceEntity>;
 
     public getProductOptionId() {
         return this.productOptionId;
@@ -60,6 +62,10 @@ export default class ProductOptionEntity extends Model {
     public getPreorder(): boolean {
         return this.preorder;
     }
+
+    public getListPrices() {
+        return this.productOptionPrices;
+    }
 }
 
 ProductOptionEntity.init({
@@ -80,4 +86,8 @@ ProductOptionEntity.init({
     sequelize: DatabaseSingleton.getInstance().getSequelize()
 });
 
-ProductOptionEntity.hasOne(ProductEntity, {sourceKey: 'productId', foreignKey: 'productId'});
+ProductOptionEntity.hasMany(ProductOptionPriceEntity, {
+    sourceKey: 'productOptionId',
+    foreignKey: 'productOptionId',
+    as: 'productOptionPrices'
+});

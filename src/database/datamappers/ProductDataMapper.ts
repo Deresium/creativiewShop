@@ -3,6 +3,8 @@ import ProductEntity from "../entities/ProductEntity";
 import ProductUpdateDS from "../../business/models/datastores/ProductUpdateDS";
 import {Op} from "sequelize";
 import ManufacturerEntity from "../entities/ManufacturerEntity";
+import ProductOptionEntity from "../entities/ProductOptionEntity";
+import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
 
 export default class ProductDataMapper implements IProductDataGateway {
     public async createProduct(customerId: number): Promise<string> {
@@ -31,7 +33,7 @@ export default class ProductDataMapper implements IProductDataGateway {
                     [Op.eq]: null
                 }
             },
-            include: {model: ManufacturerEntity, as: 'manufacturer'}
+            include: {model: ManufacturerEntity, as: 'manufacturer', required: false}
         });
     }
 
@@ -41,7 +43,31 @@ export default class ProductDataMapper implements IProductDataGateway {
                 customerId: customerId,
                 productId: productId
             },
-            include: {model: ManufacturerEntity, as: 'manufacturer'}
+            include: {model: ManufacturerEntity, as: 'manufacturer', required: false}
+        });
+    }
+
+    public async getAllProductsAdmin(customerId: number): Promise<Array<ProductEntity>> {
+        return await ProductEntity.findAll({
+            where: {
+                customerId: customerId,
+                deletedAt: {
+                    [Op.eq]: null
+                }
+            },
+            include: [{
+                model: ManufacturerEntity, as: 'manufacturer', required: false
+            }, {
+                model: ProductOptionEntity,
+                as: 'productOptions',
+                where: {deletedAt: {[Op.eq]: null}},
+                include: [{
+                    model: ProductOptionPriceEntity,
+                    as: 'productOptionPrices',
+                    required: false,
+                    where: {endDate: {[Op.eq]: null}}
+                }]
+            }],
         });
     }
 

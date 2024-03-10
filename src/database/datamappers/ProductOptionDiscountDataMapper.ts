@@ -6,7 +6,7 @@ export default class ProductOptionDiscountDataMapper implements IProductOptionDi
     public async addProductOptionDiscount(productOptionDiscountDs: ProductOptionDiscountDS): Promise<void> {
         await ProductOptionDiscountEntity.create({
             productOptionId: productOptionDiscountDs.getProductOptionId(),
-            groupId: productOptionDiscountDs.getPercent(),
+            groupId: productOptionDiscountDs.getGroupId(),
             percent: productOptionDiscountDs.getPercent(),
             startDate: productOptionDiscountDs.getStartDate(),
             endDate: productOptionDiscountDs.getEndDate()

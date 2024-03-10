@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const DatabaseSingleton_1 = __importDefault(require("../DatabaseSingleton"));
-const ProductEntity_1 = __importDefault(require("./ProductEntity"));
+const ProductOptionPriceEntity_1 = __importDefault(require("./ProductOptionPriceEntity"));
 class ProductOptionEntity extends sequelize_1.Model {
     getProductOptionId() {
         return this.productOptionId;
@@ -40,6 +40,9 @@ class ProductOptionEntity extends sequelize_1.Model {
     getPreorder() {
         return this.preorder;
     }
+    getListPrices() {
+        return this.productOptionPrices;
+    }
 }
 exports.default = ProductOptionEntity;
 ProductOptionEntity.init({
@@ -59,5 +62,9 @@ ProductOptionEntity.init({
     tableName: 'ProductOption',
     sequelize: DatabaseSingleton_1.default.getInstance().getSequelize()
 });
-ProductOptionEntity.hasOne(ProductEntity_1.default, { sourceKey: 'productId', foreignKey: 'productId' });
+ProductOptionEntity.hasMany(ProductOptionPriceEntity_1.default, {
+    sourceKey: 'productOptionId',
+    foreignKey: 'productOptionId',
+    as: 'productOptionPrices'
+});
 //# sourceMappingURL=ProductOptionEntity.js.map

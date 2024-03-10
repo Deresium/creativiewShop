@@ -1,0 +1,1 @@
+{"version":3,"file":"PercentCalculator.js","sourceRoot":"","sources":["../../../src/business/utils/PercentCalculator.ts"],"names":[],"mappings":";;AAAA,MAAqB,iBAAiB;IAC3B,MAAM,CAAC,6BAA6B,CAAC,aAAqB,EAAE,aAAqB;QACpF,OAAO,CAAC,CAAC,aAAa,GAAG,aAAa,CAAC,GAAG,aAAa,CAAC,GAAG,GAAG,CAAC;IACnE,CAAC;CACJ;AAJD,oCAIC"}

@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import {Ref, ref} from "vue";
+import {computed, Ref, ref} from "vue";
 import CategoryFlatVM from "../../viewmodels/CategoryFlatVM.ts";
 import CategoryFlatRequester from "../../requesters/CategoryFlatRequester.ts";
 import {useI18n} from "vue-i18n";
@@ -40,7 +40,7 @@ const {t} = useI18n({useScope: "global"});
 
 const emit = defineEmits(['deleteSuccess', 'showEditOverlay']);
 
-const headers = ref([
+const headers = computed(() => [
     {title: t('frenchName'), value: 'nameFr'},
     {title: t('englishName'), value: 'nameEn'},
     {title: t('parentCategory'), value: 'parentsAriane'},

@@ -3,8 +3,9 @@ import {RecaptchaEnterpriseServiceClient} from "@google-cloud/recaptcha-enterpri
 import {RequestHandler} from "express";
 
 export default class CheckTokenRecaptchaMiddleware extends ApplicationMiddleware {
-    private readonly googleClient: any
+    private readonly googleClient: any;
     private readonly projectPath: any;
+
     constructor() {
         super();
         this.googleClient = new RecaptchaEnterpriseServiceClient();
@@ -23,7 +24,7 @@ export default class CheckTokenRecaptchaMiddleware extends ApplicationMiddleware
                 parent: this.projectPath
             });
 
-            const [ response ] = await this.googleClient.createAssessment(request);
+            const [response] = await this.googleClient.createAssessment(request);
 
             if (!response.tokenProperties.valid) {
                 console.error(`The CreateAssessment call failed because the token was: ${response.tokenProperties.invalidReason}`);
@@ -33,7 +34,7 @@ export default class CheckTokenRecaptchaMiddleware extends ApplicationMiddleware
 
             const recaptchaAction = req.query.recaptchaAction;
 
-            if(response.tokenProperties.action !== recaptchaAction) {
+            if (response.tokenProperties.action !== recaptchaAction) {
                 console.error("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score");
                 res.status(403).send();
                 return;

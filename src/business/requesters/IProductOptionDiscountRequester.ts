@@ -3,6 +3,10 @@ import ProductOptionDiscountVM from "../models/viewmodels/ProductOptionDiscountV
 
 export default interface IProductOptionDiscountRequester {
     getDiscountsForProductOption(productOptionId: string): Promise<Array<ProductOptionDiscountVM>>;
+
     addProductOptionDiscount(productOptionDiscountDs: ProductOptionDiscountDS): Promise<void>;
+
     deleteProductOptionDiscount(productOptionDiscountId: string): Promise<void>;
+
+    calculateDiscountPercent(originalPrice: number, discountPrice: number): number;
 }

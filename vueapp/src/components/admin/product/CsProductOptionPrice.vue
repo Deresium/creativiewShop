@@ -59,7 +59,7 @@ const price = ref('');
 const priceRules = [notEmpty(t('price'))];
 
 
-const headers = ref([
+const headers = computed(() => [
     {title: t('price'), value: 'price'},
     {title: t('startDate'), value: 'startDate'},
     {title: t('endDate'), value: 'endDate'}

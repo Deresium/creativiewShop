@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductOptionDiscountVM_1 = __importDefault(require("../models/viewmodels/ProductOptionDiscountVM"));
+const PercentCalculator_1 = __importDefault(require("../utils/PercentCalculator"));
 class ProductOptionDiscountFacade {
     constructor(productOptionDiscountDataGateway) {
         this.productOptionDiscountDataGateway = productOptionDiscountDataGateway;
@@ -24,9 +25,11 @@ class ProductOptionDiscountFacade {
                 return;
             }
             if (productOptionDiscountDs.getStartDate() < now
-                || productOptionDiscountDs.getEndDate() < now
-                || productOptionDiscountDs.getEndDate() <= productOptionDiscountDs.getStartDate()) {
-                throw new Error('error.date');
+                || productOptionDiscountDs.getEndDate() < now) {
+                throw new Error('error.date.past');
+            }
+            if (productOptionDiscountDs.getEndDate() <= productOptionDiscountDs.getStartDate()) {
+                throw new Error('error.date.startAfter');
             }
             yield this.productOptionDiscountDataGateway.addProductOptionDiscount(productOptionDiscountDs);
         });
@@ -47,10 +50,14 @@ class ProductOptionDiscountFacade {
                 if (productDiscount.getDeletedAt()) {
                     deletedAtDate = productDiscount.getDeletedAt().toISOString();
                 }
-                discountsReturn.push(new ProductOptionDiscountVM_1.default(productDiscount.getProductOptionDiscountId(), productDiscount.getProductOptionId(), productDiscount.getGroupId(), productDiscount.getPercent(), startDate, endDate, deletedAtDate));
+                const percent = `${Number(productDiscount.getPercent()).toFixed(2)}%`;
+                discountsReturn.push(new ProductOptionDiscountVM_1.default(productDiscount.getProductOptionDiscountId(), productDiscount.getProductOptionId(), productDiscount.getGroupId(), percent, startDate, endDate, deletedAtDate));
             }
             return discountsReturn;
         });
+    }
+    calculateDiscountPercent(originalPrice, discountPrice) {
+        return PercentCalculator_1.default.calculatePercentBasedOnPrices(originalPrice, discountPrice);
     }
 }
 exports.default = ProductOptionDiscountFacade;

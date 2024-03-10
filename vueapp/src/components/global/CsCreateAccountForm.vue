@@ -2,37 +2,35 @@
     <h2>{{ t('createAccount') }}</h2>
 
     <template v-if="!successCreate">
-        <v-alert class="alertError" v-model="showAlert" type="error" :text="t('error.form')"/>
-        <v-alert class="alertError" v-model="showBackendError" type="error"
-                 :text="t(backendError, {email: email})"/>
+        <v-alert v-model="showAlert" :text="t('error.form')" class="alertError" type="error"/>
+        <v-alert v-model="showBackendError" :text="t(backendError, {email: email})" class="alertError"
+                 type="error"/>
         <v-form v-model="formValid" validate-on="blur" @submit.prevent="submitForm">
-            <v-text-field name="name" v-model="name" :rules="nameRules" :label="t('name')"/>
-            <v-text-field name="firstName" v-model="firstName" :rules="firstNameRules" :label="t('firstName')"/>
-            <v-text-field name="email" type="email" v-model="email" :rules="emailRules" :label="t('email')"/>
-            <v-text-field name="password" type="password" v-model="password" :rules="passwordRules"
-                          :label="t('password')"/>
-            <v-text-field name="repeatPassword" type="password" v-model="repeatPassword"
-                          :rules="repeatPasswordRules" :label="t('repeatPassword')"/>
+            <v-text-field v-model="name" :label="t('name')" :rules="nameRules" name="name"/>
+            <v-text-field v-model="firstName" :label="t('firstName')" :rules="firstNameRules" name="firstName"/>
+            <v-text-field v-model="email" :label="t('email')" :rules="emailRules" name="email" type="email"/>
+            <v-text-field v-model="password" :label="t('password')" :rules="passwordRules" name="password"
+                          type="password"/>
+            <v-text-field v-model="repeatPassword" :label="t('repeatPassword')" :rules="repeatPasswordRules"
+                          name="repeatPassword" type="password"/>
             <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('submit') }}</v-btn>
         </v-form>
     </template>
 
     <template v-if="successCreate">
-        <v-alert v-model="successCreate" type="success" :text="t('createAccount.success')"/>
+        <v-alert v-model="successCreate" :text="t('createAccount.success')" type="success"/>
     </template>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useI18n} from "vue-i18n";
 import {computed, ref, watch} from "vue";
 import useRules from "../../compositionfunctions/rules.ts";
 import axiosServer from "../../axios/axiosServer.ts";
 import * as validator from "validator";
-import useGoogleRecaptcha from "../../compositionfunctions/googleRecaptcha.ts";
 
 const {t} = useI18n({useScope: "global"});
 const {notEmpty, isEmail, isStrongPassword, isSamePassword} = useRules();
-const {getToken} = useGoogleRecaptcha();
 
 const formValid = ref();
 const firstSubmit = ref(false);
@@ -65,7 +63,7 @@ const submitForm = async () => {
         return;
     }
 
-    const token = await getToken('CREATE ACCOUNT');
+    //const token = await getToken('CREATE ACCOUNT');
 
     try {
         await axiosServer.post('/user', {

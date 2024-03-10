@@ -2,7 +2,7 @@ import IProductOptionDiscountRequester from "../requesters/IProductOptionDiscoun
 import ProductOptionDiscountDS from "../models/datastores/ProductOptionDiscountDS";
 import ProductOptionDiscountVM from "../models/viewmodels/ProductOptionDiscountVM";
 import IProductOptionDiscountDataGateway from "../../database/gateways/IProductOptionDiscountDataGateway";
-import ProductOptionDiscountEntity from "../../database/entities/ProductOptionDiscountEntity";
+import PercentCalculator from "../utils/PercentCalculator";
 
 export default class ProductOptionDiscountFacade implements IProductOptionDiscountRequester {
     private readonly productOptionDiscountDataGateway: IProductOptionDiscountDataGateway;
@@ -13,14 +13,16 @@ export default class ProductOptionDiscountFacade implements IProductOptionDiscou
 
     public async addProductOptionDiscount(productOptionDiscountDs: ProductOptionDiscountDS): Promise<void> {
         const now = new Date();
-        if(!productOptionDiscountDs.getStartDate() || !productOptionDiscountDs.getEndDate()){
+        if (!productOptionDiscountDs.getStartDate() || !productOptionDiscountDs.getEndDate()) {
             return;
         }
 
-        if(productOptionDiscountDs.getStartDate() < now
-            || productOptionDiscountDs.getEndDate() < now
-            || productOptionDiscountDs.getEndDate() <= productOptionDiscountDs.getStartDate()){
-            throw new Error('error.date');
+        if (productOptionDiscountDs.getStartDate() < now
+            || productOptionDiscountDs.getEndDate() < now) {
+            throw new Error('error.date.past');
+        }
+        if (productOptionDiscountDs.getEndDate() <= productOptionDiscountDs.getStartDate()) {
+            throw new Error('error.date.startAfter');
         }
 
         await this.productOptionDiscountDataGateway.addProductOptionDiscount(productOptionDiscountDs);
@@ -34,15 +36,20 @@ export default class ProductOptionDiscountFacade implements IProductOptionDiscou
     public async getDiscountsForProductOption(productOptionId: string): Promise<Array<ProductOptionDiscountVM>> {
         const discountsReturn = new Array<ProductOptionDiscountVM>();
         const productDiscounts = await this.productOptionDiscountDataGateway.getDiscountsForProductOption(productOptionId);
-        for(const productDiscount of productDiscounts){
+        for (const productDiscount of productDiscounts) {
             const startDate = productDiscount.getStartDate().toISOString();
             const endDate = productDiscount.getEndDate().toISOString();
             let deletedAtDate = null;
-            if(productDiscount.getDeletedAt()){
+            if (productDiscount.getDeletedAt()) {
                 deletedAtDate = productDiscount.getDeletedAt().toISOString();
             }
-            discountsReturn.push(new ProductOptionDiscountVM(productDiscount.getProductOptionDiscountId(), productDiscount.getProductOptionId(), productDiscount.getGroupId(), productDiscount.getPercent(), startDate, endDate, deletedAtDate));
+            const percent = `${Number(productDiscount.getPercent()).toFixed(2)}%`;
+            discountsReturn.push(new ProductOptionDiscountVM(productDiscount.getProductOptionDiscountId(), productDiscount.getProductOptionId(), productDiscount.getGroupId(), percent, startDate, endDate, deletedAtDate));
         }
         return discountsReturn;
+    }
+
+    public calculateDiscountPercent(originalPrice: number, discountPrice: number): number {
+        return PercentCalculator.calculatePercentBasedOnPrices(originalPrice, discountPrice);
     }
 }

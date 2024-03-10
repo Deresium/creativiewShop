@@ -18,7 +18,7 @@ class ProductOptionDiscountDataMapper {
         return __awaiter(this, void 0, void 0, function* () {
             yield ProductOptionDiscountEntity_1.default.create({
                 productOptionId: productOptionDiscountDs.getProductOptionId(),
-                groupId: productOptionDiscountDs.getPercent(),
+                groupId: productOptionDiscountDs.getGroupId(),
                 percent: productOptionDiscountDs.getPercent(),
                 startDate: productOptionDiscountDs.getStartDate(),
                 endDate: productOptionDiscountDs.getEndDate()

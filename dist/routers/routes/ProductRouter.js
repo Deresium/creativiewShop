@@ -57,6 +57,11 @@ class ProductRouter extends ApplicationRouter_1.default {
             const products = yield this.productRequester.getAllProduct(customerId);
             res.status(200).send(products);
         }));
+        this.getRouter().get('/productListAdmin', this.onlyAdminStoreMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const customerId = req.customer.getCustomerId();
+            const products = yield this.productRequester.getListAdminProducts(customerId);
+            res.status(200).send(products);
+        }));
     }
 }
 exports.default = ProductRouter;

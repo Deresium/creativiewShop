@@ -51,6 +51,18 @@ class ProductOptionPriceDataMapper {
             }));
         });
     }
+    getLastPriceForProductOption(productOptionId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductOptionPriceEntity_1.default.findOne({
+                where: {
+                    productOptionId: productOptionId,
+                    endDate: {
+                        [sequelize_1.Op.eq]: null
+                    }
+                }
+            });
+        });
+    }
 }
 exports.default = ProductOptionPriceDataMapper;
 //# sourceMappingURL=ProductOptionPriceDataMapper.js.map

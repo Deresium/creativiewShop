@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import {useI18n} from "vue-i18n";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import ManufacturerVM from "../../viewmodels/ManufacturerVM.ts";
 import ManufacturerRequester from "../../requesters/ManufacturerRequester.ts";
 import axiosServer from "../../axios/axiosServer.ts";
@@ -36,7 +36,7 @@ const {t} = useI18n({useScope: "global"});
 
 const emit = defineEmits(['deleteSuccess', 'showEditOverlay']);
 
-const headers = ref([
+const headers = computed(() => [
     {title: t('name'), value: 'name'},
     {title: t('action'), value: 'actions'}
 ]);

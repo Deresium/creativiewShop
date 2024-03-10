@@ -12,4 +12,9 @@ export default class ProductRequester {
         const response = await axiosServer.get('/product');
         return ProductParser.parseProducts(response.data);
     }
+
+    public static async requestProductsAdminList(): Promise<any> {
+        const response = await axiosServer.get('/productListAdmin');
+        return response.data;
+    }
 }

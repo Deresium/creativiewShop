@@ -15,6 +15,8 @@
             @add-price-success="handleAddPriceSuccess"
             @add-picture-success="handleAddPictureSuccess"
             @delete-picture-success="handleDeletePictureSuccess"
+            @add-discount-success="handleAddDiscountSuccess"
+            @delete-discount-success="handleDeleteDiscountSuccess"
         />
     </div>
 
@@ -101,7 +103,17 @@ const handleAddPictureSuccess = () => {
 const handleDeletePictureSuccess = () => {
     textSnackbar.value = t('deletePictureOption.success');
     showSnackbar.value = true;
-}
+};
+
+const handleAddDiscountSuccess = () => {
+    textSnackbar.value = t('addDiscountOption.success');
+    showSnackbar.value = true;
+};
+
+const handleDeleteDiscountSuccess = () => {
+    textSnackbar.value = t('deleteDiscountOption.success');
+    showSnackbar.value = true;
+};
 
 </script>
 

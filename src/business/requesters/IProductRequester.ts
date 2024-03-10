@@ -1,5 +1,6 @@
 import ProductUpdateDS from "../models/datastores/ProductUpdateDS";
 import ProductVM from "../models/viewmodels/ProductVM";
+import ProductListAdminVM from "../models/viewmodels/ProductListAdminVM";
 
 export default interface IProductRequester {
     getAllProduct(customerId: number): Promise<Array<ProductVM>>;
@@ -13,4 +14,6 @@ export default interface IProductRequester {
     deleteProduct(productId: string, customerId: number): Promise<void>;
 
     createProduct(customerId: number): Promise<string>;
+
+    getListAdminProducts(customerId: number): Promise<Array<ProductListAdminVM>>
 }

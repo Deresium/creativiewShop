@@ -1,6 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 import ManufacturerEntity from "./ManufacturerEntity";
+import ProductOptionEntity from "./ProductOptionEntity";
 
 export default class ProductEntity extends Model {
     private productId: string;
@@ -12,6 +13,7 @@ export default class ProductEntity extends Model {
     private descriptionFr: string;
     private descriptionEn: string;
     private deletedAt: Date;
+    private productOptions: Array<ProductOptionEntity>;
 
 
     public getProductId(): string {
@@ -55,6 +57,10 @@ export default class ProductEntity extends Model {
     public getDescriptionEn(): string {
         return this.descriptionEn;
     }
+
+    public getProductOptions() {
+        return this.productOptions;
+    }
 }
 
 ProductEntity.init({
@@ -76,4 +82,10 @@ ProductEntity.hasOne(ManufacturerEntity, {
     sourceKey: 'manufacturerId',
     foreignKey: 'manufacturerId',
     as: 'manufacturer'
+});
+
+ProductEntity.hasMany(ProductOptionEntity, {
+    sourceKey: 'productId',
+    foreignKey: 'productId',
+    as: 'productOptions'
 });

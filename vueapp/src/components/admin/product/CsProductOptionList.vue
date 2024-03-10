@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import {useI18n} from "vue-i18n";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useRoute} from "vue-router";
 import ProductOptionVM from "../../../viewmodels/ProductOptionVM.ts";
 import ProductOptionRequester from "../../../requesters/ProductOptionRequester.ts";
@@ -40,7 +40,7 @@ const productIdString = String(productId);
 
 const emit = defineEmits(['deleteSuccess', 'editProductOption']);
 
-const headers = ref([
+const headers = computed(() => [
     {title: t('code'), value: 'code'},
     {title: t('nameFr'), value: 'nameFr'},
     {title: t('nameEn'), value: 'nameEn'},
@@ -48,7 +48,7 @@ const headers = ref([
     {title: t('weight'), value: 'weight'},
     {title: t('active'), value: 'active'},
     {title: t('preorder'), value: 'preorder'},
-    {title: t('actions'), value: 'actions'}
+    {title: t('action'), value: 'actions'}
 ]);
 
 const askConfirmDelete = ref(false);

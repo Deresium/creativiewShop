@@ -13,4 +13,6 @@ export default interface IProductDataGateway {
     deleteProduct(productId: string, customerId: number): Promise<void>;
 
     createProduct(customerId: number): Promise<string>;
+
+    getAllProductsAdmin(customerId: number): Promise<Array<ProductEntity>>;
 }

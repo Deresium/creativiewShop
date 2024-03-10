@@ -10,25 +10,26 @@ export default class CurrencyRateRouter extends ApplicationRouter {
     constructor(currencyRateRequester: ICurrencyRateRequester, onlyAdminMiddleware: RequestHandler) {
         super();
         this.currencyRateRequester = currencyRateRequester;
+        this.onlyAdminMiddleware = onlyAdminMiddleware;
         this.initRoutes();
     }
 
     public initRoutes() {
-        this.getRouter().post('/currencyRate/:currencyCode', this.onlyAdminMiddleware, async(req: any, res: any) => {
+        this.getRouter().post('/currencyRate/:currencyCode', this.onlyAdminMiddleware, async (req: any, res: any) => {
             const currencyCode = String(req.params.currencyCode);
             const rate = req.body.rate;
             const customerId = req.customer.getCustomerId();
             await this.currencyRateRequester.addCurrencyRate(currencyCode, rate, customerId);
         });
 
-        this.getRouter().get('/currencyRate/:currencyCode', this.onlyAdminMiddleware, async(req: any, res: any) => {
+        this.getRouter().get('/currencyRate/:currencyCode', this.onlyAdminMiddleware, async (req: any, res: any) => {
             const currencyCode = String(req.params.currencyCode);
             const customerId = req.customer.getCustomerId();
             const currencyRates = await this.currencyRateRequester.getCurrencyRates(currencyCode, customerId);
             res.send(currencyRates);
         });
 
-        this.getRouter().get('/currency', this.onlyAdminMiddleware, async(req: any, res: any) => {
+        this.getRouter().get('/currency', this.onlyAdminMiddleware, async (req: any, res: any) => {
             const currency = await this.currencyRateRequester.getCurrency();
             res.send(currency);
         });

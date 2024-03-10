@@ -18,6 +18,9 @@ class ProductOptionDiscountEntity extends sequelize_1.Model {
     getPercent() {
         return this.percent;
     }
+    getMinQuantity() {
+        return this.minQuantity;
+    }
     getStartDate() {
         return this.startDate;
     }
@@ -34,6 +37,7 @@ ProductOptionDiscountEntity.init({
     productOptionId: sequelize_1.DataTypes.BIGINT,
     groupId: sequelize_1.DataTypes.BIGINT,
     percent: sequelize_1.DataTypes.DECIMAL,
+    minQuantity: sequelize_1.DataTypes.INTEGER,
     startDate: sequelize_1.DataTypes.DATE,
     endDate: sequelize_1.DataTypes.DATE,
     deletedAt: sequelize_1.DataTypes.DATE

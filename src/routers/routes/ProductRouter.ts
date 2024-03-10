@@ -54,8 +54,13 @@ export default class ProductRouter extends ApplicationRouter {
 
         this.getRouter().get('/product', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
-
             const products = await this.productRequester.getAllProduct(customerId);
+            res.status(200).send(products);
+        });
+
+        this.getRouter().get('/productListAdmin', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const products = await this.productRequester.getListAdminProducts(customerId);
             res.status(200).send(products);
         });
     }

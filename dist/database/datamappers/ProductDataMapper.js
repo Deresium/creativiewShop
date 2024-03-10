@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ProductEntity_1 = __importDefault(require("../entities/ProductEntity"));
 const sequelize_1 = require("sequelize");
 const ManufacturerEntity_1 = __importDefault(require("../entities/ManufacturerEntity"));
+const ProductOptionEntity_1 = __importDefault(require("../entities/ProductOptionEntity"));
+const ProductOptionPriceEntity_1 = __importDefault(require("../entities/ProductOptionPriceEntity"));
 class ProductDataMapper {
     createProduct(customerId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,7 +47,7 @@ class ProductDataMapper {
                         [sequelize_1.Op.eq]: null
                     }
                 },
-                include: { model: ManufacturerEntity_1.default, as: 'manufacturer' }
+                include: { model: ManufacturerEntity_1.default, as: 'manufacturer', required: false }
             });
         });
     }
@@ -56,7 +58,32 @@ class ProductDataMapper {
                     customerId: customerId,
                     productId: productId
                 },
-                include: { model: ManufacturerEntity_1.default, as: 'manufacturer' }
+                include: { model: ManufacturerEntity_1.default, as: 'manufacturer', required: false }
+            });
+        });
+    }
+    getAllProductsAdmin(customerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductEntity_1.default.findAll({
+                where: {
+                    customerId: customerId,
+                    deletedAt: {
+                        [sequelize_1.Op.eq]: null
+                    }
+                },
+                include: [{
+                        model: ManufacturerEntity_1.default, as: 'manufacturer', required: false
+                    }, {
+                        model: ProductOptionEntity_1.default,
+                        as: 'productOptions',
+                        where: { deletedAt: { [sequelize_1.Op.eq]: null } },
+                        include: [{
+                                model: ProductOptionPriceEntity_1.default,
+                                as: 'productOptionPrices',
+                                required: false,
+                                where: { endDate: { [sequelize_1.Op.eq]: null } }
+                            }]
+                    }],
             });
         });
     }

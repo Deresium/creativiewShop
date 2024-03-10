@@ -6,6 +6,7 @@
             <v-tab value="category">{{ t('category') }}</v-tab>
             <v-tab value="price">{{ t('price') }}</v-tab>
             <v-tab value="picture">{{ t('picture') }}</v-tab>
+            <v-tab value="discount">{{ t('discount') }}</v-tab>
         </v-tabs>
         <v-window v-model="tab" :touch="false" class="window">
             <v-window-item value="info">
@@ -25,6 +26,11 @@
                                         @add-picture-success="handleAddPictureSuccess"
                                         @delete-picture-success="handleDeletePictureSuccess"/>
             </v-window-item>
+            <v-window-item value="discount">
+                <CsProductOptionDiscountList :key="counterRefresh" :product-option-id="productOptionId"
+                                             @add-discount-success="handleAddDiscountSuccess"
+                                             @delete-discount-success="handleDeleteDiscountSuccess"/>
+            </v-window-item>
         </v-window>
     </div>
 </template>
@@ -40,6 +46,7 @@ import CsProductOptionPicture from "./CsProductOptionPicture.vue";
 import ProductOptionRequester from "../../../requesters/ProductOptionRequester.ts";
 import {useRoute} from "vue-router";
 import ProductOptionVM from "../../../viewmodels/ProductOptionVM.ts";
+import CsProductOptionDiscountList from "./CsProductOptionDiscountList.vue";
 
 const {t} = useI18n({useScope: 'global'});
 
@@ -62,7 +69,7 @@ ProductOptionRequester.requestProductOption(productIdString, props.productOption
     productOption.value = response;
 });
 
-const emit = defineEmits(['updateInfoSuccess', 'updateCategorySuccess', 'addPriceSuccess', 'addPictureSuccess', 'deletePictureSuccess']);
+const emit = defineEmits(['updateInfoSuccess', 'updateCategorySuccess', 'addPriceSuccess', 'addPictureSuccess', 'deletePictureSuccess', 'addDiscountSuccess', 'deleteDiscountSuccess']);
 
 const tab = ref('info');
 
@@ -89,6 +96,16 @@ const handleAddPictureSuccess = () => {
 const handleDeletePictureSuccess = () => {
     counterRefresh.value++;
     emit('deletePictureSuccess');
+};
+
+const handleAddDiscountSuccess = () => {
+    counterRefresh.value++;
+    emit('addDiscountSuccess');
+};
+
+const handleDeleteDiscountSuccess = () => {
+    counterRefresh.value++;
+    emit('deleteDiscountSuccess');
 };
 
 </script>

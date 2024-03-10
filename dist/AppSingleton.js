@@ -47,6 +47,15 @@ const ProductOptionPriceFacade_1 = __importDefault(require("./business/facades/P
 const ProductOptionPriceDataMapper_1 = __importDefault(require("./database/datamappers/ProductOptionPriceDataMapper"));
 const ProductOptionCategoryFacade_1 = __importDefault(require("./business/facades/ProductOptionCategoryFacade"));
 const ProductOptionPictureFacade_1 = __importDefault(require("./business/facades/ProductOptionPictureFacade"));
+const ProductOptionDiscountDataMapper_1 = __importDefault(require("./database/datamappers/ProductOptionDiscountDataMapper"));
+const CurrencyRateDataMapper_1 = __importDefault(require("./database/datamappers/CurrencyRateDataMapper"));
+const ProductOptionDiscountFacade_1 = __importDefault(require("./business/facades/ProductOptionDiscountFacade"));
+const CurrencyRateFacade_1 = __importDefault(require("./business/facades/CurrencyRateFacade"));
+const CurrencyRateRouter_1 = __importDefault(require("./routers/routes/CurrencyRateRouter"));
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const GroupDataMapper_1 = __importDefault(require("./database/datamappers/GroupDataMapper"));
+const GroupFacade_1 = __importDefault(require("./business/facades/GroupFacade"));
+const GroupRouter_1 = __importDefault(require("./routers/routes/GroupRouter"));
 class AppSingleton {
     constructor() {
         this.expressApp = (0, express_1.default)();
@@ -76,6 +85,9 @@ class AppSingleton {
         const productOptionPriceDataMapper = new ProductOptionPriceDataMapper_1.default();
         const productOptionCategoryDataMapper = new ProductOptionCategoryDataMapper_1.default();
         const productOptionPictureDataMapper = new ProductOptionPictureDataMapper_1.default();
+        const productOptionDiscountDataMapper = new ProductOptionDiscountDataMapper_1.default();
+        const currencyRateDataMapper = new CurrencyRateDataMapper_1.default();
+        const groupDataMapper = new GroupDataMapper_1.default();
         const customerFacade = new CustomerFacade_1.default(customerDataMapper);
         const userGroupFacade = new UserGroupFacade_1.default(userGroupDataMapper);
         const userFacade = new UserFacade_1.default(userDataMapper, userGroupFacade);
@@ -87,9 +99,21 @@ class AppSingleton {
         const productOptionPriceFacade = new ProductOptionPriceFacade_1.default(productOptionPriceDataMapper);
         const productOptionCategoryFacade = new ProductOptionCategoryFacade_1.default(productOptionCategoryDataMapper);
         const productOptionPictureFacade = new ProductOptionPictureFacade_1.default(productOptionPictureDataMapper, fileDataMapper);
+        const productOptionDiscountFacade = new ProductOptionDiscountFacade_1.default(productOptionDiscountDataMapper);
+        const currencyRateFacade = new CurrencyRateFacade_1.default(currencyRateDataMapper);
+        const groupFacade = new GroupFacade_1.default(groupDataMapper);
         CustomerCacheSingleton_1.default.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
         });
+        // rate-limiting
+        const limiter = (0, express_rate_limit_1.default)({
+            windowMs: 60 * 1000, // 1 minutes
+            limit: 100,
+            standardHeaders: 'draft-7',
+            legacyHeaders: false,
+            message: ('rateLimitReached')
+        });
+        this.expressApp.use(limiter);
         if (process.env.NODE_ENV === 'production') {
             this.expressApp.use(new RedirectHttpsMiddleware_1.default().getRequestHandler());
         }
@@ -112,7 +136,9 @@ class AppSingleton {
         this.expressApp.use('/api', new CategoryRouter_1.default(categoryFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new ManufacturerRouter_1.default(manufacturerFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new ProductRouter_1.default(productFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new ProductOptionRouter_1.default(productOptionFacade, productOptionPriceFacade, productOptionCategoryFacade, productOptionPictureFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductOptionRouter_1.default(productOptionFacade, productOptionPriceFacade, productOptionCategoryFacade, productOptionPictureFacade, productOptionDiscountFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new CurrencyRateRouter_1.default(currencyRateFacade, onlyAdminMiddleware).getRouter());
+        this.expressApp.use('/api', new GroupRouter_1.default(groupFacade, onlyAdminMiddleware).getRouter());
     }
 }
 exports.default = AppSingleton;

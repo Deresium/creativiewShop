@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductOptionPriceVM_1 = __importDefault(require("../models/viewmodels/ProductOptionPriceVM"));
+const PercentCalculator_1 = __importDefault(require("../utils/PercentCalculator"));
 class ProductOptionPriceFacade {
     constructor(productOptionPriceDataGateway) {
         this.productOptionPriceDataGateway = productOptionPriceDataGateway;
@@ -30,7 +31,7 @@ class ProductOptionPriceFacade {
                 if (price.getEndDate()) {
                     endDate = price.getEndDate().toISOString();
                 }
-                pricesReturn.push(new ProductOptionPriceVM_1.default(startDate, endDate, price.getPrice()));
+                pricesReturn.push(new ProductOptionPriceVM_1.default(startDate, endDate, Number(price.getPrice()).toFixed(2)));
             }
             return pricesReturn;
         });
@@ -38,6 +39,25 @@ class ProductOptionPriceFacade {
     updatePrice(productOptionId, price) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.productOptionPriceDataGateway.updatePrice(productOptionId, price);
+        });
+    }
+    getLastPriceForProductOption(productOptionId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const price = yield this.productOptionPriceDataGateway.getLastPriceForProductOption(productOptionId);
+            if (price) {
+                return Number(price.getPrice()).toFixed(2);
+            }
+            return null;
+        });
+    }
+    calculatePercentForProductOption(productOptionId, discountPrice) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const price = yield this.productOptionPriceDataGateway.getLastPriceForProductOption(productOptionId);
+            if (!price.getPrice() || !discountPrice) {
+                return null;
+            }
+            const percent = PercentCalculator_1.default.calculatePercentBasedOnPrices(price.getPrice(), discountPrice);
+            return percent.toFixed(2);
         });
     }
 }

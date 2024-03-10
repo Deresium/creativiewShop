@@ -119,27 +119,44 @@ export default class ProductOptionRouter extends ApplicationRouter {
             res.send(productOptionPicturesId);
         });
 
-        this.getRouter().post('/product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().post('/product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const groupId = req.body.groupId;
             const percent = req.body.percent;
-            const startDate = req.body.startDate;
-            const endDate = req.body.endDate;
+            const startDate = new Date(req.body.startDate);
+            const endDate = new Date(req.body.endDate);
             const productOptionDiscount = new ProductOptionDiscountDS(productOptionId, groupId, percent, startDate, endDate);
-            await this.productOptionDiscountRequester.addProductOptionDiscount(productOptionDiscount);
-            res.send();
+            try {
+                await this.productOptionDiscountRequester.addProductOptionDiscount(productOptionDiscount);
+                res.send();
+            } catch (error: any) {
+                res.status(400).send(error.message);
+            }
         });
 
-        this.getRouter().delete('/product/:productId/productOption/:productOptionId/discount/:productOptionDiscountId', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().delete('/product/:productId/productOption/:productOptionId/discount/:productOptionDiscountId', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productOptionDiscountId = String(req.params.productOptionDiscountId);
             await this.productOptionDiscountRequester.deleteProductOptionDiscount(productOptionDiscountId);
             res.send();
         });
 
-        this.getRouter().get(' /product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const discounts = await this.productOptionDiscountRequester.getDiscountsForProductOption(productOptionId);
             res.send(discounts);
+        });
+
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/percentCalculator', async (req: any, res: any) => {
+            const productOptionId = String(req.params.productOptionId);
+            const discountPrice = Number(req.query.discountPrice);
+            const percent = await this.productOptionPriceRequester.calculatePercentForProductOption(productOptionId, discountPrice);
+            res.send({percent: percent});
+        });
+
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/lastPrice', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
+            const productOptionId = String(req.params.productOptionId);
+            const price = await this.productOptionPriceRequester.getLastPriceForProductOption(productOptionId);
+            res.send({price: price});
         });
     }
 }

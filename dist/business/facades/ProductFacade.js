@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductVM_1 = __importDefault(require("../models/viewmodels/ProductVM"));
+const ProductListAdminVM_1 = __importDefault(require("../models/viewmodels/ProductListAdminVM"));
+const ProductOptionListAdminVM_1 = __importDefault(require("../models/viewmodels/ProductOptionListAdminVM"));
 class ProductFacade {
     constructor(productDataGateway) {
         this.productDataGateway = productDataGateway;
@@ -49,8 +51,25 @@ class ProductFacade {
             yield this.productDataGateway.updateProduct(productUpdateDS);
         });
     }
+    getListAdminProducts(customerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const products = yield this.productDataGateway.getAllProductsAdmin(customerId);
+            return products.map(product => this.productEntityToProductListAdminVM(product));
+        });
+    }
     productEntityToProductVM(productEntity) {
         return new ProductVM_1.default(productEntity.getProductId(), productEntity.getCustomerId(), productEntity.getManufacturerId(), productEntity.getManufacturerName(), productEntity.getCode(), productEntity.getNameFr(), productEntity.getNameEn(), productEntity.getDescriptionFr(), productEntity.getDescriptionEn());
+    }
+    productEntityToProductListAdminVM(productEntity) {
+        const productOptions = new Array();
+        for (const productOption of productEntity.getProductOptions()) {
+            let price = null;
+            if (productOption.getListPrices() && productOption.getListPrices().length === 1) {
+                price = Number(productOption.getListPrices()[0].getPrice()).toFixed(2);
+            }
+            productOptions.push(new ProductOptionListAdminVM_1.default(productOption.getNameFr(), productOption.getActive(), productOption.getStock(), price));
+        }
+        return new ProductListAdminVM_1.default(productEntity.getProductId(), productEntity.getCustomerId(), productEntity.getManufacturerId(), productEntity.getManufacturerName(), productEntity.getCode(), productEntity.getNameFr(), productEntity.getNameEn(), productEntity.getDescriptionFr(), productEntity.getDescriptionEn(), productOptions);
     }
 }
 exports.default = ProductFacade;

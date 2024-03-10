@@ -39,4 +39,14 @@ export default class ProductOptionPriceDataMapper implements IProductOptionPrice
         });
     }
 
+    public async getLastPriceForProductOption(productOptionId: string): Promise<ProductOptionPriceEntity> {
+        return await ProductOptionPriceEntity.findOne({
+            where: {
+                productOptionId: productOptionId,
+                endDate: {
+                    [Op.eq]: null
+                }
+            }
+        });
+    }
 }

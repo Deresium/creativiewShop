@@ -15,13 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ApplicationRouter_1 = __importDefault(require("./ApplicationRouter"));
 const ProductOptionUpdateDS_1 = __importDefault(require("../../business/models/datastores/ProductOptionUpdateDS"));
 const multer_1 = __importDefault(require("multer"));
+const ProductOptionDiscountDS_1 = __importDefault(require("../../business/models/datastores/ProductOptionDiscountDS"));
 class ProductOptionRouter extends ApplicationRouter_1.default {
-    constructor(productOptionRequester, productOptionPriceRequester, productOptionCategoryRequester, productOptionPictureRequester, onlyAdminStoreMiddleware, checkProductOwnerMiddleware) {
+    constructor(productOptionRequester, productOptionPriceRequester, productOptionCategoryRequester, productOptionPictureRequester, productOptionDiscountRequester, onlyAdminStoreMiddleware, checkProductOwnerMiddleware) {
         super();
         this.productOptionRequester = productOptionRequester;
         this.productOptionPriceRequester = productOptionPriceRequester;
         this.productOptionCategoryRequester = productOptionCategoryRequester;
         this.productOptionPictureRequester = productOptionPictureRequester;
+        this.productOptionDiscountRequester = productOptionDiscountRequester;
         this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
         this.checkProductOwnerMiddleware = checkProductOwnerMiddleware;
         this.initRoutes();
@@ -100,6 +102,42 @@ class ProductOptionRouter extends ApplicationRouter_1.default {
             const productOptionId = String(req.params.productOptionId);
             const productOptionPicturesId = yield this.productOptionPictureRequester.getPicturesForProductOption(productOptionId);
             res.send(productOptionPicturesId);
+        }));
+        this.getRouter().post('/product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const groupId = req.body.groupId;
+            const percent = req.body.percent;
+            const startDate = new Date(req.body.startDate);
+            const endDate = new Date(req.body.endDate);
+            const productOptionDiscount = new ProductOptionDiscountDS_1.default(productOptionId, groupId, percent, startDate, endDate);
+            try {
+                yield this.productOptionDiscountRequester.addProductOptionDiscount(productOptionDiscount);
+                res.send();
+            }
+            catch (error) {
+                res.status(400).send(error.message);
+            }
+        }));
+        this.getRouter().delete('/product/:productId/productOption/:productOptionId/discount/:productOptionDiscountId', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionDiscountId = String(req.params.productOptionDiscountId);
+            yield this.productOptionDiscountRequester.deleteProductOptionDiscount(productOptionDiscountId);
+            res.send();
+        }));
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const discounts = yield this.productOptionDiscountRequester.getDiscountsForProductOption(productOptionId);
+            res.send(discounts);
+        }));
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/percentCalculator', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const discountPrice = Number(req.query.discountPrice);
+            const percent = yield this.productOptionPriceRequester.calculatePercentForProductOption(productOptionId, discountPrice);
+            res.send({ percent: percent });
+        }));
+        this.getRouter().get('/product/:productId/productOption/:productOptionId/lastPrice', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const productOptionId = String(req.params.productOptionId);
+            const price = yield this.productOptionPriceRequester.getLastPriceForProductOption(productOptionId);
+            res.send({ price: price });
         }));
     }
 }
