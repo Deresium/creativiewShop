@@ -43,8 +43,14 @@ export default class ProductOptionDiscountFacade implements IProductOptionDiscou
             if (productDiscount.getDeletedAt()) {
                 deletedAtDate = productDiscount.getDeletedAt().toISOString();
             }
-            const percent = `${Number(productDiscount.getPercent()).toFixed(2)}%`;
-            discountsReturn.push(new ProductOptionDiscountVM(productDiscount.getProductOptionDiscountId(), productDiscount.getProductOptionId(), productDiscount.getGroupId(), percent, startDate, endDate, deletedAtDate));
+            const percent = Number(productDiscount.getPercent());
+            const lastPrice = Number(productDiscount.getProductOption().getListPrices()[0].getPrice());
+            const discountPrice = PercentCalculator.calculateDiscountPriceBasedOnPercent(lastPrice, percent);
+            let groupName = null;
+            if(productDiscount.getGroup()){
+                groupName = productDiscount.getGroup().getName();
+            }
+            discountsReturn.push(new ProductOptionDiscountVM(productDiscount.getProductOptionDiscountId(), productDiscount.getProductOptionId(), groupName, `${percent.toFixed(2)}%`, lastPrice.toFixed(2), discountPrice.toFixed(2), startDate, endDate, deletedAtDate));
         }
         return discountsReturn;
     }

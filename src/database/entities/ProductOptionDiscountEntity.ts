@@ -1,10 +1,12 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import ProductOptionEntity from "./ProductOptionEntity";
+import GroupEntity from "./GroupEntity";
 
 export default class ProductOptionDiscountEntity extends Model {
     private productOptionDiscountId: string;
-    private productOptionId: string;
-    private groupId: string;
+    private productOption: ProductOptionEntity;
+    private group: GroupEntity;
     private percent: number;
     private minQuantity: number;
     private startDate: Date;
@@ -17,11 +19,25 @@ export default class ProductOptionDiscountEntity extends Model {
     }
 
     getProductOptionId(): string {
-        return this.productOptionId;
+        if(this.productOption) {
+            return this.productOption.getProductOptionId();
+        }
+        return null;
+    }
+
+    getProductOption() {
+        return this.productOption;
     }
 
     getGroupId(): string {
-        return this.groupId;
+        if(this.group){
+            return this.group.getGroupId();
+        }
+        return null;
+    }
+
+    getGroup(){
+        return this.group;
     }
 
     getPercent(): number {
@@ -57,4 +73,16 @@ ProductOptionDiscountEntity.init({
 }, {
     tableName: 'ProductOptionDiscount',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
+});
+
+ProductOptionDiscountEntity.hasOne(ProductOptionEntity, {
+    sourceKey: 'productOptionId',
+    foreignKey: 'productOptionId',
+    as: 'productOption'
+});
+
+ProductOptionDiscountEntity.hasOne(GroupEntity, {
+    sourceKey: 'groupId',
+    foreignKey: 'groupId',
+    as: 'group'
 });

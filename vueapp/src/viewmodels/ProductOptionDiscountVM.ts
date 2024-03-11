@@ -1,18 +1,22 @@
 export default class ProductOptionDiscountVM {
     private readonly productOptionDiscountId: string;
     private readonly productOptionId: string;
-    private readonly groupId: string;
+    private readonly groupName: string;
     private readonly percent: string;
+    private readonly lastPrice: string;
+    private readonly discountPrice: string;
     private readonly startDate: Date;
     private readonly endDate: Date;
     private readonly deletedAt: Date;
 
 
-    constructor(productOptionDiscountId: string, productOptionId: string, groupId: string, percent: string, startDate: Date, endDate: Date, deletedAt: Date) {
+    constructor(productOptionDiscountId: string, productOptionId: string, groupName: string, percent: string, lastPrice: string, discountPrice: string, startDate: Date, endDate: Date, deletedAt: Date) {
         this.productOptionDiscountId = productOptionDiscountId;
         this.productOptionId = productOptionId;
-        this.groupId = groupId;
+        this.groupName = groupName
         this.percent = percent;
+        this.lastPrice = lastPrice;
+        this.discountPrice = discountPrice;
         this.startDate = startDate;
         this.endDate = endDate;
         this.deletedAt = deletedAt;
@@ -27,12 +31,20 @@ export default class ProductOptionDiscountVM {
         return this.productOptionId;
     }
 
-    public getGroupId(): string {
-        return this.groupId;
+    public getGroupName(): string {
+        return this.groupName;
     }
 
     public getPercent(): string {
         return this.percent;
+    }
+
+    public getLastPrice(): string {
+        return this.lastPrice;
+    }
+
+    public getDiscountPrice(): string {
+        return this.discountPrice;
     }
 
     public getStartDate(): Date {

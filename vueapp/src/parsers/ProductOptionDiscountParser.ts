@@ -12,6 +12,6 @@ export default class ProductOptionDiscountParser {
         if (data.deletedAt) {
             deletedAt = new Date(data.deletedAt);
         }
-        return new ProductOptionDiscountVM(data.productOptionDiscountId, data.productOptionId, data.groupId, data.percent, startDate, endDate, deletedAt);
+        return new ProductOptionDiscountVM(data.productOptionDiscountId, data.productOptionId, data.groupName, data.percent, data.lastPrice, data.discountPrice, startDate, endDate, deletedAt);
     }
 }

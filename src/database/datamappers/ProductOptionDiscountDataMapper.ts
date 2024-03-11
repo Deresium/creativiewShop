@@ -1,6 +1,11 @@
 import IProductOptionDiscountDataGateway from "../gateways/IProductOptionDiscountDataGateway";
 import ProductOptionDiscountDS from "../../business/models/datastores/ProductOptionDiscountDS";
 import ProductOptionDiscountEntity from "../entities/ProductOptionDiscountEntity";
+import ProductEntity from "../entities/ProductEntity";
+import ProductOptionEntity from "../entities/ProductOptionEntity";
+import GroupEntity from "../entities/GroupEntity";
+import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
+import {Op} from "sequelize";
 
 export default class ProductOptionDiscountDataMapper implements IProductOptionDiscountDataGateway {
     public async addProductOptionDiscount(productOptionDiscountDs: ProductOptionDiscountDS): Promise<void> {
@@ -24,7 +29,13 @@ export default class ProductOptionDiscountDataMapper implements IProductOptionDi
         return await ProductOptionDiscountEntity.findAll({
             where: {
                 productOptionId: productOptionId
-            }
+            },
+            include: [
+                {model: GroupEntity, as: 'group', required: false},
+                {model: ProductOptionEntity, as: 'productOption', include: [{
+                    model: ProductOptionPriceEntity, as: 'productOptionPrices', where: {endDate: {[Op.eq]: null}}
+                }]
+            }]
         });
     }
 }
