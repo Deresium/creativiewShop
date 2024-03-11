@@ -35,7 +35,10 @@ export default class ProductOptionDiscountDataMapper implements IProductOptionDi
                 {model: ProductOptionEntity, as: 'productOption', include: [{
                     model: ProductOptionPriceEntity, as: 'productOptionPrices', where: {endDate: {[Op.eq]: null}}
                 }]
-            }]
+            }],
+            order: [
+                ['startDate', 'ASC']
+            ]
         });
     }
 }

@@ -68,6 +68,9 @@ export default class ProductDataMapper implements IProductDataGateway {
                     where: {endDate: {[Op.eq]: null}}
                 }]
             }],
+            order: [
+                ['productId', 'ASC NULLS FIRST']
+            ]
         });
     }
 
