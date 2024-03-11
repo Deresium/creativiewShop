@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class ProductOptionVM {
-    constructor(productOptionId, productId, nameFr, nameEn, code, stock, active, featured, click, weight, preorder) {
+    constructor(productOptionId, productId, nameFr, nameEn, code, stock, active, featured, click, weight, preorder, price) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.nameFr = nameFr;
@@ -13,6 +13,7 @@ class ProductOptionVM {
         this.click = click;
         this.weight = weight;
         this.preorder = preorder;
+        this.price = price;
     }
 }
 exports.default = ProductOptionVM;

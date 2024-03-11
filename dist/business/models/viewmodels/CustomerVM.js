@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class CustomerVM {
-    constructor(customerId, name, dnsName, storeProtectionCode, firstColor, secondColor, thirdColor) {
+    constructor(customerId, name, dnsName, storeProtectionCode, firstColor, secondColor, thirdColor, currencyCode, currencySymbol) {
         this.customerId = customerId;
         this.name = name;
         this.dnsName = dnsName;
@@ -9,6 +9,8 @@ class CustomerVM {
         this.firstColor = firstColor;
         this.secondColor = secondColor;
         this.thirdColor = thirdColor;
+        this.currencyCode = currencyCode;
+        this.currencySymbol = currencySymbol;
     }
     getCustomerId() {
         return this.customerId;

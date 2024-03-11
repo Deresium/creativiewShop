@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const DatabaseSingleton_1 = __importDefault(require("../DatabaseSingleton"));
 class CurrencyRateEntity extends sequelize_1.Model {
+    getCurrencyRateId() {
+        return this.currencyRateId;
+    }
     getCurrencyCode() {
         return this.currencyCode;
     }

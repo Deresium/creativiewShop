@@ -33,7 +33,7 @@ class CurrencyRateFacade {
                 if (currencyRate.getEndDate()) {
                     endDate = currencyRate.getEndDate().toISOString();
                 }
-                currencyRateReturn.push(new CurrencyRateVM_1.default(currencyCode, currencyRate.getRate(), startDate, endDate));
+                currencyRateReturn.push(new CurrencyRateVM_1.default(currencyRate.getCurrencyRateId(), currencyCode, currencyRate.getRate(), startDate, endDate));
             }
             return currencyRateReturn;
         });

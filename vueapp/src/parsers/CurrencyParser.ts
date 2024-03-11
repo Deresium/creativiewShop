@@ -15,6 +15,6 @@ export default class CurrencyParser {
     }
 
     public static parseCurrencyRate(data: any): CurrencyRateVM {
-        return new CurrencyRateVM(data.currencyCode, data.rate, data.startDate, data.endDate);
+        return new CurrencyRateVM(data.currencyRateId, data.currencyCode, data.rate, data.startDate, data.endDate);
     }
 }

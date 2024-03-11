@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ProductOptionEntity_1 = __importDefault(require("../entities/ProductOptionEntity"));
 const sequelize_1 = require("sequelize");
 const ProductEntity_1 = __importDefault(require("../entities/ProductEntity"));
+const ProductOptionPriceEntity_1 = __importDefault(require("../entities/ProductOptionPriceEntity"));
 class ProductOptionDataMapper {
     createProductOption(productId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -65,7 +66,12 @@ class ProductOptionDataMapper {
                     deletedAt: {
                         [sequelize_1.Op.eq]: null
                     }
-                }
+                },
+                include: [{
+                        model: ProductOptionPriceEntity_1.default, as: 'productOptionPrices', where: {
+                            endDate: { [sequelize_1.Op.eq]: null }
+                        }
+                    }]
             });
         });
     }

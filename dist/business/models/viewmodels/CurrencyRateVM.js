@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class CurrencyRateVM {
-    constructor(currencyCode, rate, startDate, endDate) {
+    constructor(currencyRateId, currencyCode, rate, startDate, endDate) {
+        this.currencyRateId = currencyRateId;
         this.currencyCode = currencyCode;
         this.rate = rate;
         this.startDate = startDate;

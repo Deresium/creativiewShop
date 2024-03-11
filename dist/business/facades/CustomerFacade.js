@@ -24,7 +24,7 @@ class CustomerFacade {
         });
     }
     customerToVM(customerEntity) {
-        return new CustomerVM_1.default(customerEntity.getCustomerId(), customerEntity.getName(), customerEntity.getDnsName(), customerEntity.getStoreProtectionCode(), customerEntity.getFirstColor(), customerEntity.getSecondColor(), customerEntity.getThirdColor());
+        return new CustomerVM_1.default(customerEntity.getCustomerId(), customerEntity.getName(), customerEntity.getDnsName(), customerEntity.getStoreProtectionCode(), customerEntity.getFirstColor(), customerEntity.getSecondColor(), customerEntity.getThirdColor(), customerEntity.getCurrency().getCurrencyCode(), customerEntity.getCurrency().getSymbol());
     }
 }
 exports.default = CustomerFacade;

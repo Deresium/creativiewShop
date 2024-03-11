@@ -26,6 +26,7 @@ class CurrencyRateRouter extends ApplicationRouter_1.default {
             const rate = req.body.rate;
             const customerId = req.customer.getCustomerId();
             yield this.currencyRateRequester.addCurrencyRate(currencyCode, rate, customerId);
+            res.send();
         }));
         this.getRouter().get('/currencyRate/:currencyCode', this.onlyAdminMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const currencyCode = String(req.params.currencyCode);

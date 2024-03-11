@@ -18,13 +18,13 @@ export default class CurrencyRateFacade implements ICurrencyRateRequester {
     public async getCurrencyRates(currencyCode: string, customerId: number): Promise<Array<CurrencyRateVM>> {
         const currencyRateReturn = new Array<CurrencyRateVM>();
         const currencyRates = await this.currencyRateDataGateway.getCurrencyRates(currencyCode, customerId);
-        for(const currencyRate of currencyRates) {
+        for (const currencyRate of currencyRates) {
             let endDate: string = null;
             const startDate = currencyRate.getStartDate().toISOString();
-            if(currencyRate.getEndDate()){
+            if (currencyRate.getEndDate()) {
                 endDate = currencyRate.getEndDate().toISOString();
             }
-            currencyRateReturn.push(new CurrencyRateVM(currencyCode, currencyRate.getRate(), startDate, endDate));
+            currencyRateReturn.push(new CurrencyRateVM(currencyRate.getCurrencyRateId(), currencyCode, currencyRate.getRate(), startDate, endDate));
         }
         return currencyRateReturn;
     }
