@@ -9,7 +9,7 @@
         item-key="productId"
         items-per-page="10"
     >
-        <template v-slot:item.productOptions="{ item }">
+<!--        <template v-slot:item.productOptions="{ item }">
             <v-data-table
                 :headers="headersOption"
                 :items="item.getProductOptions()"
@@ -21,7 +21,7 @@
                     <v-icon :color="getColorBoolean(item.getActive())" icon="mdi-circle"/>
                 </template>
             </v-data-table>
-        </template>
+        </template>-->
 
         <template v-slot:item.actions="{ item }">
             <v-btn color="white" icon="mdi-pencil" size="25px" @click="goToEdit(item.getProductId())"/>
@@ -78,16 +78,16 @@ const headers = computed(() => [
     {title: t('nameFr'), value: 'nameFr'},
     {title: t('nameEn'), value: 'nameEn'},
     {title: t('manufacturer'), value: 'manufacturerName'},
-    {title: t('productOption'), value: 'productOptions'},
+    /*{title: t('productOption'), value: 'productOptions'},*/
     {title: t('action'), value: 'actions'}
 ]);
 
-const headersOption = computed(() => [
+/*const headersOption = computed(() => [
     {title: t('nameFr'), value: 'nameFr'},
     {title: t('active'), value: 'active'},
     {title: t('stock'), value: 'stock'},
     {title: t('price'), value: 'price'},
-]);
+]);*/
 
 const headersFlatOptions = computed(() => [
     {title: t('codeProduct'), value: 'codeProduct'},
