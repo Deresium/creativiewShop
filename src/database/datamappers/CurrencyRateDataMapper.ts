@@ -4,6 +4,7 @@ import DatabaseSingleton from "../DatabaseSingleton";
 import {Op, Transaction} from "sequelize";
 import {now} from "sequelize/types/utils";
 import CurrencyEntity from "../entities/CurrencyEntity";
+import CurrencyCustomerEntity from "../entities/CurrencyCustomerEntity";
 
 export default class CurrencyRateDataMapper implements ICurrencyRateDataGateway {
     public async addCurrencyRate(currencyCode: string, rate: number, customerId: number): Promise<void> {
@@ -40,10 +41,9 @@ export default class CurrencyRateDataMapper implements ICurrencyRateDataGateway 
         });
     }
 
-    public async getCurrency(): Promise<Array<CurrencyEntity>> {
-        return await CurrencyEntity.findAll();
+    public async getCustomerCurrency(customerId: number): Promise<Array<CurrencyCustomerEntity>> {
+        return await CurrencyCustomerEntity.findAll({
+           include: [{model: CurrencyEntity, as: 'currency'}]
+        });
     }
-
-
-
 }
