@@ -38,7 +38,11 @@ export default class ProductOptionFacade implements IProductOptionRequester {
     }
 
     private productOptionEntityToVM(productOption: ProductOptionEntity): ProductOptionVM {
+        let price = null;
+        if (productOption.getListPrices() && productOption.getListPrices()[0]) {
+            price = Number(productOption.getListPrices()[0].getPrice()).toFixed(2);
+        }
         return new ProductOptionVM(productOption.getProductOptionId(), productOption.getProductId(), productOption.getNameFr(), productOption.getNameEn(),
-            productOption.getCode(), productOption.getStock(), productOption.getActive(), productOption.getFeatured(), productOption.getClick(), productOption.getWeight(), productOption.getPreorder());
+            productOption.getCode(), productOption.getStock(), productOption.getActive(), productOption.getFeatured(), productOption.getClick(), productOption.getWeight(), productOption.getPreorder(), price);
     }
 }

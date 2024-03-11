@@ -3,6 +3,7 @@ import ProductOptionEntity from "../entities/ProductOptionEntity";
 import ProductOptionUpdateDS from "../../business/models/datastores/ProductOptionUpdateDS";
 import {Op} from "sequelize";
 import ProductEntity from "../entities/ProductEntity";
+import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
 
 export default class ProductOptionDataMapper implements IProductOptionDataGateway {
     public async createProductOption(productId: string): Promise<string> {
@@ -50,7 +51,12 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
                 deletedAt: {
                     [Op.eq]: null
                 }
-            }
+            },
+            include: [{
+                model: ProductOptionPriceEntity, as: 'productOptionPrices', where: {
+                    endDate: {[Op.eq]: null}
+                }
+            }]
         });
     }
 

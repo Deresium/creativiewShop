@@ -84,6 +84,9 @@ class ProductDataMapper {
                                 where: { endDate: { [sequelize_1.Op.eq]: null } }
                             }]
                     }],
+                order: [
+                    ['productId', 'ASC NULLS FIRST']
+                ]
             });
         });
     }

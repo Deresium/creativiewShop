@@ -1,5 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import CurrencyEntity from "./CurrencyEntity";
 
 export default class CustomerEntity extends Model {
     private customerId: number;
@@ -9,7 +10,7 @@ export default class CustomerEntity extends Model {
     private firstColor: string;
     private secondColor: string;
     private thirdColor: string;
-
+    private currency: CurrencyEntity;
 
     public getCustomerId(): number {
         return this.customerId;
@@ -39,6 +40,11 @@ export default class CustomerEntity extends Model {
     public getThirdColor(): string {
         return this.thirdColor;
     }
+
+
+    public getCurrency() {
+        return this.currency;
+    }
 }
 
 CustomerEntity.init({
@@ -48,8 +54,11 @@ CustomerEntity.init({
     storeProtectionCode: DataTypes.STRING,
     firstColor: DataTypes.STRING,
     secondColor: DataTypes.STRING,
-    thirdColor: DataTypes.STRING
+    thirdColor: DataTypes.STRING,
+    currencyCode: DataTypes.STRING
 }, {
     tableName: 'Customer',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
 });
+
+CustomerEntity.hasOne(CurrencyEntity, {sourceKey: 'currencyCode', foreignKey: 'currencyCode', as: 'currency'});

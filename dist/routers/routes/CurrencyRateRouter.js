@@ -34,7 +34,8 @@ class CurrencyRateRouter extends ApplicationRouter_1.default {
             res.send(currencyRates);
         }));
         this.getRouter().get('/currency', this.onlyAdminMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const currency = yield this.currencyRateRequester.getCurrency();
+            const customerId = req.customer.getCustomerId();
+            const currency = yield this.currencyRateRequester.getCurrency(customerId);
             res.send(currency);
         }));
     }

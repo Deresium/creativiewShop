@@ -38,10 +38,10 @@ class CurrencyRateFacade {
             return currencyRateReturn;
         });
     }
-    getCurrency() {
+    getCurrency(customerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const currencies = yield this.currencyRateDataGateway.getCurrency();
-            return currencies.map(currency => new CurrencyVM_1.default(currency.getCurrencyCode(), currency.getName(), currency.getSymbol()));
+            const currencies = yield this.currencyRateDataGateway.getCustomerCurrency(customerId);
+            return currencies.map(currency => new CurrencyVM_1.default(currency.getCurrency().getCurrencyCode(), currency.getCurrency().getName(), currency.getCurrency().getSymbol()));
         });
     }
 }

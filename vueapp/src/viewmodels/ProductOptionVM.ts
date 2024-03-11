@@ -10,9 +10,10 @@ export default class ProductOptionVM {
     private readonly click: string;
     private readonly weight: number;
     private readonly preorder: boolean;
+    private readonly price: string;
 
 
-    constructor(productOptionId: string, productId: string, nameFr: string, nameEn: string, code: string, stock: number, active: boolean, featured: boolean, click: string, weight: number, preorder: boolean) {
+    constructor(productOptionId: string, productId: string, nameFr: string, nameEn: string, code: string, stock: number, active: boolean, featured: boolean, click: string, weight: number, preorder: boolean, price: string) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.nameFr = nameFr;
@@ -24,6 +25,7 @@ export default class ProductOptionVM {
         this.click = click;
         this.weight = weight;
         this.preorder = preorder;
+        this.price = price;
     }
 
 
@@ -69,5 +71,9 @@ export default class ProductOptionVM {
 
     public getPreorder(): boolean {
         return this.preorder;
+    }
+
+    public getPrice(): string {
+        return this.price;
     }
 }

@@ -5,6 +5,15 @@
         item-key="productOptionId"
         items-per-page="10"
     >
+        <template #item.active="{ item }">
+            <v-icon :color="getColorBoolean(item.getActive())" icon="mdi-circle"/>
+        </template>
+        <template #item.preorder="{ item }">
+            <v-icon :color="getColorBoolean(item.getPreorder())" icon="mdi-circle"/>
+        </template>
+        <template #item.price="{ item }">
+            <template v-if="item.getPrice()">{{ `${item.getPrice()}${currencySymbol}` }}</template>
+        </template>
         <template v-slot:item.actions="{ item }">
             <v-btn color="white" icon="mdi-pencil" size="25px" @click="goToEdit(item.getProductOptionId())"/>
             <v-btn color="red" icon="mdi-delete-empty" size="25px"
@@ -32,6 +41,7 @@ import {useRoute} from "vue-router";
 import ProductOptionVM from "../../../viewmodels/ProductOptionVM.ts";
 import ProductOptionRequester from "../../../requesters/ProductOptionRequester.ts";
 import axiosServer from "../../../axios/axiosServer.ts";
+import useCustomer from "../../../compositionfunctions/customer.ts";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -48,8 +58,11 @@ const headers = computed(() => [
     {title: t('weight'), value: 'weight'},
     {title: t('active'), value: 'active'},
     {title: t('preorder'), value: 'preorder'},
+    {title: t('price'), value: 'price'},
     {title: t('action'), value: 'actions'}
 ]);
+
+const {currencySymbol} = useCustomer();
 
 const askConfirmDelete = ref(false);
 const tempProductOptionId = ref();
@@ -84,6 +97,13 @@ const handleRefuse = () => {
 
 const goToEdit = async (productOptionId: string) => {
     emit('editProductOption', productOptionId);
+};
+
+const getColorBoolean = (bool: boolean) => {
+    if (bool) {
+        return 'green';
+    }
+    return 'red';
 };
 
 </script>

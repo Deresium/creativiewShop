@@ -16,6 +16,7 @@ const CurrencyRateEntity_1 = __importDefault(require("../entities/CurrencyRateEn
 const DatabaseSingleton_1 = __importDefault(require("../DatabaseSingleton"));
 const sequelize_1 = require("sequelize");
 const CurrencyEntity_1 = __importDefault(require("../entities/CurrencyEntity"));
+const CurrencyCustomerEntity_1 = __importDefault(require("../entities/CurrencyCustomerEntity"));
 class CurrencyRateDataMapper {
     addCurrencyRate(currencyCode, rate, customerId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -52,9 +53,11 @@ class CurrencyRateDataMapper {
             });
         });
     }
-    getCurrency() {
+    getCustomerCurrency(customerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CurrencyEntity_1.default.findAll();
+            return yield CurrencyCustomerEntity_1.default.findAll({
+                include: [{ model: CurrencyEntity_1.default, as: 'currency' }]
+            });
         });
     }
 }

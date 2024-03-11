@@ -6,9 +6,11 @@ export default class CustomerVM {
     private readonly firstColor: string;
     private readonly secondColor: string;
     private readonly thirdColor: string;
+    private readonly currencyCode: string;
+    private readonly currencySymbol: string;
 
 
-    constructor(customerId: number, name: string, dnsName: string, storeProtectionCode: boolean, firstColor: string, secondColor: string, thirdColor: string) {
+    constructor(customerId: number, name: string, dnsName: string, storeProtectionCode: boolean, firstColor: string, secondColor: string, thirdColor: string, currencyCode: string, currencySymbol: string) {
         this.customerId = customerId;
         this.name = name;
         this.dnsName = dnsName;
@@ -16,6 +18,8 @@ export default class CustomerVM {
         this.firstColor = firstColor;
         this.secondColor = secondColor;
         this.thirdColor = thirdColor;
+        this.currencyCode = currencyCode;
+        this.currencySymbol = currencySymbol;
     }
 
 
@@ -46,5 +50,14 @@ export default class CustomerVM {
 
     public getThirdColor(): string {
         return this.thirdColor;
+    }
+
+
+    public getCurrencyCode(): string {
+        return this.currencyCode;
+    }
+
+    public getCurrencySymbol(): string {
+        return this.currencySymbol;
     }
 }

@@ -13,6 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductOptionDiscountEntity_1 = __importDefault(require("../entities/ProductOptionDiscountEntity"));
+const ProductOptionEntity_1 = __importDefault(require("../entities/ProductOptionEntity"));
+const GroupEntity_1 = __importDefault(require("../entities/GroupEntity"));
+const ProductOptionPriceEntity_1 = __importDefault(require("../entities/ProductOptionPriceEntity"));
+const sequelize_1 = require("sequelize");
 class ProductOptionDiscountDataMapper {
     addProductOptionDiscount(productOptionDiscountDs) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -38,7 +42,17 @@ class ProductOptionDiscountDataMapper {
             return yield ProductOptionDiscountEntity_1.default.findAll({
                 where: {
                     productOptionId: productOptionId
-                }
+                },
+                include: [
+                    { model: GroupEntity_1.default, as: 'group', required: false },
+                    { model: ProductOptionEntity_1.default, as: 'productOption', include: [{
+                                model: ProductOptionPriceEntity_1.default, as: 'productOptionPrices', where: { endDate: { [sequelize_1.Op.eq]: null } }
+                            }]
+                    }
+                ],
+                order: [
+                    ['startDate', 'ASC']
+                ]
             });
         });
     }

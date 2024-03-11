@@ -6,6 +6,6 @@ export default class ProductOptionParser {
     }
 
     public static parseProductOption(data: any): ProductOptionVM {
-        return new ProductOptionVM(data.productOptionId, data.productId, data.nameFr, data.nameEn, data.code, data.stock, data.active, data.featured, data.click, data.weight, data.preorder);
+        return new ProductOptionVM(data.productOptionId, data.productId, data.nameFr, data.nameEn, data.code, data.stock, data.active, data.featured, data.click, data.weight, data.preorder, data.price);
     }
 }

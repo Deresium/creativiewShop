@@ -9,19 +9,19 @@
         item-key="productId"
         items-per-page="10"
     >
-<!--        <template v-slot:item.productOptions="{ item }">
-            <v-data-table
-                :headers="headersOption"
-                :items="item.getProductOptions()"
-                :items-per-page="-1"
-                item-key="productOptionId"
-            >
-                <template #bottom></template>
-                <template #item.active="{ item }">
-                    <v-icon :color="getColorBoolean(item.getActive())" icon="mdi-circle"/>
-                </template>
-            </v-data-table>
-        </template>-->
+        <!--        <template v-slot:item.productOptions="{ item }">
+                    <v-data-table
+                        :headers="headersOption"
+                        :items="item.getProductOptions()"
+                        :items-per-page="-1"
+                        item-key="productOptionId"
+                    >
+                        <template #bottom></template>
+                        <template #item.active="{ item }">
+                            <v-icon :color="getColorBoolean(item.getActive())" icon="mdi-circle"/>
+                        </template>
+                    </v-data-table>
+                </template>-->
 
         <template v-slot:item.actions="{ item }">
             <v-btn color="white" icon="mdi-pencil" size="25px" @click="goToEdit(item.getProductId())"/>
@@ -42,6 +42,9 @@
         </template>
         <template #item.active="{ item }">
             <v-icon :color="getColorBoolean(item.getActive())" icon="mdi-circle"/>
+        </template>
+        <template #item.price="{ item }">
+            <template v-if="item.getPrice()">{{ `${item.getPrice()}${currencySymbol}` }}</template>
         </template>
     </v-data-table>
 
@@ -68,6 +71,7 @@ import axiosServer from "../../axios/axiosServer.ts";
 import ProductListAdminVM from "../../viewmodels/ProductListAdminVM.ts";
 import ProductOptionListAdminFlatVM from "../../viewmodels/ProductOptionListAdminFlatVM.ts";
 import ProductParser from "../../parsers/ProductParser.ts";
+import useCustomer from "../../compositionfunctions/customer.ts";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -99,6 +103,8 @@ const headersFlatOptions = computed(() => [
     {title: t('price'), value: 'price'},
     {title: t('action'), value: 'actions'}
 ]);
+
+const {currencySymbol} = useCustomer();
 
 const askConfirmDelete = ref(false);
 const tempProductId = ref();
@@ -145,7 +151,7 @@ const getColorBoolean = (bool: boolean) => {
         return 'green';
     }
     return 'red';
-}
+};
 
 </script>
 
