@@ -69,7 +69,10 @@ const props = defineProps({
 });
 
 const headers = computed(() => [
+    {title: t('price'), value: 'lastPrice'},
+    {title: t('discountPrice'), value: 'discountPrice'},
     {title: t('percent'), value: 'percent'},
+    {title: t('group'), value: 'groupName'},
     {title: t('startDate'), value: 'startDate'},
     {title: t('endDate'), value: 'endDate'},
     {title: t('deletedAt'), value: 'deletedAt'},

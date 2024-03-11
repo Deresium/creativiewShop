@@ -30,7 +30,8 @@ export default class CurrencyRateRouter extends ApplicationRouter {
         });
 
         this.getRouter().get('/currency', this.onlyAdminMiddleware, async (req: any, res: any) => {
-            const currency = await this.currencyRateRequester.getCurrency();
+            const customerId = req.customer.getCustomerId();
+            const currency = await this.currencyRateRequester.getCurrency(customerId);
             res.send(currency);
         });
     }
