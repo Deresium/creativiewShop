@@ -8,6 +8,19 @@ export default class WeightPriceEntity extends Model {
     private price: number;
     private startDate: Date;
     private endDate: Date;
+
+
+    getGram(): number {
+        return this.gram;
+    }
+
+    getPrice(): number {
+        return this.price;
+    }
+
+    getStartDate(): Date {
+        return this.startDate;
+    }
 }
 
 WeightPriceEntity.init({

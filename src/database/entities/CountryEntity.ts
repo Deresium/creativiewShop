@@ -5,6 +5,19 @@ export default class CountryEntity extends Model {
     private countryId: number;
     private nameFr: string;
     private nameEn: string;
+
+
+    getCountryId(): number {
+        return this.countryId;
+    }
+
+    getNameFr(): string {
+        return this.nameFr;
+    }
+
+    getNameEn(): string {
+        return this.nameEn;
+    }
 }
 
 CountryEntity.init({

@@ -1,9 +1,19 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import CountryEntity from "./CountryEntity";
 
 export default class GeographicZoneCountryEntity extends Model {
     private geographicZoneId: string;
-    private countryId: number;
+    private country: CountryEntity;
+
+
+    getGeographicZoneId(): string {
+        return this.geographicZoneId;
+    }
+
+    getCountry(): CountryEntity {
+        return this.country;
+    }
 }
 
 GeographicZoneCountryEntity.init({
@@ -12,4 +22,10 @@ GeographicZoneCountryEntity.init({
 }, {
     tableName: 'GeographicZoneCountry',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
+});
+
+GeographicZoneCountryEntity.hasOne(CountryEntity, {
+    sourceKey: 'countryId',
+    foreignKey: 'countryId',
+    as: 'country'
 });
