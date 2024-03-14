@@ -87,7 +87,7 @@ axiosServer.get(`/product/${productIdString}/productOption/${props.productOption
     }
 });
 
-axiosServer.get('/discountGroups').then(response => {
+axiosServer.get('/group/discount').then(response => {
     listGroupDiscount.value = TitleValueParser.parseTitleValues(response.data);
 });
 const handleCalculatePercent = async () => {

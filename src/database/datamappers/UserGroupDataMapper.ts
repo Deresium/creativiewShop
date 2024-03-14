@@ -15,7 +15,37 @@ export default class UserGroupDataMapper implements IUserGroupDataGateway {
                     {endDate: {[Op.is]: null}}
                 ]
             },
-            include: [{model: UserEntity, where: {customerId: customerId}}]
+            include: [{model: UserEntity, as: 'user', where: {customerId: customerId}}]
         });
+    }
+
+    public async addUserToGroup(userId: string, groupId: string): Promise<void> {
+        await UserGroupEntity.create({
+            groupId: groupId,
+            userId: userId,
+            startDate: Date.now()
+        });
+    }
+
+    public async deleteUserFromGroup(userId: string, groupId: string): Promise<void> {
+        await UserGroupEntity.update({
+            endDate: Date.now()
+        },{
+            where: {
+                userId: userId,
+                groupId: groupId
+            }
+        });
+    }
+
+    public async existsUserInGroup(userId: string, groupId: string): Promise<boolean> {
+        const count = await UserGroupEntity.count({
+            where: {
+                userId: userId,
+                groupId: groupId,
+                endDate: {[Op.is]: null}
+            }
+        });
+        return count === 1;
     }
 }

@@ -14,7 +14,7 @@ export default class GroupRouter extends ApplicationRouter {
     }
 
     public initRoutes(): void {
-        this.getRouter().get('/discountGroups', this.onlyAdminMiddleware, async (req: any, res: any) => {
+        this.getRouter().get('/group/discount', this.onlyAdminMiddleware, async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
             const groups = await this.groupRequester.getDiscountGroupsForCustomer(customerId);
             res.send(groups);

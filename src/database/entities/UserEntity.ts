@@ -1,5 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import UserGroupEntity from "./UserGroupEntity";
 
 
 export default class UserEntity extends Model {
@@ -11,6 +12,8 @@ export default class UserEntity extends Model {
     private name: string;
     private firstName: string;
     private customerId: number;
+
+    private userGroups: Array<UserGroupEntity>;
 
 
     public getUserId(): string {
@@ -44,6 +47,10 @@ export default class UserEntity extends Model {
     public getCustomerId(): number {
         return this.customerId;
     }
+
+    public getUserGroups() {
+        return this.userGroups;
+    }
 }
 
 UserEntity.init({
@@ -59,3 +66,5 @@ UserEntity.init({
     tableName: 'User',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
 });
+
+UserEntity.hasMany(UserGroupEntity, {sourceKey: 'userId', foreignKey: 'userId', as: 'userGroups'})

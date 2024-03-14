@@ -12,4 +12,16 @@ export default class UserGroupFacade implements IUserGroupRequester {
         const userGroups = await this.userGroupDataGateway.getAllGroupsForUser(userId, customerId);
         return userGroups.map(userGroup => userGroup.getGroupId());
     }
+
+    public async addUserToGroup(userId: string, groupId: string): Promise<void> {
+        const userExistsInGroup = await this.userGroupDataGateway.existsUserInGroup(userId, groupId);
+        if(userExistsInGroup){
+            throw new Error('error.userExistsInGroup');
+        }
+        await this.userGroupDataGateway.addUserToGroup(userId, groupId);
+    }
+
+    public async deleteUserFromGroup(userId: string, groupId: string): Promise<void> {
+        await this.userGroupDataGateway.deleteUserFromGroup(userId, groupId);
+    }
 }

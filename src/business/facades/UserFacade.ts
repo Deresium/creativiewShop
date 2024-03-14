@@ -7,6 +7,7 @@ import UserLoginVM from "../models/viewmodels/UserLoginVM";
 import UserVM from "../models/viewmodels/UserVM";
 import IUserGroupRequester from "../requesters/IUserGroupRequester";
 import GroupConst from "../utils/GroupConst";
+import UserPurchaserVM from "../models/viewmodels/UserPurchaserVM";
 
 export default class UserFacade implements IUserRequester {
     private readonly userDataGateway: IUserDataGateway;
@@ -51,5 +52,29 @@ export default class UserFacade implements IUserRequester {
             return null;
         }
         return new UserVM(userEntity.getName(), userEntity.getFirstName(), userEntity.getEmail(), GroupConst.hasAccessTo(GroupConst.ADMIN_STORE, userGroups), true);
+    }
+
+    public async findUserPurchasers(customerId: number): Promise<Array<UserPurchaserVM>> {
+        const userPurchasers = new Array<UserPurchaserVM>();
+        const users = await this.userDataGateway.findUserPurchasers(customerId);
+        for(const user of users){
+            let groupIdDiscountUser: string = null;
+            if(user.getUserGroups().length !== 0){
+                groupIdDiscountUser = user.getUserGroups()[0].getGroup().getGroupId();
+            }
+            const userPurchaser = new UserPurchaserVM(user.getUserId(), groupIdDiscountUser,user.getAccess(), user.getName(), user.getFirstName(), user.getEmail());
+            userPurchasers.push(userPurchaser);
+        }
+
+        return userPurchasers;
+    }
+
+
+    public async updateUserActive(userId: string, customerId: number, access: boolean): Promise<void> {
+        await this.userDataGateway.updateUserActive(userId, customerId, access);
+    }
+
+    public async userExistsForCustomer(userId: string, customerId: number): Promise<boolean> {
+        return await this.userDataGateway.userExistsForCustomer(userId, customerId);
     }
 }
