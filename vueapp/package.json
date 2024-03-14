@@ -5,8 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "checkBuild": "vue-tsc --noEmit",
-        "build": "vite build --base=/vueapp/ --emptyOutDir",
+        "build": "vue-tsc --noEmit && vite build --base=/vueapp/ --emptyOutDir",
         "preview": "vite preview"
     },
     "dependencies": {
