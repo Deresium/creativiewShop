@@ -6,6 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node dist/index.js",
+        "build": "cd ./vueapp && npm run build && cd .. && tsc",
         "serve": "nodemon --inspect --env-file=dev.env dist/index.js"
     },
     "author": "",
