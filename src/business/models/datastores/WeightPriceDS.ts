@@ -1,18 +1,18 @@
 export default class WeightPriceDS {
-    private readonly geographicZoneId: string;
+    private readonly deliveryOptionId: string;
     private readonly gram: number;
     private readonly price: number;
 
 
-    constructor(geographicZoneId: string, gram: number, price: number) {
-        this.geographicZoneId = geographicZoneId;
+    constructor(deliveryOptionId: string, gram: number, price: number) {
+        this.deliveryOptionId = deliveryOptionId;
         this.gram = gram;
         this.price = price;
     }
 
 
-    getGeographicZoneId(): string {
-        return this.geographicZoneId;
+    getDeliveryOptionId(): string {
+        return this.deliveryOptionId;
     }
 
     getGram(): number {
