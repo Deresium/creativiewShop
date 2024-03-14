@@ -4,14 +4,22 @@ import UserCreationDS from "../../business/models/datastores/UserCreationDS";
 import LoginInfoDS from "../../business/models/datastores/LoginInfoDS";
 import CookiesGenerator from "../../business/utils/CookiesGenerator";
 import UserLoginVM from "../../business/models/viewmodels/UserLoginVM";
-
+import {RequestHandler} from "express";
+import IUserGroupRequester from "../../business/requesters/IUserGroupRequester";
 export default class UserRouter extends ApplicationRouter {
 
     private readonly userRequester: IUserRequester;
+    private readonly userGroupRequester: IUserGroupRequester;
+    private readonly onlyAdminMiddleware: RequestHandler;
+    private readonly checkUserOwnerMiddleware: RequestHandler
 
-    constructor(userRequester: IUserRequester) {
+
+    constructor(userRequester: IUserRequester, userGroupRequester: IUserGroupRequester, onlyAdminMiddleware: RequestHandler, checkUserOwnerMiddleware: RequestHandler) {
         super();
         this.userRequester = userRequester;
+        this.userGroupRequester = userGroupRequester;
+        this.onlyAdminMiddleware = onlyAdminMiddleware;
+        this.checkUserOwnerMiddleware = checkUserOwnerMiddleware;
         this.initRoutes();
     }
 
@@ -68,5 +76,33 @@ export default class UserRouter extends ApplicationRouter {
             const user = await this.userRequester.getUser(userId, customerId, req.userGroups);
             res.status(200).send(user);
         });
+
+        this.getRouter().get('/user/purchaser', this.onlyAdminMiddleware, async(req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const users = await this.userRequester.findUserPurchasers(customerId);
+            res.send(users);
+        });
+
+        this.getRouter().put('/user/:userId/access', this.onlyAdminMiddleware, async(req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const userId = String(req.params.userId);
+            const access = req.body.acccess;
+            await this.userRequester.updateUserActive(userId, customerId, access);
+            res.send();
+        });
+
+        this.getRouter().post('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async(req: any, res: any) => {
+            const userId = String(req.params.userId);
+            const groupId = String(req.params.groupId);
+            await this.userGroupRequester.addUserToGroup(userId, groupId);
+            res.send();
+        });
+
+        this.getRouter().delete('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async(req: any, res: any) => {
+            const userId = String(req.params.userId);
+            const groupId = String(req.params.groupId);
+            await this.userGroupRequester.deleteUserFromGroup(userId, groupId);
+            res.send();
+        })
     }
 }

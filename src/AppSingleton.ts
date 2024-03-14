@@ -61,6 +61,7 @@ import WeightPriceDataMapper from "./database/datamappers/WeightPriceDataMapper"
 import WeightPriceFacade from "./business/facades/WeightPriceFacade";
 import CountryDataMapper from "./database/datamappers/CountryDataMapper";
 import CountryFacade from "./business/facades/CountryFacade";
+import CheckUserOwnerMiddleware from "./routers/middlewares/checkUserOwnerMiddleware";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -163,8 +164,9 @@ export default class AppSingleton {
         const onlyAdminMiddleware = new OnlyAdminStoreMiddleware().getRequestHandler();
         const checkProductOwnerMiddleware = new CheckProductOwnerMiddleware(productFacade).getRequestHandler();
         const checkGeographicZoneOwnerMiddleware = new CheckGeographicZoneOwnerMiddleware(geographicZoneFacade).getRequestHandler();
+        const checkUserOwnerMiddleware = new CheckUserOwnerMiddleware(userFacade).getRequestHandler();
 
-        this.expressApp.use('/api', new UserRouter(userFacade).getRouter());
+        this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminMiddleware, checkUserOwnerMiddleware).getRouter());
         this.expressApp.use('/api', new CustomerRouter().getRouter());
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
         this.expressApp.use('/api', new CategoryRouter(categoryFacade, onlyAdminMiddleware).getRouter());
