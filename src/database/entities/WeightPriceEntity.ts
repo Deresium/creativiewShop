@@ -3,7 +3,7 @@ import DatabaseSingleton from "../DatabaseSingleton";
 
 export default class WeightPriceEntity extends Model {
     private weightPriceId: string;
-    private geographicZoneId: string;
+    private deliveryOptionId: string;
     private gram: number;
     private price: number;
     private startDate: Date;
@@ -25,7 +25,7 @@ export default class WeightPriceEntity extends Model {
 
 WeightPriceEntity.init({
     weightPriceId: {type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true},
-    geographicZoneId: DataTypes.BIGINT,
+    deliveryOptionId: DataTypes.BIGINT,
     gram: DataTypes.DECIMAL,
     price: DataTypes.DECIMAL,
     startDate: DataTypes.DATE,

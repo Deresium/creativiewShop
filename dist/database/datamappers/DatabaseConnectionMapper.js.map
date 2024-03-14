@@ -1,1 +1,0 @@
-{"version":3,"file":"DatabaseConnectionMapper.js","sourceRoot":"","sources":["../../../src/database/datamappers/DatabaseConnectionMapper.ts"],"names":[],"mappings":";;;;;;;;;;;;;;AAAA,6EAAqD;AAGrD,MAAqB,wBAAwB;IACnC,WAAW;;YACb,MAAM,2BAAiB,CAAC,WAAW,EAAE,CAAC,WAAW,EAAE,CAAC;QACxD,CAAC;KAAA;CACJ;AAJD,2CAIC"}

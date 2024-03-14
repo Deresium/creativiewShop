@@ -11,10 +11,10 @@ export default class Ruler {
     }
 
     public notEmpty = (value: any) => {
-        if (value && !validator.isEmpty(value)) {
-            return true;
+        if (!value || (typeof value === 'string' && validator.isEmpty(value))) {
+            return Ruler.t('error.notEmpty', {field: this.rulerOptions.fieldName});
         }
-        return Ruler.t('error.notEmpty', {field: this.rulerOptions.fieldName});
+        return true;
     };
 
     public isEmail = (value: any) => {

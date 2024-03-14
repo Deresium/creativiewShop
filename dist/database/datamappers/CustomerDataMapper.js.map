@@ -1,1 +1,0 @@
-{"version":3,"file":"CustomerDataMapper.js","sourceRoot":"","sources":["../../../src/database/datamappers/CustomerDataMapper.ts"],"names":[],"mappings":";;;;;;;;;;;;;;AACA,gFAAwD;AACxD,gFAAwD;AAExD,MAAqB,kBAAkB;IACtB,eAAe;;YACxB,OAAO,MAAM,wBAAc,CAAC,OAAO,CAAC;gBAChC,OAAO,EAAE,CAAC,EAAC,KAAK,EAAE,wBAAc,EAAE,EAAE,EAAE,UAAU,EAAC,CAAC;aACrD,CAAC,CAAC;QACP,CAAC;KAAA;CACJ;AAND,qCAMC"}

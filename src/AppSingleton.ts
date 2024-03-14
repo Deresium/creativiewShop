@@ -51,12 +51,12 @@ import rateLimit from "express-rate-limit";
 import GroupDataMapper from "./database/datamappers/GroupDataMapper";
 import GroupFacade from "./business/facades/GroupFacade";
 import GroupRouter from "./routers/routes/GroupRouter";
-import GeographicZoneDataMapper from "./database/datamappers/GeographicZoneDataMapper";
-import GeographicZoneFacade from "./business/facades/GeographicZoneFacade";
-import GeographicZoneRouter from "./routers/routes/GeographicZoneRouter";
-import CheckGeographicZoneOwnerMiddleware from "./routers/middlewares/CheckGeographicZoneOwnerMiddleware";
-import GeographicZoneCountryFacade from "./business/facades/GeographicZoneCountryFacade";
-import GeographicZoneCountryDataMapper from "./database/datamappers/GeographicZoneCountryDataMapper";
+import DeliveryOptionDataMapper from "./database/datamappers/DeliveryOptionDataMapper";
+import DeliveryOptionFacade from "./business/facades/DeliveryOptionFacade";
+import DeliveryOptionRouter from "./routers/routes/DeliveryOptionRouter";
+import CheckDeliveryOptionOwnerMiddleware from "./routers/middlewares/CheckDeliveryOptionOwnerMiddleware";
+import DeliveryOptionCountryFacade from "./business/facades/DeliveryOptionCountryFacade";
+import DeliveryOptionCountryDataMapper from "./database/datamappers/DeliveryOptionCountryDataMapper";
 import WeightPriceDataMapper from "./database/datamappers/WeightPriceDataMapper";
 import WeightPriceFacade from "./business/facades/WeightPriceFacade";
 import CountryDataMapper from "./database/datamappers/CountryDataMapper";
@@ -101,8 +101,8 @@ export default class AppSingleton {
         const productOptionDiscountDataMapper = new ProductOptionDiscountDataMapper();
         const currencyRateDataMapper = new CurrencyRateDataMapper();
         const groupDataMapper = new GroupDataMapper();
-        const geographicZoneDataMapper = new GeographicZoneDataMapper();
-        const geographicZoneCountryDataMapper = new GeographicZoneCountryDataMapper();
+        const deliveryOptionDataMapper = new DeliveryOptionDataMapper();
+        const deliveryOptionCountryDataMapper = new DeliveryOptionCountryDataMapper();
         const countryDataMapper = new CountryDataMapper();
         const weightPriceDataMapper = new WeightPriceDataMapper();
 
@@ -120,8 +120,8 @@ export default class AppSingleton {
         const productOptionDiscountFacade = new ProductOptionDiscountFacade(productOptionDiscountDataMapper);
         const currencyRateFacade = new CurrencyRateFacade(currencyRateDataMapper);
         const groupFacade = new GroupFacade(groupDataMapper);
-        const geographicZoneFacade = new GeographicZoneFacade(geographicZoneDataMapper);
-        const geographicZoneCountryFacade = new GeographicZoneCountryFacade(geographicZoneCountryDataMapper);
+        const deliveryOptionFacade = new DeliveryOptionFacade(deliveryOptionDataMapper);
+        const deliveryOptionCountryFacade = new DeliveryOptionCountryFacade(deliveryOptionCountryDataMapper);
         const countryFacade = new CountryFacade(countryDataMapper);
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
 
@@ -163,7 +163,7 @@ export default class AppSingleton {
 
         const onlyAdminMiddleware = new OnlyAdminStoreMiddleware().getRequestHandler();
         const checkProductOwnerMiddleware = new CheckProductOwnerMiddleware(productFacade).getRequestHandler();
-        const checkGeographicZoneOwnerMiddleware = new CheckGeographicZoneOwnerMiddleware(geographicZoneFacade).getRequestHandler();
+        const checkDeliveryOptionOwnerMiddleware = new CheckDeliveryOptionOwnerMiddleware(deliveryOptionFacade).getRequestHandler();
         const checkUserOwnerMiddleware = new CheckUserOwnerMiddleware(userFacade).getRequestHandler();
 
         this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminMiddleware, checkUserOwnerMiddleware).getRouter());
@@ -175,6 +175,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, productOptionPriceFacade, productOptionCategoryFacade, productOptionPictureFacade, productOptionDiscountFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
         this.expressApp.use('/api', new CurrencyRateRouter(currencyRateFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new GroupRouter(groupFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new GeographicZoneRouter(geographicZoneFacade, geographicZoneCountryFacade, countryFacade, weightPriceFacade, onlyAdminMiddleware, checkGeographicZoneOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new DeliveryOptionRouter(deliveryOptionFacade, deliveryOptionCountryFacade, countryFacade, weightPriceFacade, onlyAdminMiddleware, checkDeliveryOptionOwnerMiddleware).getRouter());
     }
 }

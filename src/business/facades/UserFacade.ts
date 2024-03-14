@@ -57,12 +57,12 @@ export default class UserFacade implements IUserRequester {
     public async findUserPurchasers(customerId: number): Promise<Array<UserPurchaserVM>> {
         const userPurchasers = new Array<UserPurchaserVM>();
         const users = await this.userDataGateway.findUserPurchasers(customerId);
-        for(const user of users){
+        for (const user of users) {
             let groupIdDiscountUser: string = null;
-            if(user.getUserGroups().length !== 0){
+            if (user.getUserGroups().length !== 0) {
                 groupIdDiscountUser = user.getUserGroups()[0].getGroup().getGroupId();
             }
-            const userPurchaser = new UserPurchaserVM(user.getUserId(), groupIdDiscountUser,user.getAccess(), user.getName(), user.getFirstName(), user.getEmail());
+            const userPurchaser = new UserPurchaserVM(user.getUserId(), groupIdDiscountUser, user.getAccess(), user.getName(), user.getFirstName(), user.getEmail());
             userPurchasers.push(userPurchaser);
         }
 

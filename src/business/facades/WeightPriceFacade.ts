@@ -11,23 +11,23 @@ export default class WeightPriceFacade implements IWeightPriceRequester {
         this.weightPriceDataGateway = weightPriceDataGateway;
     }
 
-    public async addWeightPriceForGeographicZone(weightPrice: WeightPriceDS): Promise<void> {
-        await this.weightPriceDataGateway.addWeightPriceForGeographicZone(weightPrice);
+    public async addWeightPriceForDeliveryOption(weightPrice: WeightPriceDS): Promise<void> {
+        await this.weightPriceDataGateway.addWeightPriceForDeliveryOption(weightPrice);
     }
 
-    public async getWeightPriceForGeographicZone(geographicZoneId: string): Promise<Array<WeightPriceVM>> {
-        const weightPrices = await this.weightPriceDataGateway.getWeightPriceForGeographicZone(geographicZoneId);
+    public async getWeightPriceForDeliveryOption(deliveryOptionId: string): Promise<Array<WeightPriceVM>> {
+        const weightPrices = await this.weightPriceDataGateway.getWeightPriceForDeliveryOption(deliveryOptionId);
         return weightPrices.map(weightPrice => {
             const startDate = weightPrice.getStartDate().toISOString();
 
             let price: string = null;
-            if(weightPrice.getPrice()){
+            if (weightPrice.getPrice()) {
                 price = Number(weightPrice.getPrice()).toFixed(2);
             }
 
             let gram: string = null;
-            if(weightPrice.getGram()){
-                gram = Number(weightPrice.getGram()).toFixed(2);
+            if (weightPrice.getGram()) {
+                gram = Number(weightPrice.getGram()).toString();
             }
 
             return new WeightPriceVM(gram, price, startDate);

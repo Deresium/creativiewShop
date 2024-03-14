@@ -1,1 +1,0 @@
-{"version":3,"file":"ApplicationMiddleware.js","sourceRoot":"","sources":["../../../src/routers/middlewares/ApplicationMiddleware.ts"],"names":[],"mappings":";;AAEA,MAA8B,qBAAqB;IAG/C;QACI,IAAI,CAAC,cAAc,GAAG,IAAI,CAAC,wBAAwB,EAAE,CAAC;IAC1D,CAAC;IAED,iBAAiB;QACb,OAAO,IAAI,CAAC,cAAc,CAAC;IAC/B,CAAC;CAGJ;AAZD,wCAYC"}

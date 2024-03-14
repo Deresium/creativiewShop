@@ -67,4 +67,5 @@ UserEntity.init({
     sequelize: DatabaseSingleton.getInstance().getSequelize()
 });
 
-UserEntity.hasMany(UserGroupEntity, {sourceKey: 'userId', foreignKey: 'userId', as: 'userGroups'})
+UserEntity.hasMany(UserGroupEntity, {sourceKey: 'userId', foreignKey: 'userId', as: 'userGroups'});
+UserGroupEntity.hasOne(UserEntity, {sourceKey: 'userId', foreignKey: 'userId', as: 'user'});

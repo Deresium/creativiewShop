@@ -6,12 +6,13 @@ import CookiesGenerator from "../../business/utils/CookiesGenerator";
 import UserLoginVM from "../../business/models/viewmodels/UserLoginVM";
 import {RequestHandler} from "express";
 import IUserGroupRequester from "../../business/requesters/IUserGroupRequester";
+
 export default class UserRouter extends ApplicationRouter {
 
     private readonly userRequester: IUserRequester;
     private readonly userGroupRequester: IUserGroupRequester;
     private readonly onlyAdminMiddleware: RequestHandler;
-    private readonly checkUserOwnerMiddleware: RequestHandler
+    private readonly checkUserOwnerMiddleware: RequestHandler;
 
 
     constructor(userRequester: IUserRequester, userGroupRequester: IUserGroupRequester, onlyAdminMiddleware: RequestHandler, checkUserOwnerMiddleware: RequestHandler) {
@@ -77,13 +78,13 @@ export default class UserRouter extends ApplicationRouter {
             res.status(200).send(user);
         });
 
-        this.getRouter().get('/user/purchaser', this.onlyAdminMiddleware, async(req: any, res: any) => {
+        this.getRouter().get('/user/purchaser', this.onlyAdminMiddleware, async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
             const users = await this.userRequester.findUserPurchasers(customerId);
             res.send(users);
         });
 
-        this.getRouter().put('/user/:userId/access', this.onlyAdminMiddleware, async(req: any, res: any) => {
+        this.getRouter().put('/user/:userId/access', this.onlyAdminMiddleware, async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
             const userId = String(req.params.userId);
             const access = req.body.acccess;
@@ -91,14 +92,14 @@ export default class UserRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().post('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().post('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async (req: any, res: any) => {
             const userId = String(req.params.userId);
             const groupId = String(req.params.groupId);
             await this.userGroupRequester.addUserToGroup(userId, groupId);
             res.send();
         });
 
-        this.getRouter().delete('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async(req: any, res: any) => {
+        this.getRouter().delete('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async (req: any, res: any) => {
             const userId = String(req.params.userId);
             const groupId = String(req.params.groupId);
             await this.userGroupRequester.deleteUserFromGroup(userId, groupId);

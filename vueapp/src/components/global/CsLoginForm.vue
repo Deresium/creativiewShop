@@ -2,24 +2,24 @@
     <h2>{{ t('login') }}</h2>
 
     <template v-if="!successLogin">
-        <v-alert class="alertError" v-model="showAlert" type="error" :text="t('error.form')"/>
-        <v-alert class="alertError" v-model="showBackendError" type="error" :text="t(backendError)"/>
-        <v-form v-model="formValid" validate-on="blur" @submit.prevent="submitForm">
-            <v-text-field name="email" type="email" v-model="email" :rules="emailRules" :label="t('email')"/>
-            <v-text-field name="password" type="password" v-model="password" :rules="passwordRules"
-                          :label="t('password')"/>
+        <v-alert v-model="showAlert" :text="t('error.form')" class="alertError" type="error"/>
+        <v-alert v-model="showBackendError" :text="t(backendError)" class="alertError" type="error"/>
+        <v-form v-model="formValid" validate-on="input" @submit.prevent="submitForm">
+            <v-text-field v-model="email" :label="t('email')" :rules="emailRules" name="email" type="email"/>
+            <v-text-field v-model="password" :label="t('password')" :rules="passwordRules" name="password"
+                          type="password"/>
             <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('submit') }}</v-btn>
         </v-form>
     </template>
 
     <template v-if="successLogin">
-        <v-alert v-model="successLogin" type="success" :text="t('login.success')"/>
+        <v-alert v-model="successLogin" :text="t('login.success')" type="success"/>
     </template>
 
 
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useI18n} from "vue-i18n";
 import {computed, ref} from "vue";
 import * as validator from "validator";
