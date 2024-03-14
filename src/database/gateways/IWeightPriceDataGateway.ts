@@ -2,7 +2,7 @@ import WeightPriceDS from "../../business/models/datastores/WeightPriceDS";
 import WeightPriceEntity from "../entities/WeightPriceEntity";
 
 export default interface IWeightPriceDataGateway {
-    addWeightPriceForGeographicZone(weightPrice: WeightPriceDS): Promise<void>;
+    addWeightPriceForDeliveryOption(weightPrice: WeightPriceDS): Promise<void>;
 
-    getWeightPriceForGeographicZone(geographicZoneId: string): Promise<Array<WeightPriceEntity>>;
+    getWeightPriceForDeliveryOption(deliveryOptionId: string): Promise<Array<WeightPriceEntity>>;
 }
