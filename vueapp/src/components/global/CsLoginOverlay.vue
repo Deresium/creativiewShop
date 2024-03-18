@@ -1,11 +1,11 @@
 <template>
     <v-overlay v-model="showLoginOverlay" class="overlay">
         <div class="bgTabs">
-            <v-tabs grow v-model="tab" :bg-color="firstColor">
+            <v-tabs v-model="tab" :bg-color="firstColor" grow>
                 <v-tab value="login">{{ t('login') }}</v-tab>
                 <v-tab value="createAccount">{{ t('createAccount') }}</v-tab>
             </v-tabs>
-            <v-window class="insideTab" v-model="tab">
+            <v-window v-model="tab" class="insideTab">
                 <v-window-item value="login">
                     <LoginForm/>
                 </v-window-item>
@@ -17,7 +17,7 @@
     </v-overlay>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, ref} from "vue";
 import useCustomer from "../../compositionfunctions/customer.ts";
 import {useI18n} from "vue-i18n";
@@ -50,7 +50,7 @@ const showLoginOverlay = computed({
 .overlay {
     display: flex;
     justify-content: center;
-    margin-top: 20vh;
+    margin-top: 2vh;
 }
 
 .bgTabs {

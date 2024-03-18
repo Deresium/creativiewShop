@@ -2,7 +2,6 @@ import ICurrencyRateDataGateway from "../gateways/ICurrencyRateDataGateway";
 import CurrencyRateEntity from "../entities/CurrencyRateEntity";
 import DatabaseSingleton from "../DatabaseSingleton";
 import {Op, Transaction} from "sequelize";
-import {now} from "sequelize/types/utils";
 import CurrencyEntity from "../entities/CurrencyEntity";
 import CurrencyCustomerEntity from "../entities/CurrencyCustomerEntity";
 
@@ -12,7 +11,7 @@ export default class CurrencyRateDataMapper implements ICurrencyRateDataGateway 
         await DatabaseSingleton.getInstance().getSequelize().transaction(async (t: Transaction) => {
             await CurrencyRateEntity.update({
                 endDate: now
-            },{
+            }, {
                 where: {
                     customerId: customerId,
                     currencyCode: currencyCode,
@@ -43,7 +42,7 @@ export default class CurrencyRateDataMapper implements ICurrencyRateDataGateway 
 
     public async getCustomerCurrency(customerId: number): Promise<Array<CurrencyCustomerEntity>> {
         return await CurrencyCustomerEntity.findAll({
-           include: [{model: CurrencyEntity, as: 'currency'}]
+            include: [{model: CurrencyEntity, as: 'currency'}]
         });
     }
 }

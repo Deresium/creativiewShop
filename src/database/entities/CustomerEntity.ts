@@ -10,6 +10,7 @@ export default class CustomerEntity extends Model {
     private firstColor: string;
     private secondColor: string;
     private thirdColor: string;
+    private emailFrom: string;
     private currency: CurrencyEntity;
 
     public getCustomerId(): number {
@@ -42,6 +43,10 @@ export default class CustomerEntity extends Model {
     }
 
 
+    public getEmailFrom(): string {
+        return this.emailFrom;
+    }
+
     public getCurrency() {
         return this.currency;
     }
@@ -55,7 +60,8 @@ CustomerEntity.init({
     firstColor: DataTypes.STRING,
     secondColor: DataTypes.STRING,
     thirdColor: DataTypes.STRING,
-    currencyCode: DataTypes.STRING
+    currencyCode: DataTypes.STRING,
+    emailFrom: DataTypes.STRING
 }, {
     tableName: 'Customer',
     sequelize: DatabaseSingleton.getInstance().getSequelize()

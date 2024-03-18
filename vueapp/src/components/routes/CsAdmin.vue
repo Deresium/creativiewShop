@@ -8,6 +8,8 @@
                 <v-tab value="manufacturer">{{ t('manufacturer') }}</v-tab>
                 <v-tab value="currency">{{ t('currencies') }}</v-tab>
                 <v-tab value="deliveryOption">{{ t('deliveryOptions') }}</v-tab>
+                <v-tab value="user">{{ t('users') }}</v-tab>
+                <v-tab value="userGroup">{{ t('userGroups') }}</v-tab>
             </v-tabs>
             <v-window v-model="tab" :touch="false" class="window">
                 <v-window-item value="product">
@@ -25,6 +27,12 @@
                 <v-window-item value="deliveryOption">
                     <CsDeliveryOptionTab/>
                 </v-window-item>
+                <v-window-item value="user">
+                    <CsUserTab/>
+                </v-window-item>
+                <v-window-item value="userGroup">
+                    <CsUserGroupTab/>
+                </v-window-item>
             </v-window>
         </div>
     </div>
@@ -40,6 +48,8 @@ import {useUserStore} from "../../pinia/user/UserStore.ts";
 import CsManufacturerTab from "../admin/CsManufacturerTab.vue";
 import CsCurrencyTab from "../admin/CsCurrencyTab.vue";
 import CsDeliveryOptionTab from "../admin/CsDeliveryOptionTab.vue";
+import CsUserTab from "../admin/CsUserTab.vue";
+import CsUserGroupTab from "../admin/CsUserGroupTab.vue";
 
 const {t} = useI18n({useScope: 'global'});
 const {firstColor} = useCustomer();

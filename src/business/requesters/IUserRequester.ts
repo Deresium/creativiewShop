@@ -3,6 +3,7 @@ import LoginInfoDS from "../models/datastores/LoginInfoDS";
 import UserLoginVM from "../models/viewmodels/UserLoginVM";
 import UserVM from "../models/viewmodels/UserVM";
 import UserPurchaserVM from "../models/viewmodels/UserPurchaserVM";
+import CustomerVM from "../models/viewmodels/CustomerVM";
 
 export default interface IUserRequester {
     createUser(userCreationDS: UserCreationDS): Promise<void>;
@@ -13,7 +14,9 @@ export default interface IUserRequester {
 
     findUserPurchasers(customerId: number): Promise<Array<UserPurchaserVM>>;
 
-    updateUserActive(userId: string, customerId: number, access: boolean): Promise<void>;
+    updateUserActive(userId: string, customerId: CustomerVM, access: boolean): Promise<void>;
 
     userExistsForCustomer(userId: string, customerId: number): Promise<boolean>;
+
+    getUsersFromGroupForCustomer(customerId: number, groupId: string): Promise<Array<UserPurchaserVM>>;
 }

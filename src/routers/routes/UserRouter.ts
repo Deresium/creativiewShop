@@ -31,9 +31,10 @@ export default class UserRouter extends ApplicationRouter {
             const firstName = req.body.firstName;
             const password = req.body.password;
             const repeatPassword = req.body.repeatPassword;
-            const customerId = req.customer.getCustomerId();
+            const language = req.body.language;
+            const customer = req.customer;
             try {
-                await this.userRequester.createUser(new UserCreationDS(email, password, repeatPassword, name, firstName, customerId));
+                await this.userRequester.createUser(new UserCreationDS(email, password, repeatPassword, name, firstName, customer, language));
                 res.send();
             } catch (error: any) {
                 console.error(error);
@@ -85,17 +86,21 @@ export default class UserRouter extends ApplicationRouter {
         });
 
         this.getRouter().put('/user/:userId/access', this.onlyAdminMiddleware, async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
+            const customer = req.customer;
             const userId = String(req.params.userId);
-            const access = req.body.acccess;
-            await this.userRequester.updateUserActive(userId, customerId, access);
+            const access = req.body.access;
+            await this.userRequester.updateUserActive(userId, customer, access);
             res.send();
         });
 
-        this.getRouter().post('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async (req: any, res: any) => {
+        this.getRouter().post('/user/:userId/group/discount/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async (req: any, res: any) => {
             const userId = String(req.params.userId);
             const groupId = String(req.params.groupId);
-            await this.userGroupRequester.addUserToGroup(userId, groupId);
+            try {
+                await this.userGroupRequester.addUserToDiscountGroup(userId, groupId);
+            } catch (error: any) {
+                res.status(400).send(error.message);
+            }
             res.send();
         });
 
@@ -104,6 +109,13 @@ export default class UserRouter extends ApplicationRouter {
             const groupId = String(req.params.groupId);
             await this.userGroupRequester.deleteUserFromGroup(userId, groupId);
             res.send();
-        })
+        });
+
+        this.getRouter().get('/group/:groupId/users', this.onlyAdminMiddleware, async (req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const groupId = String(req.params.groupId);
+            const users = await this.userRequester.getUsersFromGroupForCustomer(customerId, groupId);
+            res.send(users);
+        });
     }
 }

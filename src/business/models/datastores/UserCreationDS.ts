@@ -1,18 +1,22 @@
+import CustomerVM from "../viewmodels/CustomerVM";
+
 export default class UserCreationDS {
     private readonly email: string;
     private readonly password: string;
     private readonly repeatPassword: string;
     private readonly name: string;
     private readonly firstName: string;
-    private readonly customerId: number;
+    private readonly customer: CustomerVM;
+    private readonly language: string;
 
-    constructor(email: string, password: string, repeatPassword: string, name: string, firstName: string, customerId: number) {
+    constructor(email: string, password: string, repeatPassword: string, name: string, firstName: string, customer: CustomerVM, language: string) {
         this.email = email;
         this.password = password;
         this.repeatPassword = repeatPassword;
         this.name = name;
         this.firstName = firstName;
-        this.customerId = customerId
+        this.customer = customer;
+        this.language = language;
     }
 
     public getEmail() {
@@ -35,8 +39,12 @@ export default class UserCreationDS {
         return this.firstName;
     }
 
-    public getCustomerId() {
-        return this.customerId;
+    public getCustomer() {
+        return this.customer;
     }
 
+
+    public getLanguage(): string {
+        return this.language;
+    }
 }

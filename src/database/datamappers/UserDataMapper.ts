@@ -15,7 +15,8 @@ export default class UserDataMapper implements IUserDataGateway {
             access: false,
             name: userCreationDS.getName(),
             firstName: userCreationDS.getFirstName(),
-            customerId: userCreationDS.getCustomerId()
+            customerId: userCreationDS.getCustomer().getCustomerId(),
+            language: userCreationDS.getLanguage()
         });
     }
 
@@ -51,6 +52,7 @@ export default class UserDataMapper implements IUserDataGateway {
         return await UserEntity.findAll({
             where: {
                 customerId: customerId,
+                '$groupCategoryCode$': {[Op.or]: [null, 'DISCOUNT']}
             },
             include: [{
                 model: UserGroupEntity,
@@ -58,9 +60,8 @@ export default class UserDataMapper implements IUserDataGateway {
                 required: false,
                 include: [{
                     model: GroupEntity,
-                    as: 'Group',
-                    required: false,
-                    where: {groupCategoryCode: {[Op.or]: [null, 'DISCOUNT']}}
+                    as: 'group',
+                    required: false
                 }]
             }]
         });
@@ -68,8 +69,8 @@ export default class UserDataMapper implements IUserDataGateway {
 
     public async updateUserActive(userId: string, customerId: number, access: boolean): Promise<void> {
         await UserEntity.update({
-            access : access
-        },{
+            access: access
+        }, {
             where: {
                 userId: userId,
                 customerId: customerId
@@ -86,6 +87,4 @@ export default class UserDataMapper implements IUserDataGateway {
         });
         return count === 1;
     }
-
-
 }

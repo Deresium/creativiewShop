@@ -62,6 +62,7 @@ import WeightPriceFacade from "./business/facades/WeightPriceFacade";
 import CountryDataMapper from "./database/datamappers/CountryDataMapper";
 import CountryFacade from "./business/facades/CountryFacade";
 import CheckUserOwnerMiddleware from "./routers/middlewares/checkUserOwnerMiddleware";
+import SendMailDataMapper from "./external/aws/mail/SendMailDataMapper";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -105,10 +106,11 @@ export default class AppSingleton {
         const deliveryOptionCountryDataMapper = new DeliveryOptionCountryDataMapper();
         const countryDataMapper = new CountryDataMapper();
         const weightPriceDataMapper = new WeightPriceDataMapper();
+        const sendMailDataMapper = new SendMailDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
-        const userFacade = new UserFacade(userDataMapper, userGroupFacade);
+        const userFacade = new UserFacade(userDataMapper, userGroupDataMapper, userGroupFacade, sendMailDataMapper);
         const internalizationFacade = new InternalizationFacade(internalizationDataMapper);
         const categoryFacade = new CategoryFacade(categoryDataMapper, fileDataMapper);
         const manufacturerFacade = new ManufacturerFacade(manufacturerDataMapper);

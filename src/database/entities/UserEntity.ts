@@ -12,6 +12,7 @@ export default class UserEntity extends Model {
     private name: string;
     private firstName: string;
     private customerId: number;
+    private language: string;
 
     private userGroups: Array<UserGroupEntity>;
 
@@ -48,6 +49,11 @@ export default class UserEntity extends Model {
         return this.customerId;
     }
 
+
+    public getLanguage(): string {
+        return this.language;
+    }
+
     public getUserGroups() {
         return this.userGroups;
     }
@@ -61,7 +67,8 @@ UserEntity.init({
     access: DataTypes.BOOLEAN,
     name: DataTypes.STRING,
     firstName: DataTypes.STRING,
-    customerId: DataTypes.INTEGER
+    customerId: DataTypes.INTEGER,
+    language: DataTypes.STRING
 }, {
     tableName: 'User',
     sequelize: DatabaseSingleton.getInstance().getSequelize()

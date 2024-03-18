@@ -1,12 +1,14 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 import GroupEntity from "./GroupEntity";
+import UserEntity from "./UserEntity";
 
 export default class UserGroupEntity extends Model {
     private userGroupId: string;
     private groupId: string;
     private group: GroupEntity;
     private userId: string;
+    private user: UserEntity;
     private startDate: Date;
     private endDate: Date;
 
@@ -16,6 +18,10 @@ export default class UserGroupEntity extends Model {
 
     public getGroup() {
         return this.group;
+    }
+
+    public getUser() {
+        return this.user;
     }
 }
 

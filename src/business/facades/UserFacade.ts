@@ -8,14 +8,23 @@ import UserVM from "../models/viewmodels/UserVM";
 import IUserGroupRequester from "../requesters/IUserGroupRequester";
 import GroupConst from "../utils/GroupConst";
 import UserPurchaserVM from "../models/viewmodels/UserPurchaserVM";
+import ISendMailDataGateway from "../../external/aws/mail/ISendMailDataGateway";
+import UserEmailVM from "../models/viewmodels/UserEmailVM";
+import CustomerVM from "../models/viewmodels/CustomerVM";
+import IUserGroupDataGateway from "../../database/gateways/IUserGroupDataGateway";
 
 export default class UserFacade implements IUserRequester {
     private readonly userDataGateway: IUserDataGateway;
+    private readonly userGroupDataGateway: IUserGroupDataGateway;
     private readonly userGroupRequester: IUserGroupRequester;
+    private readonly sendMailDataGateway: ISendMailDataGateway;
 
-    constructor(userDataGateway: IUserDataGateway, userGroupRequester: IUserGroupRequester) {
+
+    constructor(userDataGateway: IUserDataGateway, userGroupDataGateway: IUserGroupDataGateway, userGroupRequester: IUserGroupRequester, sendMailDataGateway: ISendMailDataGateway) {
         this.userDataGateway = userDataGateway;
+        this.userGroupDataGateway = userGroupDataGateway;
         this.userGroupRequester = userGroupRequester;
+        this.sendMailDataGateway = sendMailDataGateway;
     }
 
     public async createUser(userCreationDS: UserCreationDS): Promise<void> {
@@ -23,13 +32,18 @@ export default class UserFacade implements IUserRequester {
             throw new Error('error.noMatchPassword');
         }
 
-        const user = await this.userDataGateway.findUserByEmailAndCustomer(userCreationDS.getEmail(), userCreationDS.getCustomerId());
+        const user = await this.userDataGateway.findUserByEmailAndCustomer(userCreationDS.getEmail(), userCreationDS.getCustomer().getCustomerId());
         if (user) {
             throw new Error('createAccount.alreadyExists');
         }
 
         const passwordHashDS = await PasswordHasher.hashPassword(userCreationDS.getPassword());
         await this.userDataGateway.createUser(userCreationDS, passwordHashDS);
+
+        const userEmail = new UserEmailVM(userCreationDS.getName(), userCreationDS.getFirstName(), userCreationDS.getEmail(), userCreationDS.getLanguage());
+        const usersGroupAdminStore = await this.userGroupDataGateway.findUsersInGroup(userCreationDS.getCustomer().getCustomerId(), GroupConst.ADMIN_STORE);
+        const userAdminStoreEmail = usersGroupAdminStore.map(userGroupAdmin => userGroupAdmin.getUser().getEmail());
+        await this.sendMailDataGateway.sendEmailNewUserAccount(userEmail, userCreationDS.getCustomer(), userAdminStoreEmail);
     }
 
     public async loginUser(loginInfoDS: LoginInfoDS): Promise<UserLoginVM> {
@@ -62,16 +76,30 @@ export default class UserFacade implements IUserRequester {
             if (user.getUserGroups().length !== 0) {
                 groupIdDiscountUser = user.getUserGroups()[0].getGroup().getGroupId();
             }
-            const userPurchaser = new UserPurchaserVM(user.getUserId(), groupIdDiscountUser, user.getAccess(), user.getName(), user.getFirstName(), user.getEmail());
+            const userPurchaser = new UserPurchaserVM(user.getUserId(), groupIdDiscountUser, user.getAccess(), user.getName(), user.getFirstName(), user.getEmail(), user.getLanguage());
             userPurchasers.push(userPurchaser);
         }
 
         return userPurchasers;
     }
 
+    public async getUsersFromGroupForCustomer(customerId: number, groupId: string): Promise<Array<UserPurchaserVM>> {
+        const usersGroup = await this.userGroupDataGateway.findUsersInGroup(customerId, groupId);
+        return usersGroup.map(userGroup => new UserPurchaserVM(userGroup.getUser().getUserId(), groupId, userGroup.getUser().getAccess(), userGroup.getUser().getName(), userGroup.getUser().getFirstName(), userGroup.getUser().getEmail(), userGroup.getUser().getLanguage()));
+    }
 
-    public async updateUserActive(userId: string, customerId: number, access: boolean): Promise<void> {
-        await this.userDataGateway.updateUserActive(userId, customerId, access);
+
+    public async updateUserActive(userId: string, customer: CustomerVM, access: boolean): Promise<void> {
+        const user = await this.userDataGateway.findUserById(userId, customer.getCustomerId());
+        if (user.getAccess() === access) {
+            return;
+        }
+        await this.userDataGateway.updateUserActive(userId, customer.getCustomerId(), access);
+        if (access) {
+            const user = await this.userDataGateway.findUserById(userId, customer.getCustomerId());
+            const userEmail = new UserEmailVM(user.getName(), user.getFirstName(), user.getEmail(), user.getLanguage());
+            await this.sendMailDataGateway.sendEmailUserAccess(userEmail, customer);
+        }
     }
 
     public async userExistsForCustomer(userId: string, customerId: number): Promise<boolean> {

@@ -8,4 +8,8 @@ export default interface IUserGroupDataGateway {
     existsUserInGroup(userId: string, groupId: string): Promise<boolean>;
 
     deleteUserFromGroup(userId: string, groupId: string): Promise<void>;
+
+    existsUserInDiscountGroup(userId: string): Promise<boolean>;
+
+    findUsersInGroup(customerId: number, groupId: string): Promise<Array<UserGroupEntity>>
 }
