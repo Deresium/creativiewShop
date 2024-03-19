@@ -1,4 +1,5 @@
 import UserGroupEntity from "../entities/UserGroupEntity";
+import PasswordChangeRequestEntity from "../entities/PasswordChangeRequestEntity";
 
 export default interface IUserGroupDataGateway {
     getAllGroupsForUser(userId: string, customerId: number): Promise<Array<UserGroupEntity>>;
@@ -11,5 +12,5 @@ export default interface IUserGroupDataGateway {
 
     existsUserInDiscountGroup(userId: string): Promise<boolean>;
 
-    findUsersInGroup(customerId: number, groupId: string): Promise<Array<UserGroupEntity>>
+    findUsersInGroup(customerId: number, groupId: string): Promise<Array<UserGroupEntity>>;
 }

@@ -4,7 +4,9 @@ import UserEntity from "../entities/UserEntity";
 import PasswordHashDS from "../../business/models/datastores/PasswordHashDS";
 import UserGroupEntity from "../entities/UserGroupEntity";
 import GroupEntity from "../entities/GroupEntity";
-import {Op} from "sequelize";
+import {Op, Transaction} from "sequelize";
+import PasswordChangeRequestEntity from "../entities/PasswordChangeRequestEntity";
+import DatabaseSingleton from "../DatabaseSingleton";
 
 export default class UserDataMapper implements IUserDataGateway {
     public async createUser(userCreationDS: UserCreationDS, hashPassword: PasswordHashDS): Promise<void> {
@@ -87,4 +89,50 @@ export default class UserDataMapper implements IUserDataGateway {
         });
         return count === 1;
     }
+
+    public async createPasswordChangeRequest(userId: string, hash: string): Promise<void> {
+        await PasswordChangeRequestEntity.create({
+            userId: userId,
+            hash: hash,
+            requestUsed: false
+        });
+    }
+
+    public async findPasswordChangeRequest(hash: string): Promise<PasswordChangeRequestEntity> {
+        return PasswordChangeRequestEntity.findOne({
+            where: {
+                hash: hash,
+                requestUsed: false
+            }
+        });
+    }
+
+    public async updatePasswordBasedOnChangeRequest(userId: string, hash: string, newPassword: string, newSalt: string): Promise<void> {
+        await DatabaseSingleton.getInstance().getSequelize().transaction(async (t: Transaction) => {
+
+            await PasswordChangeRequestEntity.update({
+                requestUsed: true,
+            },{
+                where: {
+                    userId: userId,
+                    hash: hash
+                },
+                transaction: t
+            });
+
+            await UserEntity.update({
+                password: newPassword,
+                salted: newSalt
+            }, {
+                where: {
+                    userId: userId
+                },
+                transaction: t
+            })
+        });
+    }
+
+
+
+
 }

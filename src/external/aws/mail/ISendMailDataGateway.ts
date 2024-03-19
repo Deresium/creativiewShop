@@ -5,4 +5,6 @@ export default interface ISendMailDataGateway {
     sendEmailUserAccess(user: UserEmailVM, customer: CustomerVM): Promise<void>;
 
     sendEmailNewUserAccount(user: UserEmailVM, customer: CustomerVM, userAdminStoreEmail: Array<string>): Promise<void>;
+
+    sendEmailForgotPassword(customer: CustomerVM, uuid: string, to: string, language: string): Promise<void>;
 }

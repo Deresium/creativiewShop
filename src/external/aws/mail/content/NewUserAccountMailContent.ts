@@ -1,6 +1,6 @@
 import MailContent from "./MailContent";
-import UserEmailVM from "../../../business/models/viewmodels/UserEmailVM";
-import CustomerVM from "../../../business/models/viewmodels/CustomerVM";
+import UserEmailVM from "../../../../business/models/viewmodels/UserEmailVM";
+import CustomerVM from "../../../../business/models/viewmodels/CustomerVM";
 
 export default class NewUserAccountMailContent extends MailContent {
     private readonly user: UserEmailVM;

@@ -12,6 +12,8 @@ import ISendMailDataGateway from "../../external/aws/mail/ISendMailDataGateway";
 import UserEmailVM from "../models/viewmodels/UserEmailVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import IUserGroupDataGateway from "../../database/gateways/IUserGroupDataGateway";
+import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from 'uuid';
 
 export default class UserFacade implements IUserRequester {
     private readonly userDataGateway: IUserDataGateway;
@@ -105,4 +107,32 @@ export default class UserFacade implements IUserRequester {
     public async userExistsForCustomer(userId: string, customerId: number): Promise<boolean> {
         return await this.userDataGateway.userExistsForCustomer(userId, customerId);
     }
+
+    public async addPasswordChangeRequest(email: string, customer: CustomerVM): Promise<void> {
+        const user = await this.userDataGateway.findUserByEmailAndCustomer(email, customer.getCustomerId());
+        if(!user){
+            return;
+        }
+        const uuid: string = uuidv4();
+        const hashUuid = bcrypt.hash(uuid);
+        await this.userDataGateway.createPasswordChangeRequest(user.getUserId(), hashUuid);
+        await this.sendMailDataGateway.sendEmailForgotPassword(customer, uuid, user.getEmail(), user.getLanguage());
+    }
+
+    public async updatePasswordBasedOnChangeRequest(uuid: string, password: string, repeatPassword: string): Promise<void> {
+        if(password !== repeatPassword){
+            throw new Error('error.passwordMatch');
+        }
+
+        const hashUuid = bcrypt.hash(uuid);
+        const passwordRequest = await this.userDataGateway.findPasswordChangeRequest(hashUuid);
+        if(!passwordRequest){
+            throw new Error('error.noRequest');
+        }
+
+        const passwordHashed = await PasswordHasher.hashPassword(password);
+        await this.userDataGateway.updatePasswordBasedOnChangeRequest(passwordRequest.getUserId(), hashUuid, passwordHashed.getHashedPassword(), passwordHashed.getSalt());
+    }
+
+
 }

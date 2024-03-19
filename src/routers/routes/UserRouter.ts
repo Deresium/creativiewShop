@@ -68,6 +68,22 @@ export default class UserRouter extends ApplicationRouter {
             res.send();
         });
 
+        this.getRouter().post('/forgotPassword', async(req: any, res: any) => {
+            const email = req.body.email;
+            const customer = req.customer;
+            await this.userRequester.addPasswordChangeRequest(email, customer);
+            res.send();
+        });
+
+        this.getRouter().post('/changePasswordRequest', async(req: any, res: any) => {
+            const uuid = req.body.uuid;
+            const password = req.body.password;
+            const repeatPassword = req.body.repeatPassword;
+
+            await this.userRequester.updatePasswordBasedOnChangeRequest(uuid, password, repeatPassword);
+            res.send();
+        });
+
         this.getRouter().get('/user', async (req: any, res: any) => {
             const userId = req.userId;
             const customerId = req.customer.getCustomerId();

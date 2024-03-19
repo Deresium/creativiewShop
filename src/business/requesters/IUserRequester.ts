@@ -19,4 +19,8 @@ export default interface IUserRequester {
     userExistsForCustomer(userId: string, customerId: number): Promise<boolean>;
 
     getUsersFromGroupForCustomer(customerId: number, groupId: string): Promise<Array<UserPurchaserVM>>;
+
+    addPasswordChangeRequest(email: string, customer: CustomerVM): Promise<void>;
+
+    updatePasswordBasedOnChangeRequest(uuid: string, password: string, repeatPassword: string): Promise<void>;
 }
