@@ -3,7 +3,6 @@ import DatabaseSingleton from "../DatabaseSingleton";
 
 export default class PasswordChangeRequestEntity extends Model {
     private passwordChangeRequestId: string;
-    private salt: string;
     private userId: string;
     private requestUsed: boolean;
     private createdAt: Date;

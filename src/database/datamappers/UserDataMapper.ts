@@ -92,8 +92,8 @@ export default class UserDataMapper implements IUserDataGateway {
 
     public async createPasswordChangeRequest(userId: string, hash: string): Promise<void> {
         await PasswordChangeRequestEntity.create({
+            passwordChangeRequestId: hash,
             userId: userId,
-            hash: hash,
             requestUsed: false
         });
     }
@@ -101,7 +101,7 @@ export default class UserDataMapper implements IUserDataGateway {
     public async findPasswordChangeRequest(hash: string): Promise<PasswordChangeRequestEntity> {
         return PasswordChangeRequestEntity.findOne({
             where: {
-                hash: hash,
+                passwordChangeRequestId: hash,
                 requestUsed: false
             }
         });
@@ -115,7 +115,7 @@ export default class UserDataMapper implements IUserDataGateway {
             },{
                 where: {
                     userId: userId,
-                    hash: hash
+                    passwordChangeRequestId: hash
                 },
                 transaction: t
             });
