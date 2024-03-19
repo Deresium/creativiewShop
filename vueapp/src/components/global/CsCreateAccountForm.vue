@@ -33,9 +33,11 @@ import useRules from "../../compositionfunctions/rules.ts";
 import axiosServer from "../../axios/axiosServer.ts";
 import * as validator from "validator";
 import TitleValueVM from "../../viewmodels/TitleValueVM.ts";
+import useGoogleRecaptcha from "../../compositionfunctions/googleRecaptcha.ts";
 
 const {t, availableLocales} = useI18n({useScope: "global"});
 const {notEmpty, isEmail, isStrongPassword, isSamePassword} = useRules();
+const {getToken} = useGoogleRecaptcha();
 
 const formValid = ref();
 const firstSubmit = ref(false);
@@ -75,7 +77,7 @@ const submitForm = async () => {
         return;
     }
 
-    //const token = await getToken('CREATE ACCOUNT');
+    const token = await getToken('CREATE_ACCOUNT');
 
     try {
         await axiosServer.post('/user', {
@@ -85,6 +87,11 @@ const submitForm = async () => {
             password: password.value,
             repeatPassword: repeatPassword.value,
             language: language.value
+        }, {
+            params: {
+                tokenAction: 'CREATE_ACCOUNT',
+                token: token
+            }
         });
         backendError.value = '';
         successCreate.value = true;

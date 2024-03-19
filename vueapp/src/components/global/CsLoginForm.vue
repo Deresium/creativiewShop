@@ -10,6 +10,7 @@
                           type="password"/>
             <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('submit') }}</v-btn>
         </v-form>
+        <router-link :to="{name: 'passwordRequest'}" class="linkLostPassword">{{ t('IForgotPassword') }}</router-link>
     </template>
 
     <template v-if="successLogin">
@@ -26,11 +27,13 @@ import * as validator from "validator";
 import useRules from "../../compositionfunctions/rules.ts";
 import axiosServer from "../../axios/axiosServer.ts";
 import {useUserStore} from "../../pinia/user/UserStore.ts";
+import useGoogleRecaptcha from "../../compositionfunctions/googleRecaptcha.ts";
 
 
 const {t} = useI18n({useScope: "global"});
 const {notEmpty, isEmail} = useRules();
 const userStore = useUserStore();
+const {getToken} = useGoogleRecaptcha();
 
 const formValid = ref();
 const firstSubmit = ref(false);
@@ -53,10 +56,16 @@ const submitForm = async () => {
         return;
     }
 
+    const token = await getToken('LOGIN');
     try {
         await axiosServer.post('/login', {
             email: email.value,
             password: password.value,
+        }, {
+            params: {
+                tokenAction: 'LOGIN',
+                token: token
+            }
         });
         await userStore.retrieveLoginUserInfo();
         backendError.value = '';
@@ -72,5 +81,11 @@ const submitForm = async () => {
 <style scoped>
 .alertError {
     margin-bottom: 10px;
+}
+
+.linkLostPassword {
+    display: block;
+    margin-top: 10px;
+    color: black;
 }
 </style>

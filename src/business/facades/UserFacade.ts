@@ -12,8 +12,8 @@ import ISendMailDataGateway from "../../external/aws/mail/ISendMailDataGateway";
 import UserEmailVM from "../models/viewmodels/UserEmailVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import IUserGroupDataGateway from "../../database/gateways/IUserGroupDataGateway";
-import bcrypt from "bcryptjs";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
+import {createHash} from 'crypto';
 
 export default class UserFacade implements IUserRequester {
     private readonly userDataGateway: IUserDataGateway;
@@ -110,24 +110,31 @@ export default class UserFacade implements IUserRequester {
 
     public async addPasswordChangeRequest(email: string, customer: CustomerVM): Promise<void> {
         const user = await this.userDataGateway.findUserByEmailAndCustomer(email, customer.getCustomerId());
-        if(!user){
+        if (!user) {
             return;
         }
         const uuid: string = uuidv4();
-        const hashUuid = bcrypt.hash(uuid);
+        const hashUuid = createHash('sha256').update(uuid).digest('hex');
         await this.userDataGateway.createPasswordChangeRequest(user.getUserId(), hashUuid);
         await this.sendMailDataGateway.sendEmailForgotPassword(customer, uuid, user.getEmail(), user.getLanguage());
     }
 
     public async updatePasswordBasedOnChangeRequest(uuid: string, password: string, repeatPassword: string): Promise<void> {
-        if(password !== repeatPassword){
-            throw new Error('error.passwordMatch');
+        if (password !== repeatPassword) {
+            throw new Error('error.noMatchPassword');
         }
 
-        const hashUuid = bcrypt.hash(uuid);
+        const hashUuid = createHash('sha256').update(uuid).digest('hex');
         const passwordRequest = await this.userDataGateway.findPasswordChangeRequest(hashUuid);
-        if(!passwordRequest){
+        if (!passwordRequest) {
             throw new Error('error.noRequest');
+        }
+
+        const createdAt = passwordRequest.getCreatedAt();
+        const now = new Date();
+        const differenceInMs = now.getTime() - createdAt.getTime();
+        if (differenceInMs > 1000 * 60 * 60 * 2) { // 2 hours timeout
+            throw new Error('error.expired');
         }
 
         const passwordHashed = await PasswordHasher.hashPassword(password);

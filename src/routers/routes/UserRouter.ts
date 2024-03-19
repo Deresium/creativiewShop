@@ -13,19 +13,21 @@ export default class UserRouter extends ApplicationRouter {
     private readonly userGroupRequester: IUserGroupRequester;
     private readonly onlyAdminMiddleware: RequestHandler;
     private readonly checkUserOwnerMiddleware: RequestHandler;
+    private readonly checkTokenRecaptchaMiddleware: RequestHandler;
 
 
-    constructor(userRequester: IUserRequester, userGroupRequester: IUserGroupRequester, onlyAdminMiddleware: RequestHandler, checkUserOwnerMiddleware: RequestHandler) {
+    constructor(userRequester: IUserRequester, userGroupRequester: IUserGroupRequester, onlyAdminMiddleware: RequestHandler, checkUserOwnerMiddleware: RequestHandler, checkTokenRecaptchaMiddleware: RequestHandler) {
         super();
         this.userRequester = userRequester;
         this.userGroupRequester = userGroupRequester;
         this.onlyAdminMiddleware = onlyAdminMiddleware;
         this.checkUserOwnerMiddleware = checkUserOwnerMiddleware;
+        this.checkTokenRecaptchaMiddleware = checkTokenRecaptchaMiddleware;
         this.initRoutes();
     }
 
     public initRoutes(): void {
-        this.getRouter().post('/user', async (req: any, res: any) => {
+        this.getRouter().post('/user', this.checkTokenRecaptchaMiddleware, async (req: any, res: any) => {
             const email = req.body.email;
             const name = req.body.name;
             const firstName = req.body.firstName;
@@ -37,12 +39,11 @@ export default class UserRouter extends ApplicationRouter {
                 await this.userRequester.createUser(new UserCreationDS(email, password, repeatPassword, name, firstName, customer, language));
                 res.send();
             } catch (error: any) {
-                console.error(error);
                 res.status(400).send(error.message);
             }
         });
 
-        this.getRouter().post('/login', async (req: any, res: any) => {
+        this.getRouter().post('/login', this.checkTokenRecaptchaMiddleware, async (req: any, res: any) => {
             const email = req.body.email;
             const password = req.body.password;
             const customerId = req.customer.getCustomerId();
@@ -57,7 +58,6 @@ export default class UserRouter extends ApplicationRouter {
                     res.status(400).send('login.fail');
                 }
             } catch (error: any) {
-                console.error(error);
                 res.status(400).send();
             }
         });
@@ -68,20 +68,24 @@ export default class UserRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().post('/forgotPassword', async(req: any, res: any) => {
+        this.getRouter().post('/forgotPassword', this.checkTokenRecaptchaMiddleware, async (req: any, res: any) => {
             const email = req.body.email;
             const customer = req.customer;
             await this.userRequester.addPasswordChangeRequest(email, customer);
             res.send();
         });
 
-        this.getRouter().post('/changePasswordRequest', async(req: any, res: any) => {
+        this.getRouter().post('/changePasswordRequest', this.checkTokenRecaptchaMiddleware, async (req: any, res: any) => {
             const uuid = req.body.uuid;
             const password = req.body.password;
             const repeatPassword = req.body.repeatPassword;
 
-            await this.userRequester.updatePasswordBasedOnChangeRequest(uuid, password, repeatPassword);
-            res.send();
+            try {
+                await this.userRequester.updatePasswordBasedOnChangeRequest(uuid, password, repeatPassword);
+                res.send();
+            } catch (error: any) {
+                res.status(400).send(error.message);
+            }
         });
 
         this.getRouter().get('/user', async (req: any, res: any) => {

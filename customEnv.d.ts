@@ -8,6 +8,7 @@ declare namespace NodeJS {
         AWS_KEY_SECRET,
         AWS_BUCKET_NAME,
         GOOGLE_PROJECT_ID,
-        GOOGLE_RECAPTCHA_KEY
+        GOOGLE_RECAPTCHA_KEY,
+        GOOGLE_API_KEY
     }
 }

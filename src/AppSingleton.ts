@@ -63,6 +63,7 @@ import CountryDataMapper from "./database/datamappers/CountryDataMapper";
 import CountryFacade from "./business/facades/CountryFacade";
 import CheckUserOwnerMiddleware from "./routers/middlewares/checkUserOwnerMiddleware";
 import SendMailDataMapper from "./external/aws/mail/SendMailDataMapper";
+import CheckTokenRecaptchaMiddleware from "./routers/middlewares/CheckTokenRecaptchaMiddleware";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -167,8 +168,9 @@ export default class AppSingleton {
         const checkProductOwnerMiddleware = new CheckProductOwnerMiddleware(productFacade).getRequestHandler();
         const checkDeliveryOptionOwnerMiddleware = new CheckDeliveryOptionOwnerMiddleware(deliveryOptionFacade).getRequestHandler();
         const checkUserOwnerMiddleware = new CheckUserOwnerMiddleware(userFacade).getRequestHandler();
+        const checkTokenRecaptchaMiddleware = new CheckTokenRecaptchaMiddleware().getRequestHandler();
 
-        this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminMiddleware, checkUserOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminMiddleware, checkUserOwnerMiddleware, checkTokenRecaptchaMiddleware).getRouter());
         this.expressApp.use('/api', new CustomerRouter().getRouter());
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
         this.expressApp.use('/api', new CategoryRouter(categoryFacade, onlyAdminMiddleware).getRouter());

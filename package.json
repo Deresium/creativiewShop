@@ -15,6 +15,7 @@
         "@aws-sdk/client-s3": "^3.507.0",
         "@aws-sdk/client-ses": "^3.507.0",
         "@google-cloud/recaptcha-enterprise": "^5.4.0",
+        "axios": "^1.6.8",
         "bcryptjs": "^2.4.3",
         "cookie": "^0.6.0",
         "express": "4.17.0",

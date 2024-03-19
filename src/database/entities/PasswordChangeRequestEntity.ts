@@ -7,8 +7,12 @@ export default class PasswordChangeRequestEntity extends Model {
     private requestUsed: boolean;
     private createdAt: Date;
 
-    public getUserId(){
+    public getUserId() {
         return this.userId;
+    }
+
+    public getCreatedAt() {
+        return this.createdAt;
     }
 }
 
@@ -17,7 +21,7 @@ PasswordChangeRequestEntity.init({
     userId: DataTypes.STRING,
     requestUsed: DataTypes.BOOLEAN,
     createdAt: DataTypes.DATE
-},{
+}, {
     tableName: 'PasswordChangeRequest',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
 });
