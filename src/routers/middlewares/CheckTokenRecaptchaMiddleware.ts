@@ -3,6 +3,11 @@ import {RequestHandler} from "express";
 import axios from "axios";
 
 export default class CheckTokenRecaptchaMiddleware extends ApplicationMiddleware {
+
+    constructor() {
+        super();
+    }
+
     defineMiddlewareFunction(): RequestHandler {
         return async (req: any, res: any, next: any) => {
             const token = req.query.token;
