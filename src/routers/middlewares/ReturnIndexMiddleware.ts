@@ -13,7 +13,7 @@ export default class ReturnIndexMiddleware extends ApplicationMiddleware {
                 next();
             } else {
                 const publicDirectoryPath = path.join(__dirname, `../../../public/vueapp`);
-                res.sendFile(publicDirectoryPath + '/index.html');
+                res.sendFile(`${publicDirectoryPath}/customer/${req.customer.getCustomerId()}/index.html`);
             }
         }
     }

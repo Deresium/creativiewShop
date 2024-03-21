@@ -2,7 +2,7 @@ export default class CustomerVM {
     private readonly customerId: number;
     private readonly name: string;
     private readonly dnsName: string;
-    private readonly storeProtectionCode: boolean;
+    private readonly storeProtectionCode: string;
     private readonly firstColor: string;
     private readonly secondColor: string;
     private readonly thirdColor: string;
@@ -11,7 +11,7 @@ export default class CustomerVM {
     private readonly emailFrom: string;
 
 
-    constructor(customerId: number, name: string, dnsName: string, storeProtectionCode: boolean, firstColor: string, secondColor: string, thirdColor: string, currencyCode: string, currencySymbol: string, emailFrom: string) {
+    constructor(customerId: number, name: string, dnsName: string, storeProtectionCode: string, firstColor: string, secondColor: string, thirdColor: string, currencyCode: string, currencySymbol: string, emailFrom: string) {
         this.customerId = customerId;
         this.name = name;
         this.dnsName = dnsName;
@@ -37,7 +37,7 @@ export default class CustomerVM {
         return this.dnsName;
     }
 
-    public getStoreProtectionCode(): boolean {
+    public getStoreProtectionCode(): string {
         return this.storeProtectionCode;
     }
 

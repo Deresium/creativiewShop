@@ -17,13 +17,14 @@
     <LoginOverlay v-if="showLoginOverlay" :open-tab="openTab"/>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useCustomerStore} from "../../pinia/customer/CustomerStore.ts";
 import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import LoginOverlay from "../global/CsLoginOverlay.vue";
 import {useGlobalStore} from "../../pinia/global/GlobalStore.ts";
 import useUser from "../../compositionfunctions/user.ts";
+import StoreAccessRequester from "../../requesters/StoreAccessRequester.ts";
 
 const customerStore = useCustomerStore();
 const globalStore = useGlobalStore();
@@ -35,6 +36,10 @@ const openTab = ref('');
 const {t} = useI18n({useScope: 'global'});
 const customerName = computed(() => customerStore.getCustomerName);
 const {isLoggedIn, nameFirstName} = useUser();
+
+StoreAccessRequester.requestStoreAccess().then((response) => {
+    console.log(response)
+});
 
 const clickOnLogin = () => {
     openTab.value = 'login';

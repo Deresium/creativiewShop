@@ -6,7 +6,7 @@ export default class CustomerEntity extends Model {
     private customerId: number;
     private name: string;
     private dnsName: string;
-    private storeProtectionCode: boolean;
+    private storeProtectionCode: string;
     private firstColor: string;
     private secondColor: string;
     private thirdColor: string;
@@ -25,7 +25,7 @@ export default class CustomerEntity extends Model {
         return this.dnsName;
     }
 
-    public getStoreProtectionCode(): boolean {
+    public getStoreProtectionCode(): string {
         return this.storeProtectionCode;
     }
 

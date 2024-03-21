@@ -64,6 +64,7 @@ import CountryFacade from "./business/facades/CountryFacade";
 import CheckUserOwnerMiddleware from "./routers/middlewares/checkUserOwnerMiddleware";
 import SendMailDataMapper from "./external/aws/mail/SendMailDataMapper";
 import CheckTokenRecaptchaMiddleware from "./routers/middlewares/CheckTokenRecaptchaMiddleware";
+import StoreRouter from "./routers/routes/StoreRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -153,8 +154,8 @@ export default class AppSingleton {
         const publicDirectoryPath = path.join(__dirname, '../public');
         this.expressApp.use(express.static(publicDirectoryPath));
 
-        this.expressApp.use(new ReturnIndexMiddleware().getRequestHandler());
         this.expressApp.use(new ExtractCustomerMiddleware().getRequestHandler());
+        this.expressApp.use(new ReturnIndexMiddleware().getRequestHandler());
 
         this.expressApp.use('/api', new PublicFileRouter(categoryFacade, productOptionPictureFacade).getRouter());
 
@@ -180,5 +181,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new CurrencyRateRouter(currencyRateFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new GroupRouter(groupFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new DeliveryOptionRouter(deliveryOptionFacade, deliveryOptionCountryFacade, countryFacade, weightPriceFacade, onlyAdminMiddleware, checkDeliveryOptionOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new StoreRouter().getRouter());
     }
 }

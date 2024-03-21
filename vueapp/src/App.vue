@@ -17,7 +17,7 @@
 import CsHeader from "./components/global/CsHeader.vue";
 import CsFooter from "./components/global/CsFooter.vue";
 import {useCustomerStore} from "./pinia/customer/CustomerStore.ts";
-import {computed, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import InternalizationRequester from "./requesters/InternalizationRequester.ts";
 import I18nMessagesMerger from "./i18n/i18nMessagesMerger.ts";
 import {useI18n} from "vue-i18n";
@@ -29,16 +29,7 @@ const initDone = ref(false);
 const customerStore = useCustomerStore();
 const userStore = useUserStore();
 const globalStore = useGlobalStore();
-const customerName = computed(() => customerStore.getCustomerName);
 const {locale} = useI18n({useScope: "global"});
-
-watch(customerName, () => {
-    document.title = `${customerName.value} - ${document.title}`;
-    const link = document.getElementById('favIconLink');
-    if (link) {
-        link.setAttribute('href', `${import.meta.env.BASE_URL}icos/${customerStore.getCustomerId}.ico`);
-    }
-});
 
 watch(locale, () => {
     axiosServer.defaults.params['language'] = locale.value;
