@@ -4,6 +4,7 @@ import ProductOptionUpdateDS from "../../business/models/datastores/ProductOptio
 import {Op} from "sequelize";
 import ProductEntity from "../entities/ProductEntity";
 import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
+import ProductOptionPictureEntity from "../entities/ProductOptionPictureEntity";
 
 export default class ProductOptionDataMapper implements IProductOptionDataGateway {
     public async createProductOption(productId: string): Promise<string> {
@@ -28,20 +29,6 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
 
     public async getProductOption(productOptionId: string): Promise<ProductOptionEntity> {
         return await ProductOptionEntity.findByPk(productOptionId);
-    }
-
-    public async getProductOptionIdByCustomer(customerId: number): Promise<Array<string>> {
-        const response = await ProductOptionEntity.findAll({
-            attributes: ['productOptionId'],
-            where: {
-                deletedAt: {
-                    [Op.eq]: null
-                }
-            },
-            include: [{model: ProductEntity, where: {customerId: customerId}}]
-        });
-
-        return response.map(productOption => productOption.getProductOptionId());
     }
 
     public async getProductOptionByProduct(productId: string): Promise<Array<ProductOptionEntity>> {
@@ -74,6 +61,41 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
             where: {
                 productOptionId: productOptionUpdate.getProductOptionId()
             }
+        });
+    }
+
+    public async getProductOptionFeatured(customerId: string): Promise<Array<ProductOptionEntity>> {
+        return await ProductOptionEntity.findAll({
+            attributes: ['productOptionId'],
+            where: {
+                featured: true,
+                active: true
+            },
+            include: [{attributes: [], model: ProductEntity, where: {customerId: customerId}, as: 'product'}]
+        })
+    };
+
+    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>): Promise<ProductOptionEntity> {
+        return await ProductOptionEntity.findOne({
+            where: {
+                productOptionId: productOptionId
+            },
+            include: [
+                {
+                    model: ProductEntity,
+                    as: 'product'
+                },
+                {
+                    attributes: ['productOptionPictureId'],
+                    model: ProductOptionPictureEntity,
+                    as: 'productOptionPictures'
+                },
+                {
+                    model: ProductOptionPriceEntity,
+                    where: {endDate: {[Op.eq]: null}},
+                    as: 'productOptionPrices'
+                }
+            ]
         });
     }
 

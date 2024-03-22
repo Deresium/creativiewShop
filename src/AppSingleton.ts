@@ -65,6 +65,7 @@ import CheckUserOwnerMiddleware from "./routers/middlewares/checkUserOwnerMiddle
 import SendMailDataMapper from "./external/aws/mail/SendMailDataMapper";
 import CheckTokenRecaptchaMiddleware from "./routers/middlewares/CheckTokenRecaptchaMiddleware";
 import StoreRouter from "./routers/routes/StoreRouter";
+import CheckStoreAccessMiddleware from "./routers/middlewares/CheckStoreAccessMiddleware";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -170,6 +171,7 @@ export default class AppSingleton {
         const checkDeliveryOptionOwnerMiddleware = new CheckDeliveryOptionOwnerMiddleware(deliveryOptionFacade).getRequestHandler();
         const checkUserOwnerMiddleware = new CheckUserOwnerMiddleware(userFacade).getRequestHandler();
         const checkTokenRecaptchaMiddleware = new CheckTokenRecaptchaMiddleware().getRequestHandler();
+        const checkStoreAccessMiddleware = new CheckStoreAccessMiddleware().getRequestHandler();
 
         this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminMiddleware, checkUserOwnerMiddleware, checkTokenRecaptchaMiddleware).getRouter());
         this.expressApp.use('/api', new CustomerRouter().getRouter());
@@ -181,6 +183,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new CurrencyRateRouter(currencyRateFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new GroupRouter(groupFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new DeliveryOptionRouter(deliveryOptionFacade, deliveryOptionCountryFacade, countryFacade, weightPriceFacade, onlyAdminMiddleware, checkDeliveryOptionOwnerMiddleware).getRouter());
-        this.expressApp.use('/api', new StoreRouter().getRouter());
+        this.expressApp.use('/api', new StoreRouter(productOptionFacade, checkStoreAccessMiddleware).getRouter());
     }
 }

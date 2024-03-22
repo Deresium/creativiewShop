@@ -89,3 +89,9 @@ ProductEntity.hasMany(ProductOptionEntity, {
     foreignKey: 'productId',
     as: 'productOptions'
 });
+
+ProductOptionEntity.hasOne(ProductEntity, {
+    sourceKey: 'productId',
+    foreignKey: 'productId',
+    as: 'product'
+});

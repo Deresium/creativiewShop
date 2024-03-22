@@ -24,11 +24,13 @@ import {useI18n} from "vue-i18n";
 import axiosServer from "./axios/axiosServer.ts";
 import {useUserStore} from "./pinia/user/UserStore.ts";
 import {useGlobalStore} from "./pinia/global/GlobalStore.ts";
+import {useStoreStore} from "./pinia/store/StoreStore.ts";
 
 const initDone = ref(false);
 const customerStore = useCustomerStore();
 const userStore = useUserStore();
 const globalStore = useGlobalStore();
+const storeStore = useStoreStore();
 const {locale} = useI18n({useScope: "global"});
 
 watch(locale, () => {
@@ -37,6 +39,7 @@ watch(locale, () => {
 
 const initApp = async () => {
     await customerStore.retrieveCustomer();
+    storeStore.setCurrency(customerStore.getCurrencyCode, customerStore.getCurrencySymbol);
     const messages = await InternalizationRequester.getInternalizationMessages();
     new I18nMessagesMerger().addMessages(messages);
     await userStore.retrieveLoginUserInfo();

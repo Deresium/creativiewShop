@@ -1,10 +1,13 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 import ProductOptionPriceEntity from "./ProductOptionPriceEntity";
+import ProductOptionPictureEntity from "./ProductOptionPictureEntity";
+import ProductEntity from "./ProductEntity";
 
 export default class ProductOptionEntity extends Model {
     private productOptionId: string;
     private productId: string;
+    private product: ProductEntity;
     private nameFr: string;
     private nameEn: string;
     private code: string;
@@ -17,14 +20,18 @@ export default class ProductOptionEntity extends Model {
     private deletedAt: Date;
 
     private productOptionPrices: Array<ProductOptionPriceEntity>;
+    private productOptionPictures: Array<ProductOptionPictureEntity>;
 
     public getProductOptionId() {
         return this.productOptionId;
     }
 
-
     public getProductId(): string {
         return this.productId;
+    }
+
+    public getProduct(): ProductEntity {
+        return this.product;
     }
 
     public getNameFr(): string {
@@ -66,6 +73,10 @@ export default class ProductOptionEntity extends Model {
     public getListPrices() {
         return this.productOptionPrices;
     }
+
+    public getListPictures() {
+        return this.productOptionPictures;
+    }
 }
 
 ProductOptionEntity.init({
@@ -90,4 +101,10 @@ ProductOptionEntity.hasMany(ProductOptionPriceEntity, {
     sourceKey: 'productOptionId',
     foreignKey: 'productOptionId',
     as: 'productOptionPrices'
+});
+
+ProductOptionEntity.hasMany(ProductOptionPictureEntity, {
+    sourceKey: 'productOptionId',
+    foreignKey: 'productOptionId',
+    as: 'productOptionPictures'
 });

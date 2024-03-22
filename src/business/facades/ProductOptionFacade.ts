@@ -3,6 +3,8 @@ import ProductOptionVM from "../models/viewmodels/ProductOptionVM";
 import ProductOptionUpdateDS from "../models/datastores/ProductOptionUpdateDS";
 import IProductOptionDataGateway from "../../database/gateways/IProductOptionDataGateway";
 import ProductOptionEntity from "../../database/entities/ProductOptionEntity";
+import ProductOptionStoreVM from "../models/viewmodels/ProductOptionStoreVM";
+import ProductOptionStoreBuilder from "../utils/ProductOptionStoreBuilder";
 
 export default class ProductOptionFacade implements IProductOptionRequester {
     private readonly productOptionDataGateway: IProductOptionDataGateway;
@@ -29,12 +31,18 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         return productOptions.map(productOption => this.productOptionEntityToVM(productOption));
     }
 
-    public async getProductOptionIdByCustomer(customerId: number): Promise<Array<string>> {
-        return await this.productOptionDataGateway.getProductOptionIdByCustomer(customerId);
-    }
-
     public async updateProductOption(productOptionUpdate: ProductOptionUpdateDS): Promise<void> {
         await this.productOptionDataGateway.updateProductOption(productOptionUpdate);
+    }
+
+    public async getProductOptionFeatured(customerId: string): Promise<Array<string>> {
+        const productOptions = await this.productOptionDataGateway.getProductOptionFeatured(customerId);
+        return productOptions.map(productOption => productOption.getProductOptionId());
+    }
+
+    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, language: string): Promise<ProductOptionStoreVM> {
+        const productOption = await this.productOptionDataGateway.getProductOptionStore(productOptionId, groupIds);
+        return new ProductOptionStoreBuilder(productOption, language).buildProductOptionStore();
     }
 
     private productOptionEntityToVM(productOption: ProductOptionEntity): ProductOptionVM {

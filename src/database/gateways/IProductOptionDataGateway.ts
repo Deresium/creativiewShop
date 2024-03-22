@@ -10,8 +10,10 @@ export default interface IProductOptionDataGateway {
 
     getProductOptionByProduct(productId: string): Promise<Array<ProductOptionEntity>>;
 
-    getProductOptionIdByCustomer(customerId: number): Promise<Array<string>>;
-
     deleteProductOption(productOptionId: string): Promise<void>;
+
+    getProductOptionFeatured(customerId: string): Promise<Array<ProductOptionEntity>>;
+
+    getProductOptionStore(productOptionId: string, groupIds: Array<string>): Promise<ProductOptionEntity>;
 
 }
