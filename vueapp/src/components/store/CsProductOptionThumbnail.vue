@@ -44,13 +44,19 @@ const minutes = ref();
 const seconds = ref();
 
 
-setInterval(() => {
+const interval = setInterval(async () => {
     if (!productOptionStore.value || !productOptionStore.value.getDiscountPrice()) {
+        clearInterval(interval);
         return;
     }
 
     const dateNow = new Date();
     const diff = productOptionStore.value.getEndDateDiscount().getTime() - dateNow.getTime();
+
+    if (diff < 0) {
+        await refreshProductOptionStore();
+    }
+
     nbDays.value = Math.floor(diff / oneDay);
     const remainderHours = diff - (nbDays.value * oneDay);
     nbHours.value = Math.floor(remainderHours / oneHour).toString().padStart(2, '0');
