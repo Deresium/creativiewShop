@@ -5,12 +5,17 @@ import IProductOptionDataGateway from "../../database/gateways/IProductOptionDat
 import ProductOptionEntity from "../../database/entities/ProductOptionEntity";
 import ProductOptionStoreVM from "../models/viewmodels/ProductOptionStoreVM";
 import ProductOptionStoreBuilder from "../utils/ProductOptionStoreBuilder";
+import CustomerVM from "../models/viewmodels/CustomerVM";
+import ICurrencyRateDataGateway from "../../database/gateways/ICurrencyRateDataGateway";
 
 export default class ProductOptionFacade implements IProductOptionRequester {
     private readonly productOptionDataGateway: IProductOptionDataGateway;
+    private readonly currencyRateDataGateway: ICurrencyRateDataGateway;
 
-    constructor(productOptionDataGateway: IProductOptionDataGateway) {
+
+    constructor(productOptionDataGateway: IProductOptionDataGateway, currencyRateDataGateway: ICurrencyRateDataGateway) {
         this.productOptionDataGateway = productOptionDataGateway;
+        this.currencyRateDataGateway = currencyRateDataGateway;
     }
 
     public async createProductOption(productId: string): Promise<string> {
@@ -40,9 +45,17 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         return productOptions.map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, language: string): Promise<ProductOptionStoreVM> {
+    public async getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<string>> {
+        const productOptions = await this.productOptionDataGateway.getProductOptionDiscount(customerId, groups);
+        return productOptions.map(productOption => productOption.getProductOptionId());
+    }
+
+    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<ProductOptionStoreVM> {
         const productOption = await this.productOptionDataGateway.getProductOptionStore(productOptionId, groupIds);
-        return new ProductOptionStoreBuilder(productOption, language).buildProductOptionStore();
+        const rates = await this.currencyRateDataGateway.getCurrentRatesForCustomer(customer.getCustomerId());
+        const mapRates = new Map<string, number>();
+        rates.forEach(rate => mapRates.set(rate.getCurrencyCode(), rate.getRate()));
+        return new ProductOptionStoreBuilder(productOption, customer, mapRates, currency, language).buildProductOptionStore();
     }
 
     private productOptionEntityToVM(productOption: ProductOptionEntity): ProductOptionVM {

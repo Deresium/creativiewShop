@@ -45,4 +45,15 @@ export default class CurrencyRateDataMapper implements ICurrencyRateDataGateway 
             include: [{model: CurrencyEntity, as: 'currency'}]
         });
     }
+
+    public async getCurrentRatesForCustomer(customerId: number): Promise<Array<CurrencyRateEntity>> {
+        return await CurrencyRateEntity.findAll({
+            where: {
+                customerId: customerId,
+                endDate: {
+                    [Op.eq]: null
+                }
+            }
+        });
+    }
 }

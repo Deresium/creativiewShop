@@ -3,6 +3,14 @@ import ProductOptionStoreVM from "../viewmodels/ProductOptionStoreVM.ts";
 export default class ProductOptionStoreParser {
 
     public static parseProductOptionStore(data: any): ProductOptionStoreVM {
+        let startDate: Date = null;
+        let endDate: Date = null;
+        if (data.startDateDiscount) {
+            startDate = new Date(data.startDateDiscount);
+        }
+        if (data.endDateDiscount) {
+            endDate = new Date(data.endDateDiscount);
+        }
         return new ProductOptionStoreVM(
             data.productOptionId,
             data.productId,
@@ -13,8 +21,8 @@ export default class ProductOptionStoreParser {
             data.basePrice,
             data.discountPrice,
             data.percent,
-            data.startDateDiscount,
-            data.endDateDiscount,
+            startDate,
+            endDate,
             data.title,
             data.description,
             data.pictures,

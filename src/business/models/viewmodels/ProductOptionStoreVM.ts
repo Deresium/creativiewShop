@@ -5,18 +5,18 @@ export default class ProductOptionStoreVM {
     private readonly weight: number;
     private readonly manufacturer: string;
     private readonly preorder: boolean;
-    private readonly basePrice: number;
-    private readonly discountPrice: number;
-    private readonly percent: number;
-    private readonly startDateDiscount: Date;
-    private readonly endDateDiscount: Date;
+    private readonly basePrice: string;
+    private readonly discountPrice: string;
+    private readonly percent: string;
+    private readonly startDateDiscount: string;
+    private readonly endDateDiscount: string;
     private readonly title: string;
     private readonly description: string;
     private readonly pictures: Array<string>;
     private readonly otherOptions: Array<ProductOptionStoreVM>;
 
 
-    constructor(productOptionId: string, productId: string, hasStock: boolean, weight: number, manufacturer: string, preorder: boolean, basePrice: number, discountPrice: number, percent: number, startDateDiscount: Date, endDateDiscount: Date, title: string, description: string, pictures: Array<string>, otherOptions: Array<ProductOptionStoreVM>) {
+    constructor(productOptionId: string, productId: string, hasStock: boolean, weight: number, manufacturer: string, preorder: boolean, basePrice: string, discountPrice: string, percent: string, startDateDiscount: string, endDateDiscount: string, title: string, description: string, pictures: Array<string>, otherOptions: Array<ProductOptionStoreVM>) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.hasStock = hasStock;

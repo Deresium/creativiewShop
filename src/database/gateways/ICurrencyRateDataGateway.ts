@@ -1,5 +1,4 @@
 import CurrencyRateEntity from "../entities/CurrencyRateEntity";
-import CurrencyEntity from "../entities/CurrencyEntity";
 import CurrencyCustomerEntity from "../entities/CurrencyCustomerEntity";
 
 export default interface ICurrencyRateDataGateway {
@@ -7,5 +6,7 @@ export default interface ICurrencyRateDataGateway {
 
     getCurrencyRates(currencyCode: string, customerId: number): Promise<Array<CurrencyRateEntity>>;
 
-    getCustomerCurrency(customerId: number): Promise<Array<CurrencyCustomerEntity>>
+    getCustomerCurrency(customerId: number): Promise<Array<CurrencyCustomerEntity>>;
+
+    getCurrentRatesForCustomer(customerId: number): Promise<Array<CurrencyRateEntity>>;
 }

@@ -16,4 +16,6 @@ export default interface IProductOptionDataGateway {
 
     getProductOptionStore(productOptionId: string, groupIds: Array<string>): Promise<ProductOptionEntity>;
 
+    getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<ProductOptionEntity>>;
+
 }

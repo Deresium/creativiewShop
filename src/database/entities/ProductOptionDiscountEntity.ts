@@ -19,7 +19,7 @@ export default class ProductOptionDiscountEntity extends Model {
     }
 
     getProductOptionId(): string {
-        if(this.productOption) {
+        if (this.productOption) {
             return this.productOption.getProductOptionId();
         }
         return null;
@@ -30,13 +30,13 @@ export default class ProductOptionDiscountEntity extends Model {
     }
 
     getGroupId(): string {
-        if(this.group){
+        if (this.group) {
             return this.group.getGroupId();
         }
         return null;
     }
 
-    getGroup(){
+    getGroup() {
         return this.group;
     }
 
@@ -79,6 +79,12 @@ ProductOptionDiscountEntity.hasOne(ProductOptionEntity, {
     sourceKey: 'productOptionId',
     foreignKey: 'productOptionId',
     as: 'productOption'
+});
+
+ProductOptionEntity.hasMany(ProductOptionDiscountEntity, {
+    sourceKey: 'productOptionId',
+    foreignKey: 'productOptionId',
+    as: 'productOptionDiscounts'
 });
 
 ProductOptionDiscountEntity.hasOne(GroupEntity, {

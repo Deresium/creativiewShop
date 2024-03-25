@@ -3,6 +3,7 @@ import DatabaseSingleton from "../DatabaseSingleton";
 import ProductOptionPriceEntity from "./ProductOptionPriceEntity";
 import ProductOptionPictureEntity from "./ProductOptionPictureEntity";
 import ProductEntity from "./ProductEntity";
+import ProductOptionDiscountEntity from "./ProductOptionDiscountEntity";
 
 export default class ProductOptionEntity extends Model {
     private productOptionId: string;
@@ -21,6 +22,7 @@ export default class ProductOptionEntity extends Model {
 
     private productOptionPrices: Array<ProductOptionPriceEntity>;
     private productOptionPictures: Array<ProductOptionPictureEntity>;
+    private productOptionDiscounts: Array<ProductOptionDiscountEntity>;
 
     public getProductOptionId() {
         return this.productOptionId;
@@ -76,6 +78,11 @@ export default class ProductOptionEntity extends Model {
 
     public getListPictures() {
         return this.productOptionPictures;
+    }
+
+
+    public getProductOptionDiscounts(): Array<ProductOptionDiscountEntity> {
+        return this.productOptionDiscounts;
     }
 }
 

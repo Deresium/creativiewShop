@@ -1,13 +1,22 @@
 import ProductOptionEntity from "../../database/entities/ProductOptionEntity";
 import ProductOptionStoreVM from "../models/viewmodels/ProductOptionStoreVM";
+import CustomerVM from "../models/viewmodels/CustomerVM";
+import ProductOptionDiscountEntity from "../../database/entities/ProductOptionDiscountEntity";
+import PercentCalculator from "./PercentCalculator";
 
 export default class ProductOptionStoreBuilder {
     private readonly productOption: ProductOptionEntity;
+    private readonly customer: CustomerVM;
+    private readonly rates: Map<string, number>;
+    private readonly currency: string;
     private readonly language: string;
 
-    constructor(productOption: ProductOptionEntity, language: string) {
+    constructor(productOption: ProductOptionEntity, customer: CustomerVM, rates: Map<string, number>, currency: string, language: string) {
         this.productOption = productOption;
+        this.customer = customer;
+        this.currency = currency;
         this.language = language;
+        this.rates = rates;
     }
 
     public buildProductOptionStore(): ProductOptionStoreVM {
@@ -17,6 +26,8 @@ export default class ProductOptionStoreBuilder {
         }
 
         const price = prices[0].getPrice();
+        const priceCurrency = this.getPriceCurrency(price, this.currency);
+
         const productOptionId = this.productOption.getProductOptionId();
         const productId = this.productOption.getProductId();
         const hasStock = this.productOption.getStock() > 0;
@@ -26,6 +37,15 @@ export default class ProductOptionStoreBuilder {
         const title = this.getTitle();
         const description = this.getDescription();
         const pictureIds = this.productOption.getListPictures().map(picture => picture.getProductOptionPictureId());
+        const discount = this.getMaxDiscountOption(this.productOption.getProductOptionDiscounts());
+
+        let discountPrice: string, percent: string, startDateDiscount: string, endDateDiscount: string;
+        if (discount !== null) {
+            discountPrice = Number(PercentCalculator.calculateDiscountPriceBasedOnPercent(priceCurrency, discount.getPercent())).toFixed(2);
+            percent = Number(discount.getPercent()).toFixed(2);
+            startDateDiscount = discount.getStartDate().toISOString();
+            endDateDiscount = discount.getEndDate().toISOString();
+        }
 
         return new ProductOptionStoreVM(
             productOptionId,
@@ -34,11 +54,11 @@ export default class ProductOptionStoreBuilder {
             weight,
             manufacturer,
             preorder,
-            price,
-            null,
-            null,
-            null,
-            null,
+            Number(priceCurrency).toFixed(2),
+            discountPrice,
+            percent,
+            startDateDiscount,
+            endDateDiscount,
             title,
             description,
             pictureIds,
@@ -65,5 +85,28 @@ export default class ProductOptionStoreBuilder {
             default:
                 return this.productOption.getProduct().getDescriptionFr();
         }
+    }
+
+    private getPriceCurrency(basePrice: number, currencyCode: string) {
+        if (this.customer.getCurrencyCode() === currencyCode) {
+            return basePrice;
+        }
+
+        const rate = this.rates.get(currencyCode);
+        if (!rate) {
+            return basePrice;
+        }
+        return basePrice * rate;
+    }
+
+    private getMaxDiscountOption(productOptionDiscounts: Array<ProductOptionDiscountEntity>): ProductOptionDiscountEntity {
+        let currentDiscountPercent = 0;
+        let discountToReturn: ProductOptionDiscountEntity = null;
+        for (const discount of productOptionDiscounts) {
+            if (discount.getPercent() > currentDiscountPercent) {
+                discountToReturn = discount;
+            }
+        }
+        return discountToReturn;
     }
 }

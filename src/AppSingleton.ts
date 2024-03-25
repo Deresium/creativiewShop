@@ -118,7 +118,7 @@ export default class AppSingleton {
         const categoryFacade = new CategoryFacade(categoryDataMapper, fileDataMapper);
         const manufacturerFacade = new ManufacturerFacade(manufacturerDataMapper);
         const productFacade = new ProductFacade(productDataMapper);
-        const productOptionFacade = new ProductOptionFacade(productOptionDataMapper);
+        const productOptionFacade = new ProductOptionFacade(productOptionDataMapper, currencyRateDataMapper);
         const productOptionPriceFacade = new ProductOptionPriceFacade(productOptionPriceDataMapper);
         const productOptionCategoryFacade = new ProductOptionCategoryFacade(productOptionCategoryDataMapper);
         const productOptionPictureFacade = new ProductOptionPictureFacade(productOptionPictureDataMapper, fileDataMapper);

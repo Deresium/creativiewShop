@@ -45,4 +45,8 @@ export default class CustomerVM {
     public getEmailFrom(): string {
         return this.emailFrom;
     }
+
+    public getCurrencyCode() {
+        return this.currencyCode;
+    }
 }

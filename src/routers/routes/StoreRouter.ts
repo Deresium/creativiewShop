@@ -27,11 +27,21 @@ export default class StoreRouter extends ApplicationRouter {
             res.send(productOptions);
         });
 
+
+        this.getRouter().get('/store/discount', async (req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const groups = req.userGroups;
+            const productOptions = await this.productOptionRequester.getProductOptionDiscount(customerId, groups);
+            res.send(productOptions);
+        });
+
         this.getRouter().get('/store/:productOptionId', this.checkStoreAccessMiddleware, async (req: any, res: any) => {
+            const customer = req.customer;
             const productOptionId = String(req.params.productOptionId);
             const groups = req.userGroups;
             const language = req.query.language;
-            const productOption = await this.productOptionRequester.getProductOptionStore(productOptionId, groups, language);
+            const currency = req.query.currency;
+            const productOption = await this.productOptionRequester.getProductOptionStore(productOptionId, groups, customer, currency, language);
             res.send(productOption);
         });
     }
