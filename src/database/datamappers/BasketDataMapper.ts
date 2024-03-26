@@ -31,7 +31,8 @@ export default class BasketDataMapper implements IBasketDataGateway {
     public async isBasketOpen(basketId: string): Promise<boolean> {
         const basketCount = await BasketEntity.count({
             where: {
-                basketId: basketId
+                basketId: basketId,
+                basketStateCode: 'BASKET'
             }
         });
         return basketCount === 1;

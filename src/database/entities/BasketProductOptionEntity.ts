@@ -5,6 +5,15 @@ export default class BasketProductOptionEntity extends Model {
     private readonly basketId: string;
     private readonly productOptionId: string;
     private readonly quantity: number;
+
+
+    getProductOptionId(): string {
+        return this.productOptionId;
+    }
+
+    getQuantity(): number {
+        return this.quantity;
+    }
 }
 
 BasketProductOptionEntity.init({
