@@ -17,11 +17,16 @@ export default class ExtractTokenMiddleware extends ApplicationMiddleware {
             const payload = cookies.payload;
             if (sign && payload) {
                 const token = `${payload}.${sign}`;
-                const decrypt = <any>jwt.verify(token, process.env.JWT_SECRET);
-                req.userGroups = decrypt.userGroups;
-                req.userId = decrypt.userId;
-                const cookieGenerator = new CookiesGenerator(req.userId, req.userGroups);
-                res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
+                try {
+                    const decrypt = <any>jwt.verify(token, process.env.JWT_SECRET);
+                    req.userGroups = decrypt.userGroups;
+                    req.userId = decrypt.userId;
+                    const cookieGenerator = new CookiesGenerator(req.userId, req.userGroups);
+                    res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
+                }catch(error){
+                    res.status(401).send();
+                    return;
+                }
             }
             next();
         }

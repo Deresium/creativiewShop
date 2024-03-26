@@ -5,6 +5,7 @@ declare module 'express-serve-static-core' {
         userId: number,
         userGroups: Array<string>,
         customer: CustomerVM,
-        language: string
+        language: string,
+        basketId: string
     }
 }
