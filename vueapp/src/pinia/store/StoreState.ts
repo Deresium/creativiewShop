@@ -1,6 +1,7 @@
 export default class StoreState {
     private currencyCode: string;
     private currencySymbol: string;
+    private hasAccessToStore: boolean;
 
 
     public getCurrencyCode(): string {
@@ -17,5 +18,14 @@ export default class StoreState {
 
     public setCurrencySymbol(value: string) {
         this.currencySymbol = value;
+    }
+
+
+    public getHasAccessToStore(): boolean {
+        return this.hasAccessToStore;
+    }
+
+    public setHasAccessToStore(value: boolean) {
+        this.hasAccessToStore = value;
     }
 }

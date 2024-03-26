@@ -29,35 +29,26 @@
 </template>
 
 <script lang="ts" setup>
-import StoreAccessRequester from "../../requesters/StoreAccessRequester.ts";
 import {useI18n} from "vue-i18n";
-import {computed, ref, watch} from "vue";
+import {computed, ref} from "vue";
 import ProductOptionStoreRequester from "../../requesters/ProductOptionStoreRequester.ts";
 import CsProductOptionThumbnail from "./CsProductOptionThumbnail.vue";
-import {useUserStore} from "../../pinia/user/UserStore.ts";
+import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 
 const {t} = useI18n({useScope: 'global'});
-const userStore = useUserStore();
-const loggedIn = computed(() => userStore.isLoggedIn);
+const storeStore = useStoreStore();
 
-const hasAccessToStore = ref(false);
+const hasAccessToStore = computed(() => storeStore.getHasAccessToStore);
 const featuredProductOptionIds = ref(new Array<string>());
 const discountProductOptionIds = ref(new Array<string>());
 
-StoreAccessRequester.requestStoreAccess().then((response) => {
-    hasAccessToStore.value = response;
+
+ProductOptionStoreRequester.requestFeaturedProductOptionIds().then(response => {
+    featuredProductOptionIds.value = response;
 });
 
-watch(hasAccessToStore, async () => {
-    if (!hasAccessToStore.value) {
-        return;
-    }
-    //featuredProductOptionIds.value = await ProductOptionStoreRequester.requestFeaturedProductOptionIds();
-    discountProductOptionIds.value = await ProductOptionStoreRequester.requestDiscountProductOptionIds();
-});
-
-watch(loggedIn, async () => {
-    hasAccessToStore.value = await StoreAccessRequester.requestStoreAccess();
+ProductOptionStoreRequester.requestDiscountProductOptionIds().then(response => {
+    discountProductOptionIds.value = response;
 });
 
 
@@ -73,6 +64,7 @@ watch(loggedIn, async () => {
 
 .featured {
     display: flex;
+    margin-bottom: 100px;
     width: 100%;
     align-items: center;
     flex-direction: column;
@@ -81,14 +73,26 @@ watch(loggedIn, async () => {
 .productOptions {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: center;
     align-items: stretch;
     align-content: stretch;
-    row-gap: 30px;
+    gap: 50px;
     width: 100%;
 }
 
 .thumbnail {
-    width: 40%;
+    width: 45%;
+}
+
+@media (min-width: 600px) {
+    .thumbnail {
+        width: 30%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .thumbnail {
+        width: 15%;
+    }
 }
 </style>

@@ -9,7 +9,7 @@
             </div>
         </template>
 
-        <CsHomeStore/>
+        <CsHomeStore v-if="hasAccessToStore"/>
     </div>
     <LoginOverlay v-if="showLoginOverlay" :open-tab="openTab"/>
 </template>
@@ -22,11 +22,14 @@ import LoginOverlay from "../global/CsLoginOverlay.vue";
 import {useGlobalStore} from "../../pinia/global/GlobalStore.ts";
 import useUser from "../../compositionfunctions/user.ts";
 import CsHomeStore from "../store/CsHomeStore.vue";
+import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 
 const customerStore = useCustomerStore();
 const globalStore = useGlobalStore();
+const storeStore = useStoreStore();
 
 const showLoginOverlay = computed(() => globalStore.getShowLoginOverlay);
+const hasAccessToStore = computed(() => storeStore.getHasAccessToStore);
 
 const openTab = ref('');
 

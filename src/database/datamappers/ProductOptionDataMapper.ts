@@ -121,15 +121,18 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
                 {
                     attributes: ['productOptionPictureId'],
                     model: ProductOptionPictureEntity,
+                    required: false,
                     as: 'productOptionPictures'
                 },
                 {
                     model: ProductOptionPriceEntity,
+                    required: false,
                     where: {endDate: {[Op.eq]: null}},
                     as: 'productOptionPrices'
                 },
                 {
                     model: ProductOptionDiscountEntity,
+                    required: false,
                     where: {
                         startDate: {[Op.lte]: date},
                         endDate: {

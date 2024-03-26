@@ -17,7 +17,7 @@
 import CsHeader from "./components/global/CsHeader.vue";
 import CsFooter from "./components/global/CsFooter.vue";
 import {useCustomerStore} from "./pinia/customer/CustomerStore.ts";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import InternalizationRequester from "./requesters/InternalizationRequester.ts";
 import I18nMessagesMerger from "./i18n/i18nMessagesMerger.ts";
 import {useI18n} from "vue-i18n";
@@ -32,10 +32,15 @@ const userStore = useUserStore();
 const globalStore = useGlobalStore();
 const storeStore = useStoreStore();
 const {locale} = useI18n({useScope: "global"});
+const loggedIn = computed(() => userStore.isLoggedIn);
 
 watch(locale, () => {
     axiosServer.defaults.params['language'] = locale.value;
 }, {immediate: true});
+
+watch(loggedIn, async () => {
+    await storeStore.setHasAccessToStore();
+});
 
 const initApp = async () => {
     await customerStore.retrieveCustomer();

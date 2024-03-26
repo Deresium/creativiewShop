@@ -1,15 +1,18 @@
 <template>
-    <v-overlay :scrim="firstColor" class="overlay" v-model="showMenuOverlay">
+    <v-overlay v-model="showMenuOverlay" :scrim="firstColor" class="overlay" opacity="97%">
         <div class="overlayContent">
             <div class="routes">
-                <RouterLink @click="clickOnRoute" v-if="isAdminStore" :to="{name: 'admin'}">{{ t('adminZone') }}</RouterLink>
+                <RouterLink v-if="isAdminStore" :to="{name: 'admin'}" @click="clickOnRoute">{{
+                        t('adminZone')
+                    }}
+                </RouterLink>
             </div>
             <v-btn v-if="isLoggedIn" @click="clickOnLogout">{{ t('logout') }}</v-btn>
         </div>
     </v-overlay>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useGlobalStore} from "../../pinia/global/GlobalStore.ts";
 import {computed} from "vue";
 import {useUserStore} from "../../pinia/user/UserStore.ts";
