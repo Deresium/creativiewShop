@@ -37,7 +37,7 @@ export default class ExtractOrCreateUserTempMiddleware extends ApplicationMiddle
                 }
             }
 
-            const userId = await this.userRequester.createUserTemp(req.customer.getCustomerId());
+            const userId = await this.userRequester.createUserTemp(req.customer.getCustomerId(), req.language);
             const createUserTempToken = jwt.sign({
                 userTempId: userId
             }, process.env.JWT_SECRET);
