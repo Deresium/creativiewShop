@@ -48,6 +48,11 @@ export default class UserFacade implements IUserRequester {
         await this.sendMailDataGateway.sendEmailNewUserAccount(userEmail, userCreationDS.getCustomer(), userAdminStoreEmail);
     }
 
+    public async createUserTemp(customerId: number): Promise<string> {
+        const user = await this.userDataGateway.createUserTemp(customerId);
+        return user.getUserId();
+    }
+
     public async loginUser(loginInfoDS: LoginInfoDS): Promise<UserLoginVM> {
         const user = await this.userDataGateway.findActiveUserOnEmail(loginInfoDS.getEmail(), loginInfoDS.getCustomerId());
         if (!user) {

@@ -6,6 +6,8 @@ import PasswordChangeRequestEntity from "../entities/PasswordChangeRequestEntity
 export default interface IUserDataGateway {
     createUser(userCreationDS: UserCreationDS, hashPassword: PasswordHashDS): Promise<void>;
 
+    createUserTemp(customerId: number): Promise<UserEntity>;
+
     findUserByEmailAndCustomer(email: string, customerId: number): Promise<UserEntity>;
 
     findActiveUserOnEmail(email: string, customerId: number): Promise<UserEntity>;

@@ -8,6 +8,7 @@ export default class ExtractOpenBasketIdMiddleware extends ApplicationMiddleware
     private readonly basketRequester: IBasketRequester;
 
 
+
     constructor(basketRequester: IBasketRequester) {
         super();
         this.basketRequester = basketRequester;
@@ -20,41 +21,8 @@ export default class ExtractOpenBasketIdMiddleware extends ApplicationMiddleware
                 next();
                 return;
             }
-
-            const cookies = cookie.parse(req.headers.cookie || '');
-            const basketIdToken = cookies.basketToken;
-            if (basketIdToken) {
-                try {
-                    const decrypt = <any>jwt.verify(basketIdToken, process.env.JWT_SECRET);
-                    const basketId = decrypt.basketId;
-                    if(!await this.basketRequester.isOpenBasket(basketId)){
-                        res.status(400).send();
-                    }
-                    req.basketId = basketId;
-                    next();
-                    return;
-                }catch(error){
-                    res.status(401).send();
-                    return;
-                }
-            }
-
-            const basketId = await this.basketRequester.addOpenBasket();
-
-            const tokenBasketId = jwt.sign({
-                basketId: basketId
-            }, process.env.JWT_SECRET);
-
-            const cookieBasket = cookie.serialize('basketToken', tokenBasketId, {
-                secure: process.env.NODE_ENV === 'production',
-                httpOnly: true,
-                sameSite: true,
-                path: '/'
-            });
-
-            res.setHeader('Set-Cookie', cookieBasket);
-
-            next();
+            console.error('No USER ID found when exract basket id middleware');
+            res.status(500).send();
         }
     }
 }

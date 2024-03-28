@@ -4,20 +4,14 @@ import BasketProductOptionEntity from "../entities/BasketProductOptionEntity";
 import BasketEntity from "../entities/BasketEntity";
 
 export default class BasketDataMapper implements IBasketDataGateway {
-    public async addBasketForUser(userId: string): Promise<string> {
-        const basket = await BasketEntity.create({
+    public async addBasketForUser(userId: string): Promise<BasketEntity> {
+        return  await BasketEntity.create({
             userId: userId,
             basketStateCode: 'BASKET'
         });
-        return basket.getBasketId();
     }
 
-    public async addBasket(): Promise<string> {
-        const basket = await BasketEntity.create({
-            basketStateCode: 'BASKET'
-        });
-        return basket.getBasketId();
-    }
+
 
     public async findOpenBasketForUser(userId: string): Promise<BasketEntity> {
         return await BasketEntity.findOne({
@@ -26,16 +20,6 @@ export default class BasketDataMapper implements IBasketDataGateway {
                 basketStateCode: 'BASKET'
             }
         });
-    }
-
-    public async isBasketOpen(basketId: string): Promise<boolean> {
-        const basketCount = await BasketEntity.count({
-            where: {
-                basketId: basketId,
-                basketStateCode: 'BASKET'
-            }
-        });
-        return basketCount === 1;
     }
 
     public async addProductOptionToBasket(basketProductOption: BasketProductOptionDS): Promise<void> {

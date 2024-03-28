@@ -22,6 +22,15 @@ export default class UserDataMapper implements IUserDataGateway {
         });
     }
 
+    public async createUserTemp(customerId: number): Promise<UserEntity> {
+        return await UserEntity.create({
+            customerId: customerId,
+            access: true
+        });
+    }
+
+
+
     public async findUserByEmailAndCustomer(email: string, customerId: number): Promise<UserEntity> {
         return await UserEntity.findOne({
             where: {

@@ -8,6 +8,8 @@ import CustomerVM from "../models/viewmodels/CustomerVM";
 export default interface IUserRequester {
     createUser(userCreationDS: UserCreationDS): Promise<void>;
 
+    createUserTemp(customerId: number): Promise<string>;
+
     loginUser(loginInfoDS: LoginInfoDS): Promise<UserLoginVM>;
 
     getUser(userId: string, customerId: number, userGroups: Array<string>): Promise<UserVM>;
