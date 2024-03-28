@@ -18,9 +18,9 @@ export default class BasketEntity extends Model {
 }
 
 BasketEntity.init({
-    basketId: {type: DataTypes.STRING, primaryKey: true, autoIncrement: true},
+    basketId: {type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true},
     basketStateCode: DataTypes.STRING,
-    userId: DataTypes.STRING,
+    userId: DataTypes.BIGINT,
     deliveryOptionId: DataTypes.STRING,
     orderedAt: DataTypes.DATE,
     deliveredAt: DataTypes.DATE,

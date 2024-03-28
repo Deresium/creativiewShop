@@ -17,8 +17,8 @@ export default class BasketProductOptionEntity extends Model {
 }
 
 BasketProductOptionEntity.init({
-    basketId: {type: DataTypes.STRING, primaryKey: true},
-    productOptionId: {type: DataTypes.STRING, primaryKey: true},
+    basketId: {type: DataTypes.BIGINT, primaryKey: true},
+    productOptionId: {type: DataTypes.BIGINT, primaryKey: true},
     quantity: DataTypes.INTEGER
 },{
     tableName: 'BasketProductOption',

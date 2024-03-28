@@ -17,8 +17,8 @@ export default class PasswordChangeRequestEntity extends Model {
 }
 
 PasswordChangeRequestEntity.init({
-    passwordChangeRequestId: {type: DataTypes.STRING, primaryKey: true},
-    userId: DataTypes.STRING,
+    passwordChangeRequestId: {type: DataTypes.BIGINT, primaryKey: true},
+    userId: DataTypes.BIGINT,
     requestUsed: DataTypes.BOOLEAN,
     createdAt: DataTypes.DATE
 }, {
