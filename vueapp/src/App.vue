@@ -6,7 +6,7 @@
         <div v-if="initDone" class="app">
             <div class="exceptFooter">
                 <CsHeader/>
-                <router-view/>
+                <router-view :key="route.fullPath"/>
             </div>
             <CsFooter/>
         </div>
@@ -25,6 +25,7 @@ import axiosServer from "./axios/axiosServer.ts";
 import {useUserStore} from "./pinia/user/UserStore.ts";
 import {useGlobalStore} from "./pinia/global/GlobalStore.ts";
 import {useStoreStore} from "./pinia/store/StoreStore.ts";
+import {useRoute} from "vue-router";
 
 const initDone = ref(false);
 const customerStore = useCustomerStore();
@@ -32,6 +33,9 @@ const userStore = useUserStore();
 const globalStore = useGlobalStore();
 const storeStore = useStoreStore();
 const {locale} = useI18n({useScope: "global"});
+
+const route = useRoute();
+
 const loggedIn = computed(() => userStore.isLoggedIn);
 
 watch(locale, () => {

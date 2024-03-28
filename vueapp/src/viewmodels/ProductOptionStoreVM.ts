@@ -1,3 +1,5 @@
+import TitleValueVM from "./TitleValueVM.ts";
+
 export default class ProductOptionStoreVM {
     private readonly productOptionId: string;
     private readonly productId: string;
@@ -13,10 +15,10 @@ export default class ProductOptionStoreVM {
     private readonly title: string;
     private readonly description: string;
     private readonly pictures: Array<string>;
-    private readonly otherOptions: Array<string>;
+    private readonly allOptions: Array<TitleValueVM<string, string>>;
 
 
-    constructor(productOptionId: string, productId: string, hasStock: boolean, weight: number, manufacturer: string, preorder: boolean, basePrice: string, discountPrice: string, percent: string, startDateDiscount: Date, endDateDiscount: Date, title: string, description: string, pictures: Array<string>, otherOptions: Array<string>) {
+    constructor(productOptionId: string, productId: string, hasStock: boolean, weight: number, manufacturer: string, preorder: boolean, basePrice: string, discountPrice: string, percent: string, startDateDiscount: Date, endDateDiscount: Date, title: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.hasStock = hasStock;
@@ -31,7 +33,7 @@ export default class ProductOptionStoreVM {
         this.title = title;
         this.description = description;
         this.pictures = pictures;
-        this.otherOptions = otherOptions;
+        this.allOptions = allOptions;
     }
 
 
@@ -91,7 +93,7 @@ export default class ProductOptionStoreVM {
         return this.pictures;
     }
 
-    public getOtherOptions(): Array<string> {
-        return this.otherOptions;
+    public getAllOptions() {
+        return this.allOptions;
     }
 }

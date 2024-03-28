@@ -76,7 +76,7 @@ ProductOptionStoreRequester.requestDiscountProductOptionIds().then(response => {
     justify-content: center;
     align-items: stretch;
     align-content: stretch;
-    gap: 50px;
+    gap: 20px;
     width: 100%;
 }
 
@@ -87,6 +87,10 @@ ProductOptionStoreRequester.requestDiscountProductOptionIds().then(response => {
 @media (min-width: 600px) {
     .thumbnail {
         width: 30%;
+    }
+
+    .productOptions {
+        gap: 50px;
     }
 }
 

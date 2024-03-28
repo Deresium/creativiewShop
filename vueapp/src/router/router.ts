@@ -1,8 +1,12 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import {routes} from "./routes";
 
+let history = createWebHistory();
+if (!import.meta.env.PROD) {
+    history = createWebHashHistory(import.meta.env.VITE_APP_ROUTER_BASE);
+}
 const router = createRouter({
-    history: createWebHistory(import.meta.env.VITE_APP_ROUTER_BASE),
+    history: history,
     routes,
     scrollBehavior() {
         return {top: 0}

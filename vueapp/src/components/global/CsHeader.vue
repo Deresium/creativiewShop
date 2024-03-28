@@ -1,8 +1,15 @@
 <template>
     <header>
-        <v-btn icon="mdi-menu" variant="flat" @click="clickOnMenu"/>
-        <img :src="srcImg" alt="logo" class="imgLogo" @click="clickOnLogo"/>
-        <v-btn v-if="hasAccessToStore" icon="mdi-cart" variant="flat" @click="clickOnBasket"/>
+        <div class="left headerItem">
+            <v-btn icon="mdi-menu" variant="flat" @click="clickOnMenu"/>
+        </div>
+        <div class="center headerItem">
+            <img :src="srcImg" alt="logo" class="imgLogo" @click="clickOnLogo"/>
+        </div>
+        <!--<v-btn v-if="hasAccessToStore" icon="mdi-cart" variant="flat" @click="clickOnBasket"/>-->
+        <div class="right headerItem">
+
+        </div>
         <CsMenu/>
     </header>
 </template>
@@ -13,13 +20,12 @@ import {useCustomerStore} from "../../pinia/customer/CustomerStore.ts";
 import CsMenu from "./CsMenu.vue";
 import {useGlobalStore} from "../../pinia/global/GlobalStore.ts";
 import router from "../../router/router.ts";
-import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 
 const customerStore = useCustomerStore();
 const globalStore = useGlobalStore();
-const storeStore = useStoreStore();
+//const storeStore = useStoreStore();
 
-const hasAccessToStore = computed(() => storeStore.getHasAccessToStore);
+//const hasAccessToStore = computed(() => storeStore.getHasAccessToStore);
 const srcImg = computed((() => `${import.meta.env.BASE_URL}logos/${customerStore.getCustomerId}.png`));
 
 const clickOnMenu = () => {
@@ -30,9 +36,9 @@ const clickOnLogo = async () => {
     await router.push({name: 'home'});
 };
 
-const clickOnBasket = async () => {
+/*const clickOnBasket = async () => {
 
-};
+};*/
 
 </script>
 
@@ -44,8 +50,18 @@ header {
     align-items: center;
 }
 
+.headerItem {
+    flex-grow: 1;
+    display: flex;
+}
+
+.center {
+    justify-content: center;
+}
+
 img.imgLogo {
     width: 150px;
+    cursor: pointer;
 }
 
 </style>

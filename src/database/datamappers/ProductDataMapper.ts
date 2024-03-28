@@ -60,6 +60,7 @@ export default class ProductDataMapper implements IProductDataGateway {
             }, {
                 model: ProductOptionEntity,
                 as: 'productOptions',
+                required: false,
                 where: {deletedAt: {[Op.eq]: null}},
                 include: [{
                     model: ProductOptionPriceEntity,

@@ -5,6 +5,7 @@ import CsAdminProduct from "../components/routes/CsAdminProduct.vue";
 import CsAdminDeliveryOption from "../components/routes/CsAdminDeliveryOption.vue";
 import CsPasswordRequest from "../components/global/CsPasswordRequest.vue";
 import CsNewPassword from "../components/global/CsNewPassword.vue";
+import CsStoreProduct from "../components/routes/CsStoreProduct.vue";
 
 export const routes: Array<RouteRecordRaw> = [
     {
@@ -40,5 +41,10 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/newPassword',
         name: 'newPassword',
         component: CsNewPassword
+    },
+    {
+        path: '/store/:productOptionId',
+        name: 'productOptionStore',
+        component: CsStoreProduct
     }
 ];

@@ -3,16 +3,19 @@ import ProductOptionStoreVM from "../models/viewmodels/ProductOptionStoreVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ProductOptionDiscountEntity from "../../database/entities/ProductOptionDiscountEntity";
 import PercentCalculator from "./PercentCalculator";
+import TitleValueVM from "../models/viewmodels/TitleValueVM";
 
 export default class ProductOptionStoreBuilder {
     private readonly productOption: ProductOptionEntity;
+    private readonly allOptionsForProduct: Array<ProductOptionEntity>;
     private readonly customer: CustomerVM;
     private readonly rates: Map<string, number>;
     private readonly currency: string;
     private readonly language: string;
 
-    constructor(productOption: ProductOptionEntity, customer: CustomerVM, rates: Map<string, number>, currency: string, language: string) {
+    constructor(productOption: ProductOptionEntity, allOptionsForProduct: Array<ProductOptionEntity>, customer: CustomerVM, rates: Map<string, number>, currency: string, language: string) {
         this.productOption = productOption;
+        this.allOptionsForProduct = allOptionsForProduct;
         this.customer = customer;
         this.currency = currency;
         this.language = language;
@@ -47,6 +50,10 @@ export default class ProductOptionStoreBuilder {
             endDateDiscount = discount.getEndDate().toISOString();
         }
 
+        const allOptions = this.allOptionsForProduct.map(productOption => {
+            return new TitleValueVM(this.getOptionName(productOption), productOption.getProductOptionId(),);
+        });
+
         return new ProductOptionStoreVM(
             productOptionId,
             productId,
@@ -62,7 +69,7 @@ export default class ProductOptionStoreBuilder {
             title,
             description,
             pictureIds,
-            null);
+            allOptions);
     }
 
     private getTitle() {
@@ -84,6 +91,17 @@ export default class ProductOptionStoreBuilder {
                 return this.productOption.getProduct().getDescriptionEn();
             default:
                 return this.productOption.getProduct().getDescriptionFr();
+        }
+    }
+
+    private getOptionName(productOption: ProductOptionEntity) {
+        switch (this.language) {
+            case 'fr':
+                return productOption.getNameFr();
+            case 'en':
+                return productOption.getNameEn();
+            default:
+                return productOption.getNameFr();
         }
     }
 

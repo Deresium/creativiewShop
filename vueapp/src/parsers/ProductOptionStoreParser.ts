@@ -1,4 +1,5 @@
 import ProductOptionStoreVM from "../viewmodels/ProductOptionStoreVM.ts";
+import TitleValueParser from "./TitleValueParser.ts";
 
 export default class ProductOptionStoreParser {
 
@@ -11,6 +12,8 @@ export default class ProductOptionStoreParser {
         if (data.endDateDiscount) {
             endDate = new Date(data.endDateDiscount);
         }
+
+        const allOptions = TitleValueParser.parseTitleValues<string, string>(data.allOptions);
         return new ProductOptionStoreVM(
             data.productOptionId,
             data.productId,
@@ -26,7 +29,7 @@ export default class ProductOptionStoreParser {
             data.title,
             data.description,
             data.pictures,
-            data.otherOptions
+            allOptions
         );
     }
 }

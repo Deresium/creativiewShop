@@ -53,9 +53,10 @@ export default class ProductOptionFacade implements IProductOptionRequester {
     public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<ProductOptionStoreVM> {
         const productOption = await this.productOptionDataGateway.getProductOptionStore(productOptionId, groupIds);
         const rates = await this.currencyRateDataGateway.getCurrentRatesForCustomer(customer.getCustomerId());
+        const allOptionsForProduct = await this.productOptionDataGateway.getProductOptionByProductActive(productOption.getProductId());
         const mapRates = new Map<string, number>();
         rates.forEach(rate => mapRates.set(rate.getCurrencyCode(), rate.getRate()));
-        return new ProductOptionStoreBuilder(productOption, customer, mapRates, currency, language).buildProductOptionStore();
+        return new ProductOptionStoreBuilder(productOption, allOptionsForProduct, customer, mapRates, currency, language).buildProductOptionStore();
     }
 
     private productOptionEntityToVM(productOption: ProductOptionEntity): ProductOptionVM {

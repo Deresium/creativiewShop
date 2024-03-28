@@ -16,7 +16,9 @@
                     <p>{{ nbDays }}{{ t('date.d') }} {{ nbHours }}{{ t('date.h') }} {{ nbMinutes }}{{ t('date.m') }}</p>
                 </div>
             </div>
-            <v-btn :color="firstColor" class="btnBasket" variant="flat">{{ t('addToBasket') }}</v-btn>
+            <v-btn :color="firstColor" class="btnConsult" variant="flat" @click="clickOnConsultProduct">
+                {{ t('consultProduct') }}
+            </v-btn>
         </article>
     </div>
 </template>
@@ -29,6 +31,7 @@ import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 import useCountdown from "../../compositionfunctions/countdown.ts";
 import {useI18n} from "vue-i18n";
 import useCustomer from "../../compositionfunctions/customer.ts";
+import router from "../../router/router.ts";
 
 
 const props = defineProps({
@@ -83,6 +86,10 @@ watch(currencyCode, () => {
     refreshProductOptionStore();
 });
 
+const clickOnConsultProduct = async () => {
+    await router.push({name: 'productOptionStore', params: {productOptionId: props.productOptionId}});
+}
+
 
 </script>
 
@@ -127,7 +134,7 @@ watch(currencyCode, () => {
     color: #cc0000;
 }
 
-.btnBasket {
+.btnConsult {
     margin-top: auto;
     width: 100%;
 }
