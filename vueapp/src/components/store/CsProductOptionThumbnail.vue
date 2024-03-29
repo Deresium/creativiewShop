@@ -55,7 +55,9 @@ const {firstColor} = useCustomer();
 
 const firstImageSrc = computed(() => {
     const firstPictureId = productOptionStore.value.getPictures()[0];
-    return `${import.meta.env.VITE_APP_URL_CREATIVIEWSHOP}/api/product/${productOptionStore.value.getProductId()}/productOption/${props.productOptionId}/image/${firstPictureId}`;
+    if (firstPictureId) {
+        return `${import.meta.env.VITE_APP_URL_CREATIVIEWSHOP}/api/product/${productOptionStore.value.getProductId()}/productOption/${props.productOptionId}/image/${firstPictureId}`;
+    }
 });
 
 const basePriceClass = computed(() => {
