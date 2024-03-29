@@ -28,7 +28,7 @@ export default class ProductParser {
         const productOptions = new Array<ProductOptionListAdminFlatVM>();
         for (const product of data) {
             for (const productOption of product.productOptions) {
-                productOptions.push(new ProductOptionListAdminFlatVM(product.productId, product.manufacturerName, product.code, product.nameFr, productOption.nameFr, productOption.active, productOption.stock, productOption.price));
+                productOptions.push(new ProductOptionListAdminFlatVM(product.productId, productOption.productOptionId, product.manufacturerName, product.code, product.nameFr, product.nameEn, productOption.nameFr, productOption.nameEn, productOption.active, productOption.stock, productOption.price, productOption.firstPictureId));
             }
         }
         return productOptions;

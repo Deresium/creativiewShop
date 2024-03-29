@@ -55,7 +55,11 @@ export default class ProductFacade implements IProductRequester {
             if (productOption.getListPrices() && productOption.getListPrices().length === 1) {
                 price = Number(productOption.getListPrices()[0].getPrice()).toFixed(2);
             }
-            productOptions.push(new ProductOptionListAdminVM(productOption.getNameFr(), productOption.getActive(), productOption.getStock(), price));
+            let pictureId = null;
+            if (productOption.getListPrices() && productOption.getListPictures().length >= 1) {
+                pictureId = productOption.getListPictures()[0].getProductOptionPictureId();
+            }
+            productOptions.push(new ProductOptionListAdminVM(productOption.getProductOptionId(), productOption.getNameFr(), productOption.getNameEn(), productOption.getActive(), productOption.getStock(), price, pictureId));
         }
         return new ProductListAdminVM(productEntity.getProductId(), productEntity.getCustomerId(), productEntity.getManufacturerId(), productEntity.getManufacturerName(), productEntity.getCode(), productEntity.getNameFr(), productEntity.getNameEn(), productEntity.getDescriptionFr(), productEntity.getDescriptionEn(), productOptions);
     }

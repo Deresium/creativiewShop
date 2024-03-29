@@ -37,6 +37,13 @@
         item-key="productOptionId"
         items-per-page="10"
     >
+        <template #item.pictureId="{ item }">
+            <div v-if="item.getPictureId()" class="divImgProductOption">
+                <img
+                    :src="imageSrc(item.getProductId(), item.getProductOptionId(), item.getPictureId())"
+                    alt="product image"/>
+            </div>
+        </template>
         <template #item.actions="{ item }">
             <v-btn color="white" icon="mdi-pencil" size="25px" @click="goToEdit(item.getProductId())"/>
         </template>
@@ -94,10 +101,11 @@ const headers = computed(() => [
 ]);*/
 
 const headersFlatOptions = computed(() => [
+    {title: t('picture'), value: 'pictureId'},
     {title: t('codeProduct'), value: 'codeProduct'},
     {title: t('manufacturer'), value: 'manufacturerName'},
-    {title: t('nameFrProduct'), value: 'nameFrProduct'},
-    {title: t('nameFrProductOption'), value: 'nameFrProductOption'},
+    {title: t('nameEnProduct'), value: 'nameEnProduct'},
+    {title: t('nameEnProductOption'), value: 'nameEnProductOption'},
     {title: t('active'), value: 'active'},
     {title: t('stock'), value: 'stock'},
     {title: t('price'), value: 'price'},
@@ -153,6 +161,13 @@ const getColorBoolean = (bool: boolean) => {
     return 'red';
 };
 
+const imageSrc = (productId: string, productOptionId: string, productPictureId: string) => {
+    if (!productId || !productOptionId || !productPictureId) {
+        return null;
+    }
+    return `${import.meta.env.VITE_APP_URL_CREATIVIEWSHOP}/api/product/${productId}/productOption/${productOptionId}/image/${productPictureId}`;
+}
+
 </script>
 
 <style scoped>
@@ -160,5 +175,16 @@ const getColorBoolean = (bool: boolean) => {
     margin-top: 10px;
     margin-bottom: 10px;
     width: 50%;
+}
+
+.divImgProductOption {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.divImgProductOption img {
+    width: 100px;
 }
 </style>

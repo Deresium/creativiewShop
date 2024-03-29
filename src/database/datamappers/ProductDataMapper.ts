@@ -5,6 +5,7 @@ import {Op} from "sequelize";
 import ManufacturerEntity from "../entities/ManufacturerEntity";
 import ProductOptionEntity from "../entities/ProductOptionEntity";
 import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
+import ProductOptionPictureEntity from "../entities/ProductOptionPictureEntity";
 
 export default class ProductDataMapper implements IProductDataGateway {
     public async createProduct(customerId: number): Promise<string> {
@@ -62,12 +63,18 @@ export default class ProductDataMapper implements IProductDataGateway {
                 as: 'productOptions',
                 required: false,
                 where: {deletedAt: {[Op.eq]: null}},
-                include: [{
-                    model: ProductOptionPriceEntity,
-                    as: 'productOptionPrices',
-                    required: false,
-                    where: {endDate: {[Op.eq]: null}}
-                }]
+                include: [
+                    {
+                        model: ProductOptionPriceEntity,
+                        as: 'productOptionPrices',
+                        required: false,
+                        where: {endDate: {[Op.eq]: null}}
+                    }, {
+                        model: ProductOptionPictureEntity,
+                        as: 'productOptionPictures',
+                        required: false
+                    }
+                ]
             }],
             order: [
                 ['productId', 'ASC NULLS FIRST']
