@@ -6,6 +6,10 @@
                         t('adminZone')
                     }}
                 </RouterLink>
+                <RouterLink v-if="hasAccessToStore" :to="{name: 'store'}" @click="clickOnRoute">{{
+                        t('store')
+                    }}
+                </RouterLink>
             </div>
             <v-btn v-if="isLoggedIn" @click="clickOnLogout">{{ t('logout') }}</v-btn>
         </div>
@@ -20,6 +24,7 @@ import {useI18n} from "vue-i18n";
 import useUser from "../../compositionfunctions/user.ts";
 import router from "../../router/router.ts";
 import useCustomer from "../../compositionfunctions/customer.ts";
+import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 
 const globalStore = useGlobalStore();
 const userStore = useUserStore();
@@ -27,6 +32,9 @@ const userStore = useUserStore();
 const {t} = useI18n({useScope: 'global'});
 const {isLoggedIn, isAdminStore} = useUser();
 const {firstColor} = useCustomer();
+const storeStore = useStoreStore();
+
+const hasAccessToStore = computed(() => storeStore.getHasAccessToStore);
 
 const showMenuOverlay = computed({
     get(): boolean {

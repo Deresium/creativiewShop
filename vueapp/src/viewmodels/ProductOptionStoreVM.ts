@@ -13,12 +13,13 @@ export default class ProductOptionStoreVM {
     private readonly startDateDiscount: Date;
     private readonly endDateDiscount: Date;
     private readonly title: string;
+    private readonly titleOption: string;
     private readonly description: string;
     private readonly pictures: Array<string>;
     private readonly allOptions: Array<TitleValueVM<string, string>>;
 
 
-    constructor(productOptionId: string, productId: string, hasStock: boolean, weight: number, manufacturer: string, preorder: boolean, basePrice: string, discountPrice: string, percent: string, startDateDiscount: Date, endDateDiscount: Date, title: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>) {
+    constructor(productOptionId: string, productId: string, hasStock: boolean, weight: number, manufacturer: string, preorder: boolean, basePrice: string, discountPrice: string, percent: string, startDateDiscount: Date, endDateDiscount: Date, title: string, titleOption: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.hasStock = hasStock;
@@ -31,6 +32,7 @@ export default class ProductOptionStoreVM {
         this.startDateDiscount = startDateDiscount;
         this.endDateDiscount = endDateDiscount;
         this.title = title;
+        this.titleOption = titleOption;
         this.description = description;
         this.pictures = pictures;
         this.allOptions = allOptions;
@@ -83,6 +85,10 @@ export default class ProductOptionStoreVM {
 
     public getTitle(): string {
         return this.title;
+    }
+
+    public getTitleOption(): string {
+        return this.titleOption;
     }
 
     public getDescription(): string {

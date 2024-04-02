@@ -87,8 +87,32 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
                 active: true
             },
             include: [{attributes: [], model: ProductEntity, where: {customerId: customerId}, as: 'product'}]
-        })
+        });
     };
+
+    public async getAllProductOptionStore(customerId: string): Promise<Array<ProductOptionEntity>> {
+        return await ProductOptionEntity.findAll({
+            attributes: ['productOptionId', 'nameFr', 'nameEn'],
+            where: {
+                active: true
+            },
+            include: [
+                {
+                    attributes: ['nameFr', 'nameEn', 'descriptionFr', 'descriptionEn'],
+                    model: ProductEntity,
+                    where: {customerId: customerId},
+                    as: 'product'
+                },
+                {
+                    attributes: [],
+                    model: ProductOptionPriceEntity,
+                    required: true,
+                    as: 'productOptionPrices'
+                }
+            ]
+        });
+    }
+
 
     public async getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<ProductOptionEntity>> {
         const date = new Date();

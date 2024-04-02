@@ -13,7 +13,7 @@ export default class BasketFacade implements IBasketRequester {
 
     public async addOpenBasketIfNotExists(userId: string): Promise<string> {
         const existsBasket = await this.basketDataGateway.findOpenBasketForUser(userId);
-        if(existsBasket){
+        if (existsBasket) {
             return existsBasket.getBasketId();
         }
         const newBasket = await this.basketDataGateway.addBasketForUser(userId);
@@ -21,7 +21,14 @@ export default class BasketFacade implements IBasketRequester {
     }
 
     public async addProductOptionToBasket(basketProductOption: BasketProductOptionDS): Promise<void> {
-        await this.basketDataGateway.addProductOptionToBasket(basketProductOption);
+        const existingProductOptionBasket = await this.basketDataGateway.findProductOptionBasket(basketProductOption.getBasketId(), basketProductOption.getProductOptionId());
+        if (existingProductOptionBasket) {
+            const quantity = existingProductOptionBasket.getQuantity() + basketProductOption.getQuantity();
+            const updateBasketProductOption = new BasketProductOptionDS(basketProductOption.getBasketId(), basketProductOption.getProductOptionId(), quantity);
+            await this.basketDataGateway.updateProductOptionBasket(updateBasketProductOption);
+        } else {
+            await this.basketDataGateway.addProductOptionToBasket(basketProductOption);
+        }
     }
 
     public async deleteProductOptionBasket(basketId: string, productOptionId: string): Promise<void> {
@@ -34,6 +41,9 @@ export default class BasketFacade implements IBasketRequester {
     }
 
     public async updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void> {
+        if (!basketProductOption.getQuantity() || basketProductOption.getQuantity() <= 0) {
+            throw new Error('error.basketQuantity');
+        }
         await this.basketDataGateway.updateProductOptionBasket(basketProductOption);
     }
 }

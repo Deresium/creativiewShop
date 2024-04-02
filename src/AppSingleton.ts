@@ -66,6 +66,11 @@ import SendMailDataMapper from "./external/aws/mail/SendMailDataMapper";
 import CheckTokenRecaptchaMiddleware from "./routers/middlewares/CheckTokenRecaptchaMiddleware";
 import StoreRouter from "./routers/routes/StoreRouter";
 import CheckStoreAccessMiddleware from "./routers/middlewares/CheckStoreAccessMiddleware";
+import BasketDataMapper from "./database/datamappers/BasketDataMapper";
+import BasketFacade from "./business/facades/BasketFacade";
+import ExtractOrCreateUserTempMiddleware from "./routers/middlewares/ExtractOrCreateUserTempMiddleware";
+import ExtractOpenBasketIdMiddleware from "./routers/middlewares/ExtractOpenBasketIdMiddleware";
+import BasketRouter from "./routers/routes/BasketRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -110,6 +115,7 @@ export default class AppSingleton {
         const countryDataMapper = new CountryDataMapper();
         const weightPriceDataMapper = new WeightPriceDataMapper();
         const sendMailDataMapper = new SendMailDataMapper();
+        const basketDataMapper = new BasketDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
@@ -129,6 +135,7 @@ export default class AppSingleton {
         const deliveryOptionCountryFacade = new DeliveryOptionCountryFacade(deliveryOptionCountryDataMapper);
         const countryFacade = new CountryFacade(countryDataMapper);
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
+        const basketFacade = new BasketFacade(basketDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -137,7 +144,7 @@ export default class AppSingleton {
         // rate-limiting
         const limiter = rateLimit({
             windowMs: 60 * 1000, // 1 minutes
-            limit: 100,
+            limit: 500,
             standardHeaders: 'draft-7',
             legacyHeaders: false,
             message: ('rateLimitReached')
@@ -172,6 +179,8 @@ export default class AppSingleton {
         const checkUserOwnerMiddleware = new CheckUserOwnerMiddleware(userFacade).getRequestHandler();
         const checkTokenRecaptchaMiddleware = new CheckTokenRecaptchaMiddleware().getRequestHandler();
         const checkStoreAccessMiddleware = new CheckStoreAccessMiddleware().getRequestHandler();
+        const extractOrCreateUserTempMiddleware = new ExtractOrCreateUserTempMiddleware(userFacade).getRequestHandler();
+        const extractOpenBasketIdMiddleware = new ExtractOpenBasketIdMiddleware(basketFacade).getRequestHandler();
 
         this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminMiddleware, checkUserOwnerMiddleware, checkTokenRecaptchaMiddleware).getRouter());
         this.expressApp.use('/api', new CustomerRouter().getRouter());
@@ -184,5 +193,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new GroupRouter(groupFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new DeliveryOptionRouter(deliveryOptionFacade, deliveryOptionCountryFacade, countryFacade, weightPriceFacade, onlyAdminMiddleware, checkDeliveryOptionOwnerMiddleware).getRouter());
         this.expressApp.use('/api', new StoreRouter(productOptionFacade, checkStoreAccessMiddleware).getRouter());
+        this.expressApp.use('/api', new BasketRouter(basketFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware, extractOpenBasketIdMiddleware).getRouter());
     }
 }

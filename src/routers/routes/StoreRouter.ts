@@ -31,7 +31,19 @@ export default class StoreRouter extends ApplicationRouter {
         this.getRouter().get('/store/discount', async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
             const groups = req.userGroups;
+            if (!groups) {
+                res.status(400).send();
+                return;
+            }
             const productOptions = await this.productOptionRequester.getProductOptionDiscount(customerId, groups);
+            res.send(productOptions);
+        });
+
+        this.getRouter().get('/store', async (req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const searchTerm = req.query.searchTerm;
+            const language = req.query.language;
+            const productOptions = await this.productOptionRequester.getProductOptionSearch(customerId, searchTerm, language);
             res.send(productOptions);
         });
 
@@ -41,6 +53,10 @@ export default class StoreRouter extends ApplicationRouter {
             const groups = req.userGroups;
             const language = req.query.language;
             const currency = req.query.currency;
+            if (!groups) {
+                res.status(400).send();
+                return;
+            }
             const productOption = await this.productOptionRequester.getProductOptionStore(productOptionId, groups, customer, currency, language);
             res.send(productOption);
         });

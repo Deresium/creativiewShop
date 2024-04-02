@@ -3,9 +3,11 @@ import CsHome from "../components/routes/CsHome.vue";
 import CsAdmin from "../components/routes/CsAdmin.vue";
 import CsAdminProduct from "../components/routes/CsAdminProduct.vue";
 import CsAdminDeliveryOption from "../components/routes/CsAdminDeliveryOption.vue";
-import CsPasswordRequest from "../components/global/CsPasswordRequest.vue";
-import CsNewPassword from "../components/global/CsNewPassword.vue";
+import CsPasswordRequest from "../components/routes/CsPasswordRequest.vue";
+import CsNewPassword from "../components/routes/CsNewPassword.vue";
 import CsStoreProduct from "../components/routes/CsStoreProduct.vue";
+import CsBasket from "../components/routes/CsBasket.vue";
+import CsStore from "../components/routes/CsStore.vue";
 
 export const routes: Array<RouteRecordRaw> = [
     {
@@ -46,5 +48,15 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/store/:productOptionId',
         name: 'productOptionStore',
         component: CsStoreProduct
+    },
+    {
+        path: '/basket',
+        name: 'basket',
+        component: CsBasket
+    },
+    {
+        path: '/store',
+        name: 'store',
+        component: CsStore
     }
 ];

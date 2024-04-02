@@ -7,6 +7,7 @@ import ProductOptionStoreVM from "../models/viewmodels/ProductOptionStoreVM";
 import ProductOptionStoreBuilder from "../utils/ProductOptionStoreBuilder";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ICurrencyRateDataGateway from "../../database/gateways/ICurrencyRateDataGateway";
+import ProductOptionStoreFilter from "../utils/ProductOptionStoreFilter";
 
 export default class ProductOptionFacade implements IProductOptionRequester {
     private readonly productOptionDataGateway: IProductOptionDataGateway;
@@ -48,6 +49,13 @@ export default class ProductOptionFacade implements IProductOptionRequester {
     public async getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getProductOptionDiscount(customerId, groups);
         return productOptions.map(productOption => productOption.getProductOptionId());
+    }
+
+    public async getProductOptionSearch(customerId: string, searchTerm: string, language: string): Promise<Array<string>> {
+        const productOptions = await this.productOptionDataGateway.getAllProductOptionStore(customerId);
+        return productOptions.filter(productOption => {
+            return new ProductOptionStoreFilter(productOption, language, searchTerm).filter();
+        }).map(productOption => productOption.getProductOptionId());
     }
 
     public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<ProductOptionStoreVM> {

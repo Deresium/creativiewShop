@@ -5,19 +5,26 @@ import BasketEntity from "../entities/BasketEntity";
 
 export default class BasketDataMapper implements IBasketDataGateway {
     public async addBasketForUser(userId: string): Promise<BasketEntity> {
-        return  await BasketEntity.create({
+        return await BasketEntity.create({
             userId: userId,
             basketStateCode: 'BASKET'
         });
     }
-
-
 
     public async findOpenBasketForUser(userId: string): Promise<BasketEntity> {
         return await BasketEntity.findOne({
             where: {
                 userId: userId,
                 basketStateCode: 'BASKET'
+            }
+        });
+    }
+
+    public async findProductOptionBasket(basketId: string, productOptionId: string): Promise<BasketProductOptionEntity> {
+        return await BasketProductOptionEntity.findOne({
+            where: {
+                basketId: basketId,
+                productOptionId: productOptionId
             }
         });
     }

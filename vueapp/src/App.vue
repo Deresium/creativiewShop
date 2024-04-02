@@ -6,7 +6,11 @@
         <div v-if="initDone" class="app">
             <div class="exceptFooter">
                 <CsHeader/>
-                <router-view :key="route.fullPath"/>
+                <router-view v-slot="{ Component }">
+                    <KeepAlive include="CsStore">
+                        <component :is="Component" :key="route.fullPath"/>
+                    </KeepAlive>
+                </router-view>
             </div>
             <CsFooter/>
         </div>
@@ -34,9 +38,10 @@ const globalStore = useGlobalStore();
 const storeStore = useStoreStore();
 const {locale} = useI18n({useScope: "global"});
 
-const route = useRoute();
 
 const loggedIn = computed(() => userStore.isLoggedIn);
+
+const route = useRoute();
 
 watch(locale, () => {
     axiosServer.defaults.params['language'] = locale.value;

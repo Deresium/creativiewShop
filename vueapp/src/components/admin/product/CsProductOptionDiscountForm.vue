@@ -122,11 +122,12 @@ const submitForm = async () => {
     }
 
     try {
+        console.log(startDate.value, new Date(startDate.value).toISOString());
         await axiosServer.post(`/product/${productIdString}/productOption/${props.productOptionId}/discount`, {
             groupId: groupId.value,
             percent: percent.value,
-            startDate: startDate.value,
-            endDate: endDate.value
+            startDate: new Date(startDate.value).toISOString(),
+            endDate: new Date(endDate.value).toISOString()
         });
         emit('addDiscountSuccess');
         backendError.value = '';

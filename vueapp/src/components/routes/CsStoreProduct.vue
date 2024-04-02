@@ -2,38 +2,71 @@
     <div class="content">
         <v-skeleton-loader v-if="!loaded" type="card"></v-skeleton-loader>
         <article v-if="loaded">
-            <v-carousel height="300px" show-arrows="hover">
-                <v-carousel-item
+            <div class="carousel">
+                <v-carousel height="300px" show-arrows="hover">
+                    <v-carousel-item
+                        v-for="productPictureId in productOptionStore.getPictures()"
+                        :key="productPictureId"
+                        @click="clickOnCarouselItem(productPictureId)"
+                    >
+                        <div class="contentCarousel">
+                            <img
+                                :src="imageSrc(productPictureId)"
+                                alt="product image"
+                                class="imgCarousel">
+                        </div>
+                    </v-carousel-item>
+                </v-carousel>
+            </div>
+            <div class="allPictures">
+                <img
                     v-for="productPictureId in productOptionStore.getPictures()"
                     :key="productPictureId"
+                    :src="imageSrc(productPictureId)"
+                    alt="product image"
+                    class="imgAllImage"
                     @click="clickOnCarouselItem(productPictureId)"
-                >
-                    <div class="contentCarousel">
-                        <img
-                            :src="imageSrc(productPictureId)"
-                            alt="product image"
-                            class="imgCarousel">
+                />
+            </div>
+
+            <div class="info">
+                <p class="title">{{ productOptionStore.getTitle() }}</p>
+                <p :class="basePriceClass" class="basePrice">{{ productOptionStore.getBasePrice() }}{{
+                        currencySymbol
+                    }}</p>
+                <div v-if="productOptionStore.getDiscountPrice()">
+                    <div class="discount">
+                        <p>{{ productOptionStore.getDiscountPrice() }}{{ currencySymbol }}</p>
+                        <p>-{{ productOptionStore.getPercent() }} %</p>
                     </div>
-                </v-carousel-item>
-            </v-carousel>
-
-            <p class="title">{{ productOptionStore.getTitle() }}</p>
-            <p :class="basePriceClass" class="basePrice">{{ productOptionStore.getBasePrice() }}{{ currencySymbol }}</p>
-            <div v-if="productOptionStore.getDiscountPrice()">
-                <div class="discount">
-                    <p>{{ productOptionStore.getDiscountPrice() }}{{ currencySymbol }}</p>
-                    <p>-{{ productOptionStore.getPercent() }} %</p>
+                    <p>{{ nbDays }}{{ t('date.d') }} {{ nbHours }}{{ t('date.h') }} {{ nbMinutes }}{{ t('date.m') }}</p>
                 </div>
-                <p>{{ nbDays }}{{ t('date.d') }} {{ nbHours }}{{ t('date.h') }} {{ nbMinutes }}{{ t('date.m') }}</p>
-            </div>
 
-            <div v-if="productOptionStore.getAllOptions().length > 1" class="option">
-                <v-select v-model="selectedOption" :items="productOptionStore.getAllOptions()"/>
-            </div>
+                <div v-if="productOptionStore.getAllOptions().length > 1" class="option">
+                    <v-select v-model="selectedOption" :items="productOptionStore.getAllOptions()"/>
+                </div>
 
-            <p class="description">{{ productOptionStore.getDescription() }}</p>
+                <v-btn :color="firstColor" class="btnAddBasket" variant="flat" @click="clickOnAddBasket">
+                    {{ t('addToBasket') }}
+                </v-btn>
+
+                <p class="description">{{ productOptionStore.getDescription() }}</p>
+            </div>
         </article>
     </div>
+
+    <v-snackbar v-model="showAddBasketSuccess">
+        {{ t('addBasket.success') }}
+        <template v-slot:actions>
+            <v-btn
+                color="green"
+                variant="text"
+                @click="showAddBasketSuccess = false"
+            >
+                {{ t('close') }}
+            </v-btn>
+        </template>
+    </v-snackbar>
 
     <v-overlay v-if="showOverlayImg" v-model="showOverlayImg" class="overlay" opacity="95%">
         <img :src="imageSrc(pictureIdOverlay)" alt="image product" class="imgOverlay"/>
@@ -49,6 +82,8 @@ import useCountdown from "../../compositionfunctions/countdown.ts";
 import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 import {useRoute} from "vue-router";
 import router from "../../router/router.ts";
+import useCustomer from "../../compositionfunctions/customer.ts";
+import axiosServer from "../../axios/axiosServer.ts";
 
 
 const {t} = useI18n({useScope: 'global'});
@@ -57,6 +92,7 @@ const {params: {productOptionId}} = useRoute();
 const productOptionIdString = String(productOptionId);
 
 const storeStore = useStoreStore();
+const {firstColor} = useCustomer();
 
 const loaded = ref(false);
 const showOverlayImg = ref(false);
@@ -66,6 +102,7 @@ const currencySymbol = computed(() => storeStore.getCurrencySymbol);
 const currencyCode = computed(() => storeStore.getCurrencyCode);
 const {nbDays, nbHours, nbMinutes, endOfDiscount, startCountdown} = useCountdown();
 const selectedOption = ref(null);
+const showAddBasketSuccess = ref(false);
 
 const refreshProductOptionStore = async () => {
     loaded.value = false;
@@ -98,6 +135,13 @@ watch(selectedOption, async () => {
 const clickOnCarouselItem = (productPictureId: string) => {
     pictureIdOverlay.value = productPictureId;
     showOverlayImg.value = true;
+};
+
+const clickOnAddBasket = async () => {
+    await axiosServer.post(`/basket/${productOptionIdString}`, {
+        quantity: 1
+    });
+    showAddBasketSuccess.value = true;
 };
 const imageSrc = (productPictureId: string) => {
     return `${import.meta.env.VITE_APP_URL_CREATIVIEWSHOP}/api/product/${productOptionStore.value.getProductId()}/productOption/${productOptionIdString}/image/${productPictureId}`;
@@ -158,6 +202,40 @@ const imageSrc = (productPictureId: string) => {
 
 .description {
     white-space: pre-wrap;
+}
+
+.allPictures {
+    display: none;
+}
+
+.btnAddBasket {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+@media (width >= 1200px) {
+    article {
+        display: flex;
+    }
+
+    .carousel {
+        display: none;
+    }
+
+    .allPictures {
+        width: 60%;
+        display: block;
+    }
+
+    .info {
+        width: 40%;
+    }
+
+    .imgAllImage {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+    }
 }
 
 </style>

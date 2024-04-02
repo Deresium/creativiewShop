@@ -84,7 +84,7 @@ ProductOptionStoreRequester.requestDiscountProductOptionIds().then(response => {
     width: 45%;
 }
 
-@media (min-width: 600px) {
+@media (width >= 600px) {
     .thumbnail {
         width: 30%;
     }
@@ -94,9 +94,15 @@ ProductOptionStoreRequester.requestDiscountProductOptionIds().then(response => {
     }
 }
 
-@media (min-width: 1200px) {
+@media (width >= 1200px) {
     .thumbnail {
-        width: 15%;
+        width: 17%;
+    }
+}
+
+@media (width >= 1400px) {
+    .thumbnail {
+        width: 13%;
     }
 }
 </style>

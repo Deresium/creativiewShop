@@ -27,6 +27,7 @@ export default class ProductOptionStoreParser {
             startDate,
             endDate,
             data.title,
+            data.titleOption,
             data.description,
             data.pictures,
             allOptions

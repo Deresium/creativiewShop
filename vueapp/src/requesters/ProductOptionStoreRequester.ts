@@ -13,10 +13,19 @@ export default class ProductOptionStoreRequester {
         return response.data;
     }
 
-    public static async requestProductOptionStore(productOptionId: string, currencySymbol: string): Promise<ProductOptionStoreVM> {
+    public static async requestSearchAllProductOptionIds(searchTerm: string): Promise<Array<string>> {
+        const response = await axiosServer.get('/store', {
+            params: {
+                searchTerm: searchTerm
+            }
+        });
+        return response.data;
+    }
+
+    public static async requestProductOptionStore(productOptionId: string, currencyCode: string): Promise<ProductOptionStoreVM> {
         const response = await axiosServer.get(`store/${productOptionId}`, {
             params: {
-                currency: currencySymbol
+                currency: currencyCode
             }
         });
         return ProductOptionStoreParser.parseProductOptionStore(response.data);

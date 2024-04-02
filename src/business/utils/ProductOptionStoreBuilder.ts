@@ -38,6 +38,7 @@ export default class ProductOptionStoreBuilder {
         const manufacturer = this.productOption.getProduct().getManufacturerName();
         const preorder = this.productOption.getPreorder();
         const title = this.getTitle();
+        const titleOption = this.getOptionName(this.productOption);
         const description = this.getDescription();
         const pictureIds = this.productOption.getListPictures().map(picture => picture.getProductOptionPictureId());
         const discount = this.getMaxDiscountOption(this.productOption.getProductOptionDiscounts());
@@ -67,6 +68,7 @@ export default class ProductOptionStoreBuilder {
             startDateDiscount,
             endDateDiscount,
             title,
+            titleOption,
             description,
             pictureIds,
             allOptions);

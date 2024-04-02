@@ -5,7 +5,7 @@ export default class BasketProductOptionEntity extends Model {
     private readonly basketId: string;
     private readonly productOptionId: string;
     private readonly quantity: number;
-
+    private readonly priceAtOrdered: number;
 
     getProductOptionId(): string {
         return this.productOptionId;
@@ -19,8 +19,9 @@ export default class BasketProductOptionEntity extends Model {
 BasketProductOptionEntity.init({
     basketId: {type: DataTypes.BIGINT, primaryKey: true},
     productOptionId: {type: DataTypes.BIGINT, primaryKey: true},
-    quantity: DataTypes.INTEGER
-},{
+    quantity: DataTypes.INTEGER,
+    priceAtOrdered: DataTypes.DECIMAL
+}, {
     tableName: 'BasketProductOption',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
 });

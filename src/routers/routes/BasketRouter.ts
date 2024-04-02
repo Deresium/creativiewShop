@@ -20,31 +20,38 @@ export default class BasketRouter extends ApplicationRouter {
     }
 
     public initRoutes() {
-        this.getRouter().post('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async(req: any, res: any) => {
+        this.getRouter().post('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const productOptionId = String(req.params.productOptionId);
             const quantity = req.body.quantity;
+            if (!quantity) {
+                res.status(400).send();
+            }
             const basketProductOption = new BasketProductOptionDS(basketId, productOptionId, quantity);
             await this.basketRequester.addProductOptionToBasket(basketProductOption);
             res.send();
         });
 
-        this.getRouter().get('/basket', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async(req: any, res: any) => {
+        this.getRouter().get('/basket', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const productOptions = await this.basketRequester.getBasketProductOptions(basketId);
             res.send(productOptions);
         });
 
-        this.getRouter().put('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async(req: any, res: any) => {
+        this.getRouter().put('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const productOptionId = String(req.params.productOptionId);
             const quantity = req.body.quantity;
             const basketProductOption = new BasketProductOptionDS(basketId, productOptionId, quantity);
-            await this.basketRequester.updateProductOptionBasket(basketProductOption);
-            res.send();
+            try {
+                await this.basketRequester.updateProductOptionBasket(basketProductOption);
+                res.send();
+            } catch (error: any) {
+                res.status(400).send(error.message);
+            }
         });
 
-        this.getRouter().delete('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async(req: any, res: any) => {
+        this.getRouter().delete('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const productOptionId = String(req.params.productOptionId);
             await this.basketRequester.deleteProductOptionBasket(basketId, productOptionId);
