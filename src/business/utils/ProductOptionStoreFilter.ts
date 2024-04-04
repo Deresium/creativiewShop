@@ -4,15 +4,25 @@ export default class ProductOptionStoreFilter {
     private readonly productOption: ProductOptionEntity;
     private readonly language: string;
     private readonly searchTerm: string;
+    private readonly categoryIds: Array<string>;
 
 
-    constructor(productOption: ProductOptionEntity, language: string, searchTerm: string) {
+    constructor(productOption: ProductOptionEntity, language: string, searchTerm: string, categoryIds: Array<string>) {
         this.productOption = productOption;
         this.language = language;
         this.searchTerm = searchTerm;
+        this.categoryIds = categoryIds;
     }
 
     public filter(): boolean {
+        const filterOnCategories = this.filterOnCategories();
+        if (!filterOnCategories) {
+            return false;
+        }
+        return this.filterOnSearchTerm();
+    }
+
+    private filterOnSearchTerm(): boolean {
         if (!this.searchTerm) {
             return true;
         }
@@ -20,6 +30,23 @@ export default class ProductOptionStoreFilter {
         return this.include(upperSearchTerm, this.getProductName()) ||
             this.include(upperSearchTerm, this.getProductOptionName()) ||
             this.include(upperSearchTerm, this.getProductDescription());
+    }
+
+    private filterOnCategories(): boolean {
+        if (!this.categoryIds || this.categoryIds.length === 0) {
+            return true;
+        }
+
+        if (!this.productOption.getProductOptionCategories() || this.productOption.getProductOptionCategories().length === 0) {
+            return false;
+        }
+
+        for (const category of this.productOption.getProductOptionCategories()) {
+            if (this.categoryIds.includes(category.getCategoryId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private getProductName() {

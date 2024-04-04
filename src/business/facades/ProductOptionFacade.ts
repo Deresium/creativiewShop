@@ -51,10 +51,10 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         return productOptions.map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionSearch(customerId: string, searchTerm: string, language: string): Promise<Array<string>> {
+    public async getProductOptionSearch(customerId: string, searchTerm: string, categoryIds: Array<string>, language: string): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getAllProductOptionStore(customerId);
         return productOptions.filter(productOption => {
-            return new ProductOptionStoreFilter(productOption, language, searchTerm).filter();
+            return new ProductOptionStoreFilter(productOption, language, searchTerm, categoryIds).filter();
         }).map(productOption => productOption.getProductOptionId());
     }
 

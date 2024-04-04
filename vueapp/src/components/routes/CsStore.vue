@@ -1,7 +1,15 @@
 <template>
     <div class="store">
         <v-skeleton-loader v-if="!loadedStore" type="card"></v-skeleton-loader>
+
         <div v-if="loadedStore" class="storeLoaded">
+
+            <div v-if="categories.length >= 1" class="filter">
+                <v-btn :color="firstColor" append-icon="mdi-plus" variant="flat" @click="showFilters=true">
+                    {{ t('filter') }}
+                </v-btn>
+            </div>
+
             <v-data-iterator :items="searchedProductOptionIds" :items-per-page="10" :page="nbPage">
                 <template #default="{ items }">
                     <div class="productOptions">
@@ -17,6 +25,7 @@
                         </template>
                     </div>
                 </template>
+
                 <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
                     <div class="footer">
                         <v-btn
@@ -44,7 +53,27 @@
                         />
                     </div>
                 </template>
+
             </v-data-iterator>
+
+            <v-overlay v-if="showFilters" v-model="showFilters" :scrim="firstColor"
+                       opacity="99%">
+                <div class="overlayContent">
+                    <v-btn class="closeIcon" density="compact" icon="mdi-close" variant="flat"
+                           @click="showFilters=false"/>
+                    <div class="categoriesFilter">
+                        <h2>{{ t('categories') }}</h2>
+                        <CsStoreFilter
+                            v-for="category in categories"
+                            :key="category.getCategoryId()"
+                            :base-selection="selectedCategories"
+                            :category="category"
+                            @value-change="updateSelectedCategories"
+                        />
+                    </div>
+                    <v-btn variant="flat" @click="searchFilter">{{ t('search') }}</v-btn>
+                </div>
+            </v-overlay>
         </div>
     </div>
 </template>
@@ -55,6 +84,10 @@ import {ref} from "vue";
 import ProductOptionStoreRequester from "../../requesters/ProductOptionStoreRequester.ts";
 import CsProductOptionThumbnail from "../store/CsProductOptionThumbnail.vue";
 import {useI18n} from "vue-i18n";
+import CategoryVM from "../../viewmodels/CategoryVM.ts";
+import CategoryRequester from "../../requesters/CategoryRequester.ts";
+import useCustomer from "../../compositionfunctions/customer.ts";
+import CsStoreFilter from "../store/CsStoreFilter.vue";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -63,14 +96,43 @@ let searchTermString: string = null;
 if (searchTerm) {
     searchTermString = String(searchTerm);
 }
+
+const {firstColor} = useCustomer();
+
 const nbPage = ref(1);
 const loadedStore = ref(false);
 const searchedProductOptionIds = ref(new Array<string>());
+const categories = ref(new Array<CategoryVM>());
+const selectedCategories = ref(new Map<string, string>());
+const showFilters = ref(false);
 
 const refreshStore = async () => {
-    searchedProductOptionIds.value = await ProductOptionStoreRequester.requestSearchAllProductOptionIds(searchTermString);
+    loadedStore.value = false;
+    searchedProductOptionIds.value = await ProductOptionStoreRequester.requestSearchAllProductOptionIds(searchTermString, [...selectedCategories.value.keys()]);
     loadedStore.value = true;
 };
+refreshStore();
+
+CategoryRequester.requestCategories().then(response => {
+    categories.value = response;
+});
+
+const updateSelectedCategories = (checked: boolean, categoryId: string) => {
+    if (checked) {
+        selectedCategories.value.set(categoryId, categoryId);
+    } else {
+        selectedCategories.value.delete(categoryId);
+    }
+};
+
+const searchFilter = async () => {
+    await refreshStore();
+    showFilters.value = false;
+};
+
+/*const onClickOutside = () => {
+    showFilters.value = false;
+};*/
 
 const goToNextPage = (nextFct: Function) => {
     nbPage.value++;
@@ -82,15 +144,23 @@ const goToPrevPage = (prevFct: Function) => {
     prevFct();
 };
 
-refreshStore();
-
 </script>
 
 <style scoped>
+.storeLoaded {
+    margin: 10px;
+}
+
+.filter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
 .productOptions {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
     align-items: stretch;
     align-content: stretch;
     gap: 20px;
@@ -118,9 +188,31 @@ refreshStore();
     width: 45%;
 }
 
+.overlayContent {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
+    padding-left: 10px;
+}
+
+.closeIcon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.categoriesFilter {
+    margin-bottom: 10px;
+}
+
+.categoriesFilter h2 {
+    padding-left: 0;
+}
+
 @media (width >= 600px) {
     .thumbnail {
-        width: 30%;
+        width: 27%;
     }
 
     .productOptions {
@@ -131,6 +223,10 @@ refreshStore();
 @media (width >= 1200px) {
     .thumbnail {
         width: 17%;
+    }
+
+    .storeLoaded {
+        margin: 50px;
     }
 }
 

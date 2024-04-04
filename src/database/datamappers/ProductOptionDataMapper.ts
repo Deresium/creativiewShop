@@ -6,6 +6,7 @@ import ProductEntity from "../entities/ProductEntity";
 import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
 import ProductOptionPictureEntity from "../entities/ProductOptionPictureEntity";
 import ProductOptionDiscountEntity from "../entities/ProductOptionDiscountEntity";
+import ProductOptionCategoryEntity from "../entities/ProductOptionCategoryEntity";
 
 export default class ProductOptionDataMapper implements IProductOptionDataGateway {
     public async createProductOption(productId: string): Promise<string> {
@@ -84,7 +85,10 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
             attributes: ['productOptionId'],
             where: {
                 featured: true,
-                active: true
+                active: true,
+                deletedAt: {
+                    [Op.eq]: null
+                }
             },
             include: [{attributes: [], model: ProductEntity, where: {customerId: customerId}, as: 'product'}]
         });
@@ -94,7 +98,10 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
         return await ProductOptionEntity.findAll({
             attributes: ['productOptionId', 'nameFr', 'nameEn'],
             where: {
-                active: true
+                active: true,
+                deletedAt: {
+                    [Op.eq]: null
+                }
             },
             include: [
                 {
@@ -108,6 +115,12 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
                     model: ProductOptionPriceEntity,
                     required: true,
                     as: 'productOptionPrices'
+                },
+                {
+                    attributes: ['categoryId'],
+                    model: ProductOptionCategoryEntity,
+                    required: false,
+                    as: 'productOptionCategories'
                 }
             ]
         });
@@ -120,6 +133,9 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
             attributes: ['productOptionId'],
             where: {
                 active: true,
+                deletedAt: {
+                    [Op.eq]: null
+                },
                 '$groupId$': {[Op.or]: [null, groups]}
             },
             include: [

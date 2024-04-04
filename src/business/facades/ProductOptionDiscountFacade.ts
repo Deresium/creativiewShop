@@ -38,7 +38,6 @@ export default class ProductOptionDiscountFacade implements IProductOptionDiscou
         const productDiscounts = await this.productOptionDiscountDataGateway.getDiscountsForProductOption(productOptionId);
         for (const productDiscount of productDiscounts) {
             const startDate = productDiscount.getStartDate().toISOString();
-            console.log(productDiscount.getStartDate(), startDate);
             const endDate = productDiscount.getEndDate().toISOString();
             let deletedAtDate = null;
             if (productDiscount.getDeletedAt()) {

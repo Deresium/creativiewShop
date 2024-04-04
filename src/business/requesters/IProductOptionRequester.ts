@@ -18,7 +18,7 @@ export default interface IProductOptionRequester {
 
     getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<string>>;
 
-    getProductOptionSearch(customerId: string, searchTerm: string, language: string): Promise<Array<string>>;
+    getProductOptionSearch(customerId: string, searchTerm: string, categoryIds: Array<string>, language: string): Promise<Array<string>>;
 
     getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<ProductOptionStoreVM>;
 }

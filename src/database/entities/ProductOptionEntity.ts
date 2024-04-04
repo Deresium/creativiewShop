@@ -4,6 +4,7 @@ import ProductOptionPriceEntity from "./ProductOptionPriceEntity";
 import ProductOptionPictureEntity from "./ProductOptionPictureEntity";
 import ProductEntity from "./ProductEntity";
 import ProductOptionDiscountEntity from "./ProductOptionDiscountEntity";
+import ProductOptionCategoryEntity from "./ProductOptionCategoryEntity";
 
 export default class ProductOptionEntity extends Model {
     private productOptionId: string;
@@ -23,6 +24,7 @@ export default class ProductOptionEntity extends Model {
     private productOptionPrices: Array<ProductOptionPriceEntity>;
     private productOptionPictures: Array<ProductOptionPictureEntity>;
     private productOptionDiscounts: Array<ProductOptionDiscountEntity>;
+    private productOptionCategories: Array<ProductOptionCategoryEntity>;
 
     public getProductOptionId() {
         return this.productOptionId;
@@ -84,6 +86,10 @@ export default class ProductOptionEntity extends Model {
     public getProductOptionDiscounts(): Array<ProductOptionDiscountEntity> {
         return this.productOptionDiscounts;
     }
+
+    public getProductOptionCategories() {
+        return this.productOptionCategories;
+    }
 }
 
 ProductOptionEntity.init({
@@ -114,4 +120,10 @@ ProductOptionEntity.hasMany(ProductOptionPictureEntity, {
     sourceKey: 'productOptionId',
     foreignKey: 'productOptionId',
     as: 'productOptionPictures'
+});
+
+ProductOptionEntity.hasMany(ProductOptionCategoryEntity, {
+    sourceKey: 'productOptionId',
+    foreignKey: 'productOptionId',
+    as: 'productOptionCategories'
 });

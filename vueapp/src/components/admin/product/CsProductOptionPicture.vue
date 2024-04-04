@@ -114,7 +114,6 @@ const sendImageToServer = async (file: File) => {
         return;
     }
 
-    console.log(file.size);
     if (file.size > 5000000) {
         return;
     }

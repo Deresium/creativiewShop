@@ -122,7 +122,6 @@ const submitForm = async () => {
     }
 
     try {
-        console.log(startDate.value, new Date(startDate.value).toISOString());
         await axiosServer.post(`/product/${productIdString}/productOption/${props.productOptionId}/discount`, {
             groupId: groupId.value,
             percent: percent.value,

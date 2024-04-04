@@ -13,10 +13,11 @@ export default class ProductOptionStoreRequester {
         return response.data;
     }
 
-    public static async requestSearchAllProductOptionIds(searchTerm: string): Promise<Array<string>> {
+    public static async requestSearchAllProductOptionIds(searchTerm: string, categoryIds?: Array<string>): Promise<Array<string>> {
         const response = await axiosServer.get('/store', {
             params: {
-                searchTerm: searchTerm
+                searchTerm: searchTerm,
+                categoryIds: categoryIds
             }
         });
         return response.data;
