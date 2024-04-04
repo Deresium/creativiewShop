@@ -90,7 +90,17 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
                     [Op.eq]: null
                 }
             },
-            include: [{attributes: [], model: ProductEntity, where: {customerId: customerId}, as: 'product'}]
+            include: [{
+                attributes: [],
+                model: ProductEntity,
+                where: {
+                    customerId: customerId,
+                    deletedAt: {
+                        [Op.eq]: null
+                    }
+                },
+                as: 'product'
+            }]
         });
     };
 
@@ -107,7 +117,12 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
                 {
                     attributes: ['nameFr', 'nameEn', 'descriptionFr', 'descriptionEn'],
                     model: ProductEntity,
-                    where: {customerId: customerId},
+                    where: {
+                        customerId: customerId,
+                        deletedAt: {
+                            [Op.eq]: null
+                        }
+                    },
                     as: 'product'
                 },
                 {
@@ -139,7 +154,17 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
                 '$groupId$': {[Op.or]: [null, groups]}
             },
             include: [
-                {attributes: [], model: ProductEntity, where: {customerId: customerId}, as: 'product'},
+                {
+                    attributes: [],
+                    model: ProductEntity,
+                    where: {
+                        customerId: customerId,
+                        deletedAt: {
+                            [Op.eq]: null
+                        }
+                    },
+                    as: 'product'
+                },
                 {
                     attributes: [],
                     model: ProductOptionDiscountEntity,
