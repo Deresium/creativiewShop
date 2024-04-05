@@ -49,6 +49,7 @@ watch(locale, () => {
 
 watch(loggedIn, async () => {
     await storeStore.setHasAccessToStore();
+    await storeStore.refreshNbItemsInStore();
 });
 
 const initApp = async () => {

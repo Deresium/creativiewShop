@@ -4,7 +4,11 @@ import BasketProductOptionParser from "../parsers/BasketProductOptionParser.ts";
 
 export default class BasketProductOptionRequester {
     public static async requestBasketProductOptions(): Promise<Array<BasketProductOptionVM>> {
-        const response = await axiosServer.get('/basket');
-        return BasketProductOptionParser.parseBasketProductOptions(response.data);
+        try {
+            const response = await axiosServer.get('/basket');
+            return BasketProductOptionParser.parseBasketProductOptions(response.data);
+        } catch (error) {
+            return new Array<BasketProductOptionVM>;
+        }
     }
 }

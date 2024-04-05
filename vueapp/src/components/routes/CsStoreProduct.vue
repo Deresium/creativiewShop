@@ -142,6 +142,7 @@ const clickOnAddBasket = async () => {
         quantity: 1
     });
     showAddBasketSuccess.value = true;
+    await storeStore.refreshNbItemsInStore();
 };
 const imageSrc = (productPictureId: string) => {
     return `${import.meta.env.VITE_APP_URL_CREATIVIEWSHOP}/api/product/${productOptionStore.value.getProductId()}/productOption/${productOptionIdString}/image/${productPictureId}`;

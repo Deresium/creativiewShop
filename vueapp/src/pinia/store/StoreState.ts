@@ -2,6 +2,7 @@ export default class StoreState {
     private currencyCode: string;
     private currencySymbol: string;
     private hasAccessToStore: boolean;
+    private nbItemsInBasket: number;
 
 
     public getCurrencyCode(): string {
@@ -27,5 +28,13 @@ export default class StoreState {
 
     public setHasAccessToStore(value: boolean) {
         this.hasAccessToStore = value;
+    }
+
+    public getNbItemsInBasket() {
+        return this.nbItemsInBasket;
+    }
+
+    public setNbItemsInBasket(value: number) {
+        this.nbItemsInBasket = value;
     }
 }

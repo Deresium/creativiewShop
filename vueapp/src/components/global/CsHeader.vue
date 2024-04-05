@@ -9,7 +9,9 @@
 
         <div class="right headerItem">
             <v-btn v-if="hasAccessToStore" icon="mdi-magnify" variant="flat" @click="handleClickSearch"/>
-            <v-btn v-if="hasAccessToStore" icon="mdi-cart" variant="flat" @click="clickOnBasket"/>
+            <v-badge v-if="hasAccessToStore" :content="nbItemsCart">
+                <v-btn icon="mdi-cart" variant="flat" @click="clickOnBasket"/>
+            </v-badge>
         </div>
         <CsMenu/>
     </header>
@@ -47,6 +49,7 @@ const srcImg = computed((() => `${import.meta.env.BASE_URL}logos/${customerId.va
 const showSearchOverlay = ref(false);
 const formValid = ref(false);
 const searchTerm = ref(null);
+const nbItemsCart = computed(() => storeStore.getNbItemsInBasket);
 
 const clickOnMenu = () => {
     globalStore.setShowMenuOverlay(true);

@@ -125,6 +125,7 @@ const handleConfirm = async () => {
     }
     await axiosServer.delete(`/basket/${tempProductOptionId.value}`);
     await refreshBasket();
+    await storeStore.refreshNbItemsInStore();
     askConfirmDelete.value = false;
     tempProductOptionId.value = null;
     loadingDelete.value = false;
@@ -135,7 +136,8 @@ const handleRefuse = () => {
     tempProductOptionId.value = null;
 };
 
-const handleQuantityUpdated = () => {
+const handleQuantityUpdated = async () => {
+    await storeStore.refreshNbItemsInStore();
     showSnackbar.value = true;
     txtSnackbar.value = t('updateProductOptionBasket.success');
 };
