@@ -31,6 +31,10 @@
 
             <div class="info">
                 <p class="title">{{ productOptionStore.getTitle() }}</p>
+                <p v-if="productOptionStore.getHasStock()" class="inStock">{{ t('inStock') }}</p>
+                <p v-if="!productOptionStore.getHasStock()" class="outStock">{{ t('outStock') }}</p>
+                <p v-if="productOptionStore.getManufacturer()">{{ t('manufacturer') }}:
+                    {{ productOptionStore.getManufacturer() }}</p>
                 <p :class="basePriceClass" class="basePrice">{{ productOptionStore.getBasePrice() }}{{
                         currencySymbol
                     }}</p>
@@ -212,6 +216,14 @@ const imageSrc = (productPictureId: string) => {
 .btnAddBasket {
     margin-top: 10px;
     margin-bottom: 30px;
+}
+
+.inStock {
+    color: darkgreen;
+}
+
+.outStock {
+    color: #cc0000;
 }
 
 @media (width >= 1200px) {

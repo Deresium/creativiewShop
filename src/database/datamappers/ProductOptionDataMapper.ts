@@ -7,6 +7,7 @@ import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
 import ProductOptionPictureEntity from "../entities/ProductOptionPictureEntity";
 import ProductOptionDiscountEntity from "../entities/ProductOptionDiscountEntity";
 import ProductOptionCategoryEntity from "../entities/ProductOptionCategoryEntity";
+import ManufacturerEntity from "../entities/ManufacturerEntity";
 
 export default class ProductOptionDataMapper implements IProductOptionDataGateway {
     public async createProductOption(productId: string): Promise<string> {
@@ -195,7 +196,8 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
             include: [
                 {
                     model: ProductEntity,
-                    as: 'product'
+                    as: 'product',
+                    include: [{model: ManufacturerEntity, as: 'manufacturer', required: false}]
                 },
                 {
                     attributes: ['productOptionPictureId'],

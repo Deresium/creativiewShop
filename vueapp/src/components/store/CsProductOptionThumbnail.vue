@@ -5,6 +5,8 @@
             <img :alt="productOptionStore.getTitle()" :src="firstImageSrc" class="imgThumbnail"/>
             <div class="info">
                 <p class="title">{{ productOptionStore.getTitle() }}</p>
+                <p v-if="productOptionStore.getHasStock()" class="inStock">{{ t('inStock') }}</p>
+                <p v-if="!productOptionStore.getHasStock()" class="outStock">{{ t('outStock') }}</p>
                 <p :class="basePriceClass" class="basePrice">{{ productOptionStore.getBasePrice() }}{{
                         currencySymbol
                     }}</p>
@@ -139,5 +141,13 @@ const clickOnConsultProduct = async () => {
 .btnConsult {
     margin-top: auto;
     width: 100%;
+}
+
+.inStock {
+    color: darkgreen;
+}
+
+.outStock {
+    color: #cc0000;
 }
 </style>
