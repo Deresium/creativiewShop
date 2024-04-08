@@ -18,6 +18,10 @@ export default interface IProductOptionDataGateway {
 
     getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<ProductOptionEntity>>;
 
+    getProductOptionLastOneAdded(customerId: string): Promise<Array<ProductOptionEntity>>;
+
+    getProductOptionOnlyOneLeft(customerId: string): Promise<Array<ProductOptionEntity>>;
+
     getAllProductOptionStore(customerId: string): Promise<Array<ProductOptionEntity>>;
 
     getProductOptionByProductActive(productId: string): Promise<Array<ProductOptionEntity>>;

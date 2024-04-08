@@ -1,11 +1,18 @@
-import BasketEntity from "../../database/entities/BasketEntity";
 import BasketProductOptionDS from "../models/datastores/BasketProductOptionDS";
-import BasketProductOptionVM from "../models/viewmodels/BasketProductOptionVM";
+import BasketVM from "../models/viewmodels/BasketVM";
+import CustomerVM from "../models/viewmodels/CustomerVM";
+import BasketErrorReportVM from "../models/viewmodels/BasketErrorReportVM";
 
 export default interface IBasketRequester {
-    getBasketProductOptions(basketId: string): Promise<Array<BasketProductOptionVM>>;
+    getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM>;
+
     addOpenBasketIfNotExists(userId: string): Promise<string>;
+
     addProductOptionToBasket(basketProductOption: BasketProductOptionDS): Promise<void>;
+
     updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void>;
+
     deleteProductOptionBasket(basketId: string, productOptionId: string): Promise<void>;
+
+    checkBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, language: string): Promise<BasketErrorReportVM>;
 }

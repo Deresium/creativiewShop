@@ -105,6 +105,73 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
         });
     };
 
+    public async getProductOptionLastOneAdded(customerId: string): Promise<Array<ProductOptionEntity>> {
+        return await ProductOptionEntity.findAll({
+            attributes: ['productOptionId', 'createdAt'],
+            where: {
+                active: true,
+                deletedAt: {
+                    [Op.eq]: null
+                }
+            },
+            order: [['createdAt', 'DESC']],
+            limit: 5,
+            include: [
+                {
+                    attributes: [],
+                    model: ProductEntity,
+                    where: {
+                        customerId: customerId,
+                        deletedAt: {
+                            [Op.eq]: null
+                        }
+                    },
+                    as: 'product'
+                },
+                {
+                    attributes: [],
+                    model: ProductOptionPriceEntity,
+                    required: true,
+                    as: 'productOptionPrices'
+                }
+            ]
+        });
+    }
+
+    public async getProductOptionOnlyOneLeft(customerId: string): Promise<Array<ProductOptionEntity>> {
+        return await ProductOptionEntity.findAll({
+            attributes: ['productOptionId'],
+            where: {
+                active: true,
+                stock: 1,
+                deletedAt: {
+                    [Op.eq]: null
+                }
+            },
+            limit: 5,
+            include: [
+                {
+                    attributes: [],
+                    model: ProductEntity,
+                    where: {
+                        customerId: customerId,
+                        deletedAt: {
+                            [Op.eq]: null
+                        }
+                    },
+                    as: 'product'
+                },
+                {
+                    attributes: [],
+                    model: ProductOptionPriceEntity,
+                    required: true,
+                    as: 'productOptionPrices'
+                }
+            ]
+        });
+    }
+
+
     public async getAllProductOptionStore(customerId: string): Promise<Array<ProductOptionEntity>> {
         return await ProductOptionEntity.findAll({
             attributes: ['productOptionId', 'nameFr', 'nameEn'],
@@ -116,7 +183,7 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
             },
             include: [
                 {
-                    attributes: ['nameFr', 'nameEn', 'descriptionFr', 'descriptionEn'],
+                    attributes: ['nameFr', 'nameEn', 'descriptionFr', 'descriptionEn', 'manufacturerId'],
                     model: ProductEntity,
                     where: {
                         customerId: customerId,

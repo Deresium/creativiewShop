@@ -35,6 +35,7 @@ export default class ProductOptionStoreBuilder {
         const productId = this.productOption.getProductId();
         const hasStock = this.productOption.getStock() > 0;
         const weight = this.productOption.getWeight();
+        const manufacturerId = this.productOption.getProduct().getManufacturerId();
         const manufacturer = this.productOption.getProduct().getManufacturerName();
         const preorder = this.productOption.getPreorder();
         const title = this.getTitle();
@@ -60,6 +61,7 @@ export default class ProductOptionStoreBuilder {
             productId,
             hasStock,
             weight,
+            manufacturerId,
             manufacturer,
             preorder,
             Number(priceCurrency).toFixed(2),

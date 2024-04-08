@@ -33,8 +33,13 @@
                 <p class="title">{{ productOptionStore.getTitle() }}</p>
                 <p v-if="productOptionStore.getHasStock()" class="inStock">{{ t('inStock') }}</p>
                 <p v-if="!productOptionStore.getHasStock()" class="outStock">{{ t('outStock') }}</p>
-                <p v-if="productOptionStore.getManufacturer()">{{ t('manufacturer') }}:
-                    {{ productOptionStore.getManufacturer() }}</p>
+                <p v-if="productOptionStore.getManufacturer()">
+                    {{ t('manufacturer') }}:
+                    <router-link
+                        :to="{name: 'store', query: {manufacturerIds: productOptionStore.getManufacturerId() }}">
+                        {{ productOptionStore.getManufacturer() }}
+                    </router-link>
+                </p>
                 <p :class="basePriceClass" class="basePrice">{{ productOptionStore.getBasePrice() }}{{
                         currencySymbol
                     }}</p>

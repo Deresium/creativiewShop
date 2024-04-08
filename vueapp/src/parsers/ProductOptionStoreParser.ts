@@ -19,6 +19,7 @@ export default class ProductOptionStoreParser {
             data.productId,
             data.hasStock,
             data.weight,
+            data.manufacturerId,
             data.manufacturer,
             data.preorder,
             data.basePrice,

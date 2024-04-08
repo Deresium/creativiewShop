@@ -1,6 +1,7 @@
-import TitleValueVM from "./TitleValueVM";
+import TitleValueVM from "./TitleValueVM.ts";
 
-export default class ProductOptionStoreVM {
+
+export default class ProductOptionBasketVM {
     private readonly productOptionId: string;
     private readonly productId: string;
     private readonly hasStock: boolean;
@@ -18,9 +19,11 @@ export default class ProductOptionStoreVM {
     private readonly description: string;
     private readonly pictures: Array<string>;
     private readonly allOptions: Array<TitleValueVM<string, string>>;
+    private readonly quantity: number;
+    private readonly total: string;
 
 
-    constructor(productOptionId: string, productId: string, hasStock: boolean, weight: number, manufacturerId: string, manufacturer: string, preorder: boolean, basePrice: string, discountPrice: string, percent: string, startDateDiscount: string, endDateDiscount: string, title: string, titleOption: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>) {
+    constructor(productOptionId: string, productId: string, hasStock: boolean, weight: number, manufacturerId: string, manufacturer: string, preorder: boolean, basePrice: string, discountPrice: string, percent: string, startDateDiscount: string, endDateDiscount: string, title: string, titleOption: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>, quantity: number, total: string) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.hasStock = hasStock;
@@ -38,7 +41,10 @@ export default class ProductOptionStoreVM {
         this.description = description;
         this.pictures = pictures;
         this.allOptions = allOptions;
+        this.quantity = quantity;
+        this.total = total;
     }
+
 
     public getProductOptionId(): string {
         return this.productOptionId;
@@ -76,6 +82,13 @@ export default class ProductOptionStoreVM {
         return this.discountPrice;
     }
 
+    public getPrice() {
+        if (this.discountPrice) {
+            return this.discountPrice;
+        }
+        return this.basePrice;
+    }
+
     public getPercent(): string {
         return this.percent;
     }
@@ -104,7 +117,22 @@ export default class ProductOptionStoreVM {
         return this.pictures;
     }
 
-    public getAllOptions(): Array<TitleValueVM<string, string>> {
-        return this.allOptions;
+    public getPictureId() {
+        if (this.pictures && this.pictures.length >= 1) {
+            return this.pictures[0];
+        }
+        return null;
+    }
+
+    public hasMultipleOptions() {
+        return this.allOptions && this.allOptions.length > 1;
+    }
+
+    public getQuantity(): number {
+        return this.quantity;
+    }
+
+    public getTotal(): string {
+        return this.total;
     }
 }

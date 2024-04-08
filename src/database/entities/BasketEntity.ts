@@ -19,6 +19,10 @@ export default class BasketEntity extends Model {
     getBasketId(): string {
         return this.basketId;
     }
+
+    getBasketStateCode() {
+        return this.basketStateCode;
+    }
 }
 
 BasketEntity.init({

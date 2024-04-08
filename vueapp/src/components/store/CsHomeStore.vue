@@ -11,6 +11,7 @@
                     class="thumbnail"
                 />
             </div>
+            <v-btn :to="{name: 'store'}" class="buttonDiscover">{{ t('discoverStore') }}</v-btn>
         </div>
 
         <div class="featured">
@@ -23,6 +24,46 @@
                     class="thumbnail"
                 />
             </div>
+            <v-btn :to="{name: 'store'}" class="buttonDiscover">{{ t('discoverStore') }}</v-btn>
+        </div>
+
+        <div class="featured">
+            <h2>{{ t('lastAdded') }}</h2>
+            <div class="productOptions">
+                <CsProductOptionThumbnail
+                    v-for="productOptionId in lastOneAddedProductOptionIds"
+                    :key="productOptionId"
+                    :product-option-id="productOptionId"
+                    class="thumbnail"
+                />
+            </div>
+            <v-btn :to="{name: 'store'}" class="buttonDiscover">{{ t('discoverStore') }}</v-btn>
+        </div>
+
+        <div class="featured">
+            <h2>{{ t('onlyOneLeft') }}</h2>
+            <div class="productOptions">
+                <CsProductOptionThumbnail
+                    v-for="productOptionId in onlyOneLeftProductOptionIds"
+                    :key="productOptionId"
+                    :product-option-id="productOptionId"
+                    class="thumbnail"
+                />
+            </div>
+            <v-btn :to="{name: 'store'}" class="buttonDiscover">{{ t('discoverStore') }}</v-btn>
+        </div>
+
+        <div class="featured">
+            <h2>{{ t('random') }}</h2>
+            <div class="productOptions">
+                <CsProductOptionThumbnail
+                    v-for="productOptionId in randomProductOptionIds"
+                    :key="productOptionId"
+                    :product-option-id="productOptionId"
+                    class="thumbnail"
+                />
+            </div>
+            <v-btn :to="{name: 'store'}" class="buttonDiscover">{{ t('discoverStore') }}</v-btn>
         </div>
     </div>
 
@@ -41,6 +82,9 @@ const storeStore = useStoreStore();
 const hasAccessToStore = computed(() => storeStore.getHasAccessToStore);
 const featuredProductOptionIds = ref(new Array<string>());
 const discountProductOptionIds = ref(new Array<string>());
+const lastOneAddedProductOptionIds = ref(new Array<string>());
+const onlyOneLeftProductOptionIds = ref(new Array<string>());
+const randomProductOptionIds = ref(new Array<string>());
 
 
 ProductOptionStoreRequester.requestFeaturedProductOptionIds().then(response => {
@@ -49,6 +93,18 @@ ProductOptionStoreRequester.requestFeaturedProductOptionIds().then(response => {
 
 ProductOptionStoreRequester.requestDiscountProductOptionIds().then(response => {
     discountProductOptionIds.value = response;
+});
+
+ProductOptionStoreRequester.requestLastOneAddedProductOptionIds().then(response => {
+    lastOneAddedProductOptionIds.value = response;
+});
+
+ProductOptionStoreRequester.requestRandomProductOptionIds().then(response => {
+    randomProductOptionIds.value = response;
+});
+
+ProductOptionStoreRequester.requestOnlyOneLeftProductOptionIds().then(response => {
+    onlyOneLeftProductOptionIds.value = response;
 });
 
 
@@ -82,6 +138,10 @@ ProductOptionStoreRequester.requestDiscountProductOptionIds().then(response => {
 
 .thumbnail {
     width: 45%;
+}
+
+.buttonDiscover {
+    margin-top: 30px;
 }
 
 @media (width >= 600px) {

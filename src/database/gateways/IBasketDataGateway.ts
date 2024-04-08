@@ -16,4 +16,6 @@ export default interface IBasketDataGateway {
     updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void>;
 
     deleteProductOptionBasket(basketId: string, productOptionId: string): Promise<void>;
+
+    findBasketById(basketId: string): Promise<BasketEntity>;
 }

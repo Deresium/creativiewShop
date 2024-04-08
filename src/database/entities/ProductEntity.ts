@@ -7,6 +7,7 @@ export default class ProductEntity extends Model {
     private productId: string;
     private customerId: number;
     private manufacturer: ManufacturerEntity;
+    private manufacturerId: string;
     private code: string;
     private nameFr: string;
     private nameEn: string;
@@ -25,10 +26,7 @@ export default class ProductEntity extends Model {
     }
 
     public getManufacturerId(): string {
-        if (this.manufacturer) {
-            return this.manufacturer.getManufacturerId();
-        }
-        return null;
+        return this.manufacturerId;
     }
 
     public getManufacturerName(): string {
@@ -60,6 +58,10 @@ export default class ProductEntity extends Model {
 
     public getProductOptions() {
         return this.productOptions;
+    }
+
+    public getDeletedAt() {
+        return this.deletedAt;
     }
 }
 

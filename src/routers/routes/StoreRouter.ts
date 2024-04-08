@@ -27,6 +27,24 @@ export default class StoreRouter extends ApplicationRouter {
             res.send(productOptions);
         });
 
+        this.getRouter().get('/store/onlyOneLeft', async (req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const productOptions = await this.productOptionRequester.getProductOptionOnlyOneLeft(customerId);
+            res.send(productOptions);
+        });
+
+        this.getRouter().get('/store/random', async (req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const productOptions = await this.productOptionRequester.getProductOptionRandom(customerId);
+            res.send(productOptions);
+        });
+
+        this.getRouter().get('/store/lastOneAdded', async (req: any, res: any) => {
+            const customerId = req.customer.getCustomerId();
+            const productOptions = await this.productOptionRequester.getProductOptionLastOneAdded(customerId);
+            res.send(productOptions);
+        });
+
 
         this.getRouter().get('/store/discount', async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
@@ -43,8 +61,9 @@ export default class StoreRouter extends ApplicationRouter {
             const customerId = req.customer.getCustomerId();
             const searchTerm = req.query.searchTerm;
             const categoryIds = req.query.categoryIds;
+            const manufacturerIds = req.query.manufacturerIds;
             const language = req.query.language;
-            const productOptions = await this.productOptionRequester.getProductOptionSearch(customerId, searchTerm, categoryIds, language);
+            const productOptions = await this.productOptionRequester.getProductOptionSearch(customerId, searchTerm, categoryIds, manufacturerIds, language);
             res.send(productOptions);
         });
 

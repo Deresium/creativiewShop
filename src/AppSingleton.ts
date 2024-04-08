@@ -135,7 +135,7 @@ export default class AppSingleton {
         const deliveryOptionCountryFacade = new DeliveryOptionCountryFacade(deliveryOptionCountryDataMapper);
         const countryFacade = new CountryFacade(countryDataMapper);
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
-        const basketFacade = new BasketFacade(basketDataMapper);
+        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');

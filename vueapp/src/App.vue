@@ -76,9 +76,17 @@ body {
     padding: 0;
 }
 
+h1 {
+    font-size: xx-large;
+}
+
+h2, h3 {
+    font-size: x-large;
+}
+
 h1, h2, h3 {
-    font-family: "Anton", sans-serif;
-    font-weight: 400;
+
+    font-weight: 700;
     font-style: normal;
 }
 

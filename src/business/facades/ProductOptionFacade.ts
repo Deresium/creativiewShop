@@ -46,15 +46,43 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         return productOptions.map(productOption => productOption.getProductOptionId());
     }
 
+    public async getProductOptionLastOneAdded(customerId: string): Promise<Array<string>> {
+        const productOptions = await this.productOptionDataGateway.getProductOptionLastOneAdded(customerId);
+        return productOptions.map(productOption => productOption.getProductOptionId());
+    }
+
+    public async getProductOptionOnlyOneLeft(customerId: string): Promise<Array<string>> {
+        const productOptions = await this.productOptionDataGateway.getProductOptionOnlyOneLeft(customerId);
+        return productOptions.map(productOption => productOption.getProductOptionId());
+    }
+
+    public async getProductOptionRandom(customerId: string): Promise<Array<string>> {
+        const productOptions = await this.productOptionDataGateway.getAllProductOptionStore(customerId);
+        const productOptionsRandom = new Array<string>();
+        let max = 5;
+        if (productOptions.length < 5) {
+            max = productOptions.length;
+        }
+        while (productOptionsRandom.length < max) {
+            const randomInt = (Math.floor(Math.random() * productOptions.length)).toString();
+            const productOptionId = productOptions[randomInt].getProductOptionId();
+            if (!productOptionsRandom.includes(productOptionId)) {
+                productOptionsRandom.push(productOptionId);
+            }
+        }
+        return productOptionsRandom;
+    }
+
+
     public async getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getProductOptionDiscount(customerId, groups);
         return productOptions.map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionSearch(customerId: string, searchTerm: string, categoryIds: Array<string>, language: string): Promise<Array<string>> {
+    public async getProductOptionSearch(customerId: string, searchTerm: string, categoryIds: Array<string>, manufacturerIds: Array<string>, language: string): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getAllProductOptionStore(customerId);
         return productOptions.filter(productOption => {
-            return new ProductOptionStoreFilter(productOption, language, searchTerm, categoryIds).filter();
+            return new ProductOptionStoreFilter(productOption, language, searchTerm, categoryIds, manufacturerIds).filter();
         }).map(productOption => productOption.getProductOptionId());
     }
 

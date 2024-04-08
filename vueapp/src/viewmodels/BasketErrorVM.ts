@@ -9,4 +9,17 @@ export default class BasketErrorVM {
         this.label = label;
         this.reason = reason;
     }
+
+
+    public getId(): string {
+        return this.id;
+    }
+
+    public getLabel() {
+        return this.label;
+    }
+
+    public getReason(): string {
+        return this.reason;
+    }
 }

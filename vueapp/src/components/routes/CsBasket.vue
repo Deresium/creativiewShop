@@ -4,7 +4,7 @@
         <div v-if="loaded" class="basketLoaded">
             <v-data-table
                 :headers="basketHeaders"
-                :items="productOptionsStoreBasket"
+                :items="basket.getProductOptionStores()"
                 item-key="productOptionId"
                 items-per-page="10"
             >
@@ -37,11 +37,28 @@
                     </div>
                 </template>
 
+                <template #item.price="{ item }">
+                    {{ item.getPrice() }}{{ currencySymbol }}
+                </template>
+
+                <template #item.total="{ item }">
+                    {{ item.getTotal() }}{{ currencySymbol }}
+                </template>
+
                 <template #item.actions="{ item }">
                     <v-btn color="red" icon="mdi-delete-empty" size="25px"
                            @click="askDeleteConfirmProductOptionBasket(item.getProductOptionId())"/>
                 </template>
             </v-data-table>
+
+            <div class="basketTotal">
+                <p>{{ t('total') }}: {{ basket.getTotal() }}{{ currencySymbol }}</p>
+            </div>
+
+            <v-alert v-if="basketErrorReport.hasErrors()" type="error">
+                <p v-for="error in basketErrorReport.getProductOptionErrors()" :key="error.getId()">
+                    {{ t(error.getReason(), {productName: error.getLabel()}) }}</p>
+            </v-alert>
         </div>
     </div>
 
@@ -73,29 +90,33 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref} from "vue";
-import BasketProductOptionRequester from "../../requesters/BasketProductOptionRequester.ts";
-import ProductOptionStoreRequester from "../../requesters/ProductOptionStoreRequester.ts";
-import ProductOptionStoreBasketVM from "../../viewmodels/ProductOptionStoreBasketVM.ts";
+import {computed, Ref, ref} from "vue";
+import BasketRequester from "../../requesters/BasketRequester.ts";
 import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 import {useI18n} from "vue-i18n";
 import axiosServer from "../../axios/axiosServer.ts";
 import CsBasketQuantity from "../store/CsBasketQuantity.vue";
+import BasketVM from "../../viewmodels/BasketVM";
+import BasketErrorReportVM from "../../viewmodels/BasketErrorReportVM.ts";
+import BasketErrorReportRequester from "../../requesters/BasketErrorReportRequester.ts";
 
 const {t} = useI18n({useScope: "global"});
 
 const storeStore = useStoreStore();
-const currencyCode = computed(() => storeStore.getCurrencyCode);
+const currencySymbol = computed(() => storeStore.getCurrencySymbol);
 
 const basketHeaders = computed(() => [
     {title: t('picture'), value: 'picture'},
     {title: t('name'), value: 'title'},
     {title: t('quantity'), value: 'quantity'},
+    {title: t('price'), value: 'price'},
+    {title: t('total'), value: 'total'},
     {title: t('action'), value: 'actions'}
 ]);
 
 const loaded = ref(false);
-const productOptionsStoreBasket = ref(new Array<ProductOptionStoreBasketVM>());
+const basket: Ref<BasketVM> = ref(null);
+const basketErrorReport: Ref<BasketErrorReportVM> = ref(null);
 const askConfirmDelete = ref(false);
 const tempProductOptionId = ref(null);
 const loadingDelete = ref(false);
@@ -103,13 +124,9 @@ const showSnackbar = ref(false);
 const txtSnackbar = ref(null);
 
 const refreshBasket = async () => {
-    productOptionsStoreBasket.value = [];
-    const basketProductOptions = await BasketProductOptionRequester.requestBasketProductOptions();
-    for (const basketProductOption of basketProductOptions) {
-        const productOptionStore = await ProductOptionStoreRequester.requestProductOptionStore(basketProductOption.getProductOptionId(), currencyCode.value);
-        const productOptionStoreBasketVM = new ProductOptionStoreBasketVM(productOptionStore, basketProductOption.getQuantity());
-        productOptionsStoreBasket.value.push(productOptionStoreBasketVM);
-    }
+    loaded.value = false;
+    basket.value = await BasketRequester.requestBasket();
+    basketErrorReport.value = await BasketErrorReportRequester.requestBasketErrorReport();
     loaded.value = true;
 };
 
@@ -138,6 +155,7 @@ const handleRefuse = () => {
 
 const handleQuantityUpdated = async () => {
     await storeStore.refreshNbItemsInStore();
+    await refreshBasket();
     showSnackbar.value = true;
     txtSnackbar.value = t('updateProductOptionBasket.success');
 };
@@ -155,9 +173,25 @@ const imageSrc = (productId: string, productOptionId: string, productPictureId: 
 };
 
 refreshBasket();
+
 </script>
 
 <style scoped>
+.basket {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 30px;
+}
+
+.basketTotal {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: x-large;
+}
+
 .divImgProductOption {
     display: flex;
     align-items: center;

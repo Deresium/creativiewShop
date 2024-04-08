@@ -9,6 +9,9 @@
                     {{ t('filter') }}
                 </v-btn>
             </div>
+            <div v-if="selectedManufacturerNames.length >= 1" class="manufacturer">
+                <p>{{ t('manufacturer') }}: {{ selectedManufacturerNames[0] }}</p>
+            </div>
 
             <v-data-iterator :items="searchedProductOptionIds" :items-per-page="10" :page="nbPage">
                 <template #default="{ items }">
@@ -71,6 +74,17 @@
                             @value-change="updateSelectedCategories"
                         />
                     </div>
+                    <!--                    <div class="manufacturerFilter">
+                                            <v-checkbox
+                                                v-for="manufacturer in manufacturers"
+                                                :key="manufacturer.getManufacturerId()"
+                                                v-model="selectedManufacturers"
+                                                :hide-details="true"
+                                                :label="manufacturer.getName()"
+                                                :value="manufacturer.getManufacturerId()"
+                                                density="compact"
+                                            />
+                                        </div>-->
                     <v-btn variant="flat" @click="searchFilter">{{ t('search') }}</v-btn>
                 </div>
             </v-overlay>
@@ -80,7 +94,7 @@
 
 <script lang="ts" setup>
 import {useRoute} from "vue-router";
-import {ref} from "vue";
+import {Ref, ref} from "vue";
 import ProductOptionStoreRequester from "../../requesters/ProductOptionStoreRequester.ts";
 import CsProductOptionThumbnail from "../store/CsProductOptionThumbnail.vue";
 import {useI18n} from "vue-i18n";
@@ -88,13 +102,24 @@ import CategoryVM from "../../viewmodels/CategoryVM.ts";
 import CategoryRequester from "../../requesters/CategoryRequester.ts";
 import useCustomer from "../../compositionfunctions/customer.ts";
 import CsStoreFilter from "../store/CsStoreFilter.vue";
+import ManufacturerVM from "../../viewmodels/ManufacturerVM.ts";
+import ManufacturerRequester from "../../requesters/ManufacturerRequester.ts";
 
 const {t} = useI18n({useScope: "global"});
 
-const {query: {searchTerm}} = useRoute();
+const {query: {searchTerm, manufacturerIds}} = useRoute();
 let searchTermString: string = null;
+let manufacturersQuery = new Array<string>();
 if (searchTerm) {
     searchTermString = String(searchTerm);
+}
+
+if (manufacturerIds) {
+    if (typeof manufacturerIds === 'string') {
+        manufacturersQuery.push(manufacturerIds);
+    } else {
+        manufacturersQuery.push(...manufacturerIds);
+    }
 }
 
 const {firstColor} = useCustomer();
@@ -102,19 +127,30 @@ const {firstColor} = useCustomer();
 const nbPage = ref(1);
 const loadedStore = ref(false);
 const searchedProductOptionIds = ref(new Array<string>());
-const categories = ref(new Array<CategoryVM>());
+const categories = ref(new Array<CategoryVM>()) as Ref<Array<CategoryVM>>;
+const manufacturers = ref(new Array<ManufacturerVM>());
 const selectedCategories = ref(new Map<string, string>());
+const selectedManufacturerNames = ref(new Array<string>());
 const showFilters = ref(false);
 
 const refreshStore = async () => {
     loadedStore.value = false;
-    searchedProductOptionIds.value = await ProductOptionStoreRequester.requestSearchAllProductOptionIds(searchTermString, [...selectedCategories.value.keys()]);
+    searchedProductOptionIds.value = await ProductOptionStoreRequester.requestSearchAllProductOptionIds(searchTermString, [...selectedCategories.value.keys()], manufacturersQuery);
     loadedStore.value = true;
 };
 refreshStore();
 
 CategoryRequester.requestCategories().then(response => {
     categories.value = response;
+});
+
+ManufacturerRequester.getManufacturers().then(response => {
+    manufacturers.value = response;
+    for (const manufacturer of manufacturers.value) {
+        if (manufacturersQuery.includes(manufacturer.getManufacturerId())) {
+            selectedManufacturerNames.value.push(manufacturer.getName());
+        }
+    }
 });
 
 const updateSelectedCategories = (checked: boolean, categoryId: string) => {
@@ -210,6 +246,10 @@ const goToPrevPage = (prevFct: Function) => {
     padding-left: 0;
 }
 
+.manufacturer {
+    margin-bottom: 20px;
+}
+
 @media (width >= 600px) {
     .thumbnail {
         width: 27%;
@@ -217,6 +257,7 @@ const goToPrevPage = (prevFct: Function) => {
 
     .productOptions {
         gap: 50px;
+        justify-content: flex-start;
     }
 }
 

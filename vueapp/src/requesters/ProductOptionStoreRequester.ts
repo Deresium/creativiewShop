@@ -13,11 +13,27 @@ export default class ProductOptionStoreRequester {
         return response.data;
     }
 
-    public static async requestSearchAllProductOptionIds(searchTerm: string, categoryIds?: Array<string>): Promise<Array<string>> {
+    public static async requestOnlyOneLeftProductOptionIds(): Promise<Array<string>> {
+        const response = await axiosServer.get('/store/onlyOneLeft');
+        return response.data;
+    }
+
+    public static async requestLastOneAddedProductOptionIds(): Promise<Array<string>> {
+        const response = await axiosServer.get('/store/lastOneAdded');
+        return response.data;
+    }
+
+    public static async requestRandomProductOptionIds(): Promise<Array<string>> {
+        const response = await axiosServer.get('/store/random');
+        return response.data;
+    }
+
+    public static async requestSearchAllProductOptionIds(searchTerm: string, categoryIds?: Array<string>, manufacturers?: Array<string>): Promise<Array<string>> {
         const response = await axiosServer.get('/store', {
             params: {
                 searchTerm: searchTerm,
-                categoryIds: categoryIds
+                categoryIds: categoryIds,
+                manufacturerIds: manufacturers
             }
         });
         return response.data;

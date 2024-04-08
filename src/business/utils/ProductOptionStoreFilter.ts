@@ -5,18 +5,24 @@ export default class ProductOptionStoreFilter {
     private readonly language: string;
     private readonly searchTerm: string;
     private readonly categoryIds: Array<string>;
+    private readonly manufacturerIds: Array<string>;
 
 
-    constructor(productOption: ProductOptionEntity, language: string, searchTerm: string, categoryIds: Array<string>) {
+    constructor(productOption: ProductOptionEntity, language: string, searchTerm: string, categoryIds: Array<string>, manufacturerIds: Array<string>) {
         this.productOption = productOption;
         this.language = language;
         this.searchTerm = searchTerm;
         this.categoryIds = categoryIds;
+        this.manufacturerIds = manufacturerIds;
     }
 
     public filter(): boolean {
         const filterOnCategories = this.filterOnCategories();
         if (!filterOnCategories) {
+            return false;
+        }
+        const filterOnManufacturer = this.filterOnManufacturers();
+        if (!filterOnManufacturer) {
             return false;
         }
         return this.filterOnSearchTerm();
@@ -43,6 +49,22 @@ export default class ProductOptionStoreFilter {
 
         for (const category of this.productOption.getProductOptionCategories()) {
             if (this.categoryIds.includes(category.getCategoryId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private filterOnManufacturers(): boolean {
+        if (!this.manufacturerIds || this.manufacturerIds.length === 0) {
+            return true;
+        }
+        if (!this.productOption.getProduct().getManufacturerId()) {
+            return false;
+        }
+
+        for (const manufacturer of this.manufacturerIds) {
+            if (this.productOption.getProduct().getManufacturerId() === manufacturer) {
                 return true;
             }
         }

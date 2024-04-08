@@ -20,6 +20,7 @@ export default class ProductOptionEntity extends Model {
     private weight: number;
     private preorder: boolean;
     private deletedAt: Date;
+    private createdAt: Date;
 
     private productOptionPrices: Array<ProductOptionPriceEntity>;
     private productOptionPictures: Array<ProductOptionPictureEntity>;
@@ -90,6 +91,15 @@ export default class ProductOptionEntity extends Model {
     public getProductOptionCategories() {
         return this.productOptionCategories;
     }
+
+
+    public getDeletedAt(): Date {
+        return this.deletedAt;
+    }
+
+    public getCreatedAt(): Date {
+        return this.createdAt;
+    }
 }
 
 ProductOptionEntity.init({
@@ -104,7 +114,8 @@ ProductOptionEntity.init({
     click: DataTypes.BIGINT,
     weight: DataTypes.DECIMAL,
     preorder: DataTypes.BOOLEAN,
-    deletedAt: DataTypes.DATE
+    deletedAt: DataTypes.DATE,
+    createdAt: DataTypes.DATE
 }, {
     tableName: 'ProductOption',
     sequelize: DatabaseSingleton.getInstance().getSequelize()

@@ -20,6 +20,14 @@ export default class BasketDataMapper implements IBasketDataGateway {
         });
     }
 
+    public async findBasketById(basketId: string): Promise<BasketEntity> {
+        return await BasketEntity.findOne({
+            where: {
+                basketId: basketId
+            }
+        });
+    }
+
     public async findProductOptionBasket(basketId: string, productOptionId: string): Promise<BasketProductOptionEntity> {
         return await BasketProductOptionEntity.findOne({
             where: {

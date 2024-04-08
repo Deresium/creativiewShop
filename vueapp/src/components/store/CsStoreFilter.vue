@@ -1,6 +1,6 @@
 <template>
     <div class="category">
-        <v-checkbox v-model="checkCategory" :label="categoryName" density="compact" hide-details="true"/>
+        <v-checkbox v-model="checkCategory" :hide-details="true" :label="categoryName" density="compact"/>
         <div v-if="category.getChildrenCategories().length >= 1" class="childrenCategories">
             <CsStoreFilter
                 v-for="children in category.getChildrenCategories()"

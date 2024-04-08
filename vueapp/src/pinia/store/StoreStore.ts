@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import StoreState from "./StoreState.ts";
 import StoreAccessRequester from "../../requesters/StoreAccessRequester.ts";
-import BasketProductOptionRequester from "../../requesters/BasketProductOptionRequester.ts";
+import BasketRequester from "../../requesters/BasketRequester.ts";
 
 export const useStoreStore = defineStore('store', {
     state: () => ({
@@ -25,14 +25,14 @@ export const useStoreStore = defineStore('store', {
         },
 
         async refreshNbItemsInStore() {
-            const response = await BasketProductOptionRequester.requestBasketProductOptions();
-            if (response.length === 0) {
+            const basket = await BasketRequester.requestBasket();
+            if (!basket) {
                 this.store.setNbItemsInBasket(0);
                 return;
             }
             let nbItems = 0;
-            for (const productOption of response) {
-                nbItems += productOption.getQuantity();
+            for (const productOptionBasket of basket.getProductOptionStores()) {
+                nbItems += productOptionBasket.getQuantity();
             }
             this.store.setNbItemsInBasket(nbItems);
 
