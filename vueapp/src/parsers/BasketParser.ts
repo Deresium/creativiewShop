@@ -8,7 +8,7 @@ export default class BasketParser {
         for (const productOptionStore of data.productOptionStores) {
             productOptionStores.push(BasketParser.parseProductOptionBasket(productOptionStore));
         }
-        return new BasketVM(data.basketId, productOptionStores, data.total);
+        return new BasketVM(data.basketId, productOptionStores, data.total, data.totalWeight);
     }
 
     private static parseProductOptionBasket(data: any): ProductOptionBasketVM {

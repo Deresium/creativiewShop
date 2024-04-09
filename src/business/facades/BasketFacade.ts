@@ -49,14 +49,18 @@ export default class BasketFacade implements IBasketRequester {
         const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(basketId);
         const productOptionBaskets = new Array<ProductOptionBasketVM>();
         let totalBasket = 0;
+        let totalWeightBasket = 0;
         for (const basketProductOption of basketProductOptions) {
             const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language);
             let price = Number(productOptionStore.getBasePrice());
             if (productOptionStore.getDiscountPrice()) {
                 price = Number(productOptionStore.getDiscountPrice());
             }
+
             const total = (price * basketProductOption.getQuantity());
+            const totalWeight = (productOptionStore.getWeight() * basketProductOption.getQuantity());
             totalBasket += total;
+            totalWeightBasket += totalWeight;
             const totalString = total.toFixed(2);
             const productOptionBasket = new ProductOptionBasketVM(
                 productOptionStore.getProductOptionId(),
@@ -81,7 +85,7 @@ export default class BasketFacade implements IBasketRequester {
             );
             productOptionBaskets.push(productOptionBasket);
         }
-        return new BasketVM(basketId, productOptionBaskets, totalBasket.toFixed(2));
+        return new BasketVM(basketId, productOptionBaskets, totalBasket.toFixed(2), totalWeightBasket.toFixed(2));
     }
 
     public async updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void> {
