@@ -109,5 +109,14 @@ export default class BasketFacade implements IBasketRequester {
         await this.basketDataGateway.updateBasketDeliveryAddress(basketId, addressId);
     }
 
+    public async getBasketNbItems(basketId: string): Promise<number> {
+        const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(basketId);
+        let nbItems = 0;
+        for (const basketProductOption of basketProductOptions) {
+            nbItems += basketProductOption.getQuantity();
+        }
+        return nbItems;
+    }
+
 
 }

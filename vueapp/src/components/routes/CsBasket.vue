@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, Ref, ref} from "vue";
+import {computed, Ref, ref, watch} from "vue";
 import BasketRequester from "../../requesters/BasketRequester.ts";
 import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 import {useI18n} from "vue-i18n";
@@ -108,6 +108,7 @@ const {t} = useI18n({useScope: "global"});
 
 const storeStore = useStoreStore();
 const currencySymbol = computed(() => storeStore.getCurrencySymbol);
+const currencyCode = computed(() => storeStore.getCurrencyCode);
 
 const basketHeaders = computed(() => [
     {title: t('picture'), value: 'picture'},
@@ -129,7 +130,7 @@ const txtSnackbar = ref(null);
 
 const refreshBasket = async () => {
     loaded.value = false;
-    basket.value = await BasketRequester.requestBasket();
+    basket.value = await BasketRequester.requestBasket(currencyCode.value);
     basketErrorReport.value = await BasketErrorReportRequester.requestBasketErrorReport();
     loaded.value = true;
 };
@@ -177,6 +178,10 @@ const imageSrc = (productId: string, productOptionId: string, productPictureId: 
 };
 
 refreshBasket();
+
+watch(currencyCode, async () => {
+    await refreshBasket();
+});
 
 </script>
 

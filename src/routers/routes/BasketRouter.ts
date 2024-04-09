@@ -46,6 +46,12 @@ export default class BasketRouter extends ApplicationRouter {
             res.send(productOptions);
         });
 
+        this.getRouter().get('/basket/nbItems', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
+            const basketId = req.basketId;
+            const nbItems = await this.basketRequester.getBasketNbItems(basketId);
+            res.status(200).send({nbItems: nbItems});
+        });
+
         this.getRouter().get('/checkBasket', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const customer = req.customer;

@@ -25,17 +25,8 @@ export const useStoreStore = defineStore('store', {
         },
 
         async refreshNbItemsInStore() {
-            const basket = await BasketRequester.requestBasket();
-            if (!basket) {
-                this.store.setNbItemsInBasket(0);
-                return;
-            }
-            let nbItems = 0;
-            for (const productOptionBasket of basket.getProductOptionStores()) {
-                nbItems += productOptionBasket.getQuantity();
-            }
+            const nbItems = await BasketRequester.requestNbItemsBasket();
             this.store.setNbItemsInBasket(nbItems);
-
         }
     }
 });
