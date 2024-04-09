@@ -50,8 +50,8 @@ export default class AddressRouter extends ApplicationRouter {
             const box = req.body.box;
             const zipCode = req.body.zipCode;
             const addressCreationDS = new AddressCreationDS(countryId, userId, city, street, streetNumber, box, zipCode);
-            await this.addressRequester.addAddress(addressCreationDS);
-            res.send();
+            const addressId = await this.addressRequester.addAddress(addressCreationDS);
+            res.send(addressId);
         });
     }
 }

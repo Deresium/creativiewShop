@@ -4,14 +4,15 @@
             <p>{{ t('deliveryAddress') }}</p>
             <v-autocomplete v-if="addresses.length > 0" v-model="deliveryAddressId"
                             :items="addresses" @update:modelValue="handleDeliveryAddressChange"/>
+            <v-btn class="btnAdd" @click="handleClickOnAddDeliveryAddress">{{ t('addDeliveryAddress') }}</v-btn>
         </div>
 
         <div class="billing">
             <p>{{ t('billingAddress') }}</p>
             <v-autocomplete v-if="addresses.length > 0" v-model="billingAddressId" :items="addresses"
                             @update:modelValue="handleBillingAddressChange"/>
+            <v-btn class="btnAdd" @click="handleClickOnAddBillingAddress">{{ t('addBillingAddress') }}</v-btn>
         </div>
-        <v-btn @click="showAddAddress=true">{{ t('addAddress') }}</v-btn>
     </div>
 
     <v-overlay v-if="showAddAddress" v-model="showAddAddress" :scrim="firstColor" class="overlay"
@@ -62,6 +63,7 @@ const {firstColor} = useCustomer();
 const showAddAddress = ref(false);
 const showSnackbar = ref(false);
 const textSnackbar = ref(null);
+const addDeliveryAddress = ref(true);
 
 const addresses = ref(new Array<TitleValueVM<string, string>>());
 const deliveryAddressId = ref(props.deliveryAddressId);
@@ -72,10 +74,28 @@ const requestAddresses = async () => {
     addresses.value = await AddressRequester.requestAddressesTitleValue();
 };
 
-const handleAddAddress = async () => {
+const handleClickOnAddBillingAddress = () => {
+    showAddAddress.value = true;
+    addDeliveryAddress.value = false;
+};
+
+const handleClickOnAddDeliveryAddress = () => {
+    showAddAddress.value = true;
+    addDeliveryAddress.value = true;
+};
+
+const handleAddAddress = async (addressId: string) => {
     await requestAddresses();
     showAddAddress.value = false;
+    if (addDeliveryAddress.value) {
+        deliveryAddressId.value = addressId;
+        await handleDeliveryAddressChange();
+    } else {
+        billingAddressId.value = addressId;
+        await handleBillingAddressChange();
+    }
 };
+
 requestAddresses();
 
 const handleDeliveryAddressChange = async () => {
@@ -108,5 +128,9 @@ const handleBillingAddressChange = async () => {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
+}
+
+.btnAdd {
+    margin-bottom: 50px;
 }
 </style>

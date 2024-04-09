@@ -87,14 +87,15 @@ const submitForm = async () => {
     }
 
     try {
-        await axiosServer.post(`/address`, {
+        const response = await axiosServer.post(`/address`, {
             countryId: countryId.value,
             city: city.value,
             street: street.value,
             streetNumber: streetNumber.value,
+            zipCode: zipCode.value,
             box: box.value
         });
-        emit('addAddressSuccess');
+        emit('addAddressSuccess', String(response.data));
         backendError.value = '';
     } catch (error: any) {
         backendError.value = error.response.data;
