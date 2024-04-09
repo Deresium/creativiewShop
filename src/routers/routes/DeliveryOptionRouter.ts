@@ -85,7 +85,8 @@ export default class DeliveryOptionRouter extends ApplicationRouter {
         });
 
         this.getRouter().get('/country', async (req: any, res: any) => {
-            const countries = await this.countryRequester.getAllCountries();
+            const language = req.query.language;
+            const countries = await this.countryRequester.getAllCountries(language);
             res.send(countries);
         });
 

@@ -79,5 +79,19 @@ export default class BasketRouter extends ApplicationRouter {
             await this.basketRequester.deleteProductOptionBasket(basketId, productOptionId);
             res.send();
         });
+
+        this.getRouter().put('/basket/address/delivery', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
+            const basketId = req.basketId;
+            const addressId = req.body.addressId;
+            await this.basketRequester.updateBasketDeliveryAddress(basketId, addressId);
+            res.send();
+        });
+
+        this.getRouter().put('/basket/address/billing', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
+            const basketId = req.basketId;
+            const addressId = req.body.addressId;
+            await this.basketRequester.updateBasketBillingAddress(basketId, addressId);
+            res.send();
+        });
     }
 }

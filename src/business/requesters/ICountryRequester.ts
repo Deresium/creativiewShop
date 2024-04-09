@@ -1,5 +1,5 @@
 import CountryVM from "../models/viewmodels/CountryVM";
 
 export default interface ICountryRequester {
-    getAllCountries(): Promise<Array<CountryVM>>;
+    getAllCountries(language: string): Promise<Array<CountryVM>>;
 }

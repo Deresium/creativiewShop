@@ -19,6 +19,6 @@ export default class DeliveryOptionCountryFacade implements IDeliveryOptionCount
 
     public async getDeliveryOptionCountries(deliveryOptionId: string): Promise<Array<CountryVM>> {
         const deliveryOptionCountries = await this.deliveryOptionCountryDataGateway.getDeliveryOptionCountries(deliveryOptionId);
-        return deliveryOptionCountries.map(deliveryOptionCountry => new CountryVM(deliveryOptionCountry.getCountry().getCountryId(), deliveryOptionCountry.getCountry().getNameFr(), deliveryOptionCountry.getCountry().getNameEn()));
+        return deliveryOptionCountries.map(deliveryOptionCountry => new CountryVM(deliveryOptionCountry.getCountry().getCountryId(), deliveryOptionCountry.getCountry().getNameFr()));
     }
 }

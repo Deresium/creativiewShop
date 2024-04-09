@@ -23,6 +23,14 @@ export default class BasketEntity extends Model {
     getBasketStateCode() {
         return this.basketStateCode;
     }
+
+    getDeliveryAddressId() {
+        return this.deliveryAddressId;
+    }
+
+    getBillingAddressId() {
+        return this.billingAddressId;
+    }
 }
 
 BasketEntity.init({

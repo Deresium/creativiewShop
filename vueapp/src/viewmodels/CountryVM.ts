@@ -1,13 +1,11 @@
 export default class CountryVM {
     private readonly countryId: number;
-    private readonly nameFr: string;
-    private readonly nameEn: string;
+    private readonly name: string;
 
 
-    constructor(countryId: number, nameFr: string, nameEn: string) {
+    constructor(countryId: number, name: string) {
         this.countryId = countryId;
-        this.nameFr = nameFr;
-        this.nameEn = nameEn;
+        this.name = name;
     }
 
 
@@ -15,11 +13,7 @@ export default class CountryVM {
         return this.countryId;
     }
 
-    public getNameFr(): string {
-        return this.nameFr;
-    }
-
-    public getNameEn(): string {
-        return this.nameEn;
+    public getName(): string {
+        return this.name;
     }
 }

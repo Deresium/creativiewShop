@@ -1,6 +1,7 @@
-export default class AddressCreationDS {
+export default class AddressVM {
+    private readonly addressId: string;
     private readonly countryId: number;
-    private readonly userId: string;
+    private readonly countryName: string;
     private readonly city: string;
     private readonly street: string;
     private readonly streetNumber: string;
@@ -8,9 +9,10 @@ export default class AddressCreationDS {
     private readonly zipCode: string;
 
 
-    constructor(countryId: number, userId: string, city: string, street: string, streetNumber: string, box: string, zipCode: string) {
+    constructor(addressId: string, countryId: number, countryName: string, city: string, street: string, streetNumber: string, box: string, zipCode: string) {
+        this.addressId = addressId;
         this.countryId = countryId;
-        this.userId = userId;
+        this.countryName = countryName;
         this.city = city;
         this.street = street;
         this.streetNumber = streetNumber;
@@ -19,27 +21,31 @@ export default class AddressCreationDS {
     }
 
 
-    getCountryId(): number {
+    public getAddressId(): string {
+        return this.addressId;
+    }
+
+    public getCountryId(): number {
         return this.countryId;
     }
 
-    getUserId(): string {
-        return this.userId;
+    public getCountryName(): string {
+        return this.countryName;
     }
 
-    getCity(): string {
+    public getCity(): string {
         return this.city;
     }
 
-    getStreet(): string {
+    public getStreet(): string {
         return this.street;
     }
 
-    getStreetNumber(): string {
+    public getStreetNumber(): string {
         return this.streetNumber;
     }
 
-    getBox(): string {
+    public getBox(): string {
         return this.box;
     }
 

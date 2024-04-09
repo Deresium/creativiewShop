@@ -72,4 +72,26 @@ export default class BasketDataMapper implements IBasketDataGateway {
             }
         });
     }
+
+    public async updateBasketBillingAddress(basketId: string, addressId: string): Promise<void> {
+        await BasketEntity.update({
+            billingAddressId: addressId
+        }, {
+            where: {
+                basketId: basketId
+            }
+        });
+    }
+
+    public async updateBasketDeliveryAddress(basketId: string, addressId: string): Promise<void> {
+        await BasketEntity.update({
+            deliveryAddressId: addressId
+        }, {
+            where: {
+                basketId: basketId
+            }
+        });
+    }
+
+
 }

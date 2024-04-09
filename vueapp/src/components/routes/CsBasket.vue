@@ -59,6 +59,9 @@
                 <p v-for="error in basketErrorReport.getProductOptionErrors()" :key="error.getId()">
                     {{ t(error.getReason(), {productName: error.getLabel()}) }}</p>
             </v-alert>
+
+            <CsBasketAddress v-if="!basketErrorReport.hasErrors()" :billing-address-id="basket.getBillingAddressId()"
+                             :delivery-address-id="basket.getDeliveryAddressId()"/>
         </div>
     </div>
 
@@ -99,6 +102,7 @@ import CsBasketQuantity from "../store/CsBasketQuantity.vue";
 import BasketVM from "../../viewmodels/BasketVM";
 import BasketErrorReportVM from "../../viewmodels/BasketErrorReportVM.ts";
 import BasketErrorReportRequester from "../../requesters/BasketErrorReportRequester.ts";
+import CsBasketAddress from "../store/CsBasketAddress.vue";
 
 const {t} = useI18n({useScope: "global"});
 

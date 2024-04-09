@@ -166,9 +166,6 @@ const searchFilter = async () => {
     showFilters.value = false;
 };
 
-/*const onClickOutside = () => {
-    showFilters.value = false;
-};*/
 
 const goToNextPage = (nextFct: Function) => {
     nbPage.value++;

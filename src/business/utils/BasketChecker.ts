@@ -10,7 +10,7 @@ export default class BasketChecker {
     private readonly groupIds: Array<string>;
     private readonly customer: CustomerVM;
     private readonly language: string;
-    private readonly basketDataMapper: IBasketDataGateway;
+    private readonly basketDataGateway: IBasketDataGateway;
     private readonly productOptionDataGateway: IProductOptionDataGateway;
 
 
@@ -19,7 +19,7 @@ export default class BasketChecker {
         this.groupIds = groupIds;
         this.customer = customer;
         this.language = language;
-        this.basketDataMapper = basketDataMapper;
+        this.basketDataGateway = basketDataMapper;
         this.productOptionDataGateway = productOptionDataGateway;
     }
 
@@ -31,14 +31,14 @@ export default class BasketChecker {
             return report;
         }
 
-        const basket = await this.basketDataMapper.findBasketById(this.basketId);
+        const basket = await this.basketDataGateway.findBasketById(this.basketId);
 
         if (basket.getBasketStateCode() !== 'BASKET') {
             report.addErrorToBasketErrors(new BasketErrorVM(this.basketId, null, "basketNotOpen"));
             return report;
         }
 
-        const productOptionBaskets = await this.basketDataMapper.getBasketProductOptions(this.basketId);
+        const productOptionBaskets = await this.basketDataGateway.getBasketProductOptions(this.basketId);
         for (const productOptionBasket of productOptionBaskets) {
             const error = await this.checkProductOption(productOptionBasket);
             if (error) {

@@ -1,6 +1,7 @@
 import ICountryRequester from "../requesters/ICountryRequester";
 import ICountryDataGateway from "../../database/gateways/ICountryDataGateway";
 import CountryVM from "../models/viewmodels/CountryVM";
+import CountryEntity from "../../database/entities/CountryEntity";
 
 export default class CountryFacade implements ICountryRequester {
     private readonly countryDataGateway: ICountryDataGateway;
@@ -10,8 +11,19 @@ export default class CountryFacade implements ICountryRequester {
         this.countryDataGateway = countryDataGateway;
     }
 
-    public async getAllCountries(): Promise<Array<CountryVM>> {
+    public async getAllCountries(language: string): Promise<Array<CountryVM>> {
         const countries = await this.countryDataGateway.getAllCountries();
-        return countries.map(country => new CountryVM(country.getCountryId(), country.getNameFr(), country.getNameEn()));
+        return countries.map(country => new CountryVM(country.getCountryId(), this.getCountryName(language, country)));
+    }
+
+    private getCountryName(language: string, countryEntity: CountryEntity): string {
+        switch (language) {
+            case 'fr':
+                return countryEntity.getNameFr();
+            case 'en':
+                return countryEntity.getNameEn();
+            default:
+                return countryEntity.getNameEn();
+        }
     }
 }

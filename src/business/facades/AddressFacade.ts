@@ -6,7 +6,8 @@ import AddressUpdateDS from "../models/datastores/AddressUpdateDS";
 import AddressEntity from "../../database/entities/AddressEntity";
 
 export default class AddressFacade implements IAddressRequester {
-    private readonly addressDataGateway: IAddressDataGateway
+    private readonly addressDataGateway: IAddressDataGateway;
+
     constructor(addressDataGateway: IAddressDataGateway) {
         this.addressDataGateway = addressDataGateway;
     }
@@ -36,7 +37,7 @@ export default class AddressFacade implements IAddressRequester {
 
     private addressEntityToAddressVM(addressEntity: AddressEntity, language: string): AddressVM {
         let countryName = null;
-        switch(language){
+        switch (language) {
             case 'fr':
                 countryName = addressEntity.getCountry().getNameFr();
                 break;
@@ -47,6 +48,10 @@ export default class AddressFacade implements IAddressRequester {
                 countryName = addressEntity.getCountry().getNameEn();
                 break;
         }
-        return new AddressVM(addressEntity.getAddressId(), addressEntity.getCountryId(), countryName, addressEntity.getCity(), addressEntity.getStreet(), addressEntity.getStreetNumber(), addressEntity.getBox());
+        let address = `${addressEntity.getStreet()}, ${addressEntity.getStreetNumber()} ${addressEntity.getZipCode()} ${addressEntity.getCity()}`;
+        if (addressEntity.getBox()) {
+            address = `${address} (${addressEntity.getBox()})`
+        }
+        return new AddressVM(addressEntity.getAddressId(), addressEntity.getCountryId(), countryName, addressEntity.getCity(), addressEntity.getStreet(), addressEntity.getStreetNumber(), addressEntity.getBox(), addressEntity.getZipCode(), address);
     }
 }

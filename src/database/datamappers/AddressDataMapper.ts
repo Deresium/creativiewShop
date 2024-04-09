@@ -12,7 +12,8 @@ export default class AddressDataMapper implements IAddressDataGateway {
             city: addressCreation.getCity(),
             street: addressCreation.getStreet(),
             streetNumber: addressCreation.getStreetNumber(),
-            box: addressCreation.getBox()
+            box: addressCreation.getBox(),
+            zipCode: addressCreation.getZipCode()
         });
     }
 
@@ -22,8 +23,9 @@ export default class AddressDataMapper implements IAddressDataGateway {
             city: addressUpdate.getCity(),
             street: addressUpdate.getStreet(),
             streetNumber: addressUpdate.getStreetNumber(),
-            box: addressUpdate.getBox()
-        },{
+            box: addressUpdate.getBox(),
+            zipCode: addressUpdate.getZipCode(),
+        }, {
             where: {
                 addressId: addressUpdate.getAddressId(),
                 userId: addressUpdate.getUserId()
@@ -35,7 +37,7 @@ export default class AddressDataMapper implements IAddressDataGateway {
         const now = new Date();
         await AddressEntity.update({
             deletedAt: now
-        },{
+        }, {
             where: {
                 addressId: addressId,
                 userId: userId

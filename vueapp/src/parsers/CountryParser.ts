@@ -7,10 +7,10 @@ export default class CountryParser {
     }
 
     public static parseCountry(data: any): CountryVM {
-        return new CountryVM(data.countryId, data.nameFr, data.nameEn);
+        return new CountryVM(data.countryId, data.name);
     }
 
     public static parseCountriesToItemValues(data: any): Array<TitleValueVM<string, number>> {
-        return data.map((country: any) => new TitleValueVM(country.nameFr, country.countryId));
+        return data.map((country: any) => new TitleValueVM(country.name, country.countryId));
     }
 }

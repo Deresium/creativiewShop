@@ -71,6 +71,9 @@ import BasketFacade from "./business/facades/BasketFacade";
 import ExtractOrCreateUserTempMiddleware from "./routers/middlewares/ExtractOrCreateUserTempMiddleware";
 import ExtractOpenBasketIdMiddleware from "./routers/middlewares/ExtractOpenBasketIdMiddleware";
 import BasketRouter from "./routers/routes/BasketRouter";
+import AddressDataMapper from "./database/datamappers/AddressDataMapper";
+import AddressFacade from "./business/facades/AddressFacade";
+import AddressRouter from "./routers/routes/AddressRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -116,6 +119,7 @@ export default class AppSingleton {
         const weightPriceDataMapper = new WeightPriceDataMapper();
         const sendMailDataMapper = new SendMailDataMapper();
         const basketDataMapper = new BasketDataMapper();
+        const addressDataMapper = new AddressDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
@@ -136,6 +140,7 @@ export default class AppSingleton {
         const countryFacade = new CountryFacade(countryDataMapper);
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
         const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper);
+        const addressFacade = new AddressFacade(addressDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -194,5 +199,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new DeliveryOptionRouter(deliveryOptionFacade, deliveryOptionCountryFacade, countryFacade, weightPriceFacade, onlyAdminMiddleware, checkDeliveryOptionOwnerMiddleware).getRouter());
         this.expressApp.use('/api', new StoreRouter(productOptionFacade, checkStoreAccessMiddleware).getRouter());
         this.expressApp.use('/api', new BasketRouter(basketFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware, extractOpenBasketIdMiddleware).getRouter());
+        this.expressApp.use('/api', new AddressRouter(addressFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware).getRouter());
     }
 }

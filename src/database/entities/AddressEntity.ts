@@ -11,6 +11,7 @@ export default class AddressEntity extends Model {
     private readonly street: string;
     private readonly streetNumber: string;
     private readonly box: string;
+    private readonly zipCode: string;
 
 
     getAddressId(): string {
@@ -21,7 +22,7 @@ export default class AddressEntity extends Model {
         return this.countryId;
     }
 
-    getCountry(){
+    getCountry() {
         return this.country;
     }
 
@@ -44,6 +45,11 @@ export default class AddressEntity extends Model {
     getBox(): string {
         return this.box;
     }
+
+
+    public getZipCode(): string {
+        return this.zipCode;
+    }
 }
 
 AddressEntity.init({
@@ -53,14 +59,15 @@ AddressEntity.init({
     city: DataTypes.STRING,
     street: DataTypes.STRING,
     streetNumber: DataTypes.STRING,
+    zipCode: DataTypes.STRING,
     box: DataTypes.STRING,
     deletedAt: DataTypes.DATE
-},{
+}, {
     tableName: 'Address',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
 });
 
-AddressEntity.hasOne(CountryEntity,{
+AddressEntity.hasOne(CountryEntity, {
     sourceKey: 'countryId',
     foreignKey: 'countryId',
     as: 'country'

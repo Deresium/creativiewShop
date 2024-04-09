@@ -46,6 +46,7 @@ export default class BasketFacade implements IBasketRequester {
     }
 
     public async getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
+        const basket = await this.basketDataGateway.findBasketById(basketId);
         const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(basketId);
         const productOptionBaskets = new Array<ProductOptionBasketVM>();
         let totalBasket = 0;
@@ -81,7 +82,7 @@ export default class BasketFacade implements IBasketRequester {
             );
             productOptionBaskets.push(productOptionBasket);
         }
-        return new BasketVM(basketId, productOptionBaskets, totalBasket.toFixed(2));
+        return new BasketVM(basketId, productOptionBaskets, totalBasket.toFixed(2), basket.getDeliveryAddressId(), basket.getBillingAddressId());
     }
 
     public async updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void> {
@@ -95,4 +96,14 @@ export default class BasketFacade implements IBasketRequester {
         const basketChecker = new BasketChecker(basketId, groupIds, customer, language, this.basketDataGateway, this.productOptionDataMapper);
         return await basketChecker.checkBasket();
     }
+
+    public async updateBasketBillingAddress(basketId: string, addressId: string): Promise<void> {
+        await this.basketDataGateway.updateBasketBillingAddress(basketId, addressId);
+    }
+
+    public async updateBasketDeliveryAddress(basketId: string, addressId: string): Promise<void> {
+        await this.basketDataGateway.updateBasketDeliveryAddress(basketId, addressId);
+    }
+
+
 }

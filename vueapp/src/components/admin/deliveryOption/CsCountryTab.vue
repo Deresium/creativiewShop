@@ -63,7 +63,7 @@ const {params: {deliveryOptionId}} = useRoute();
 const deliveryOptionIdString = String(deliveryOptionId);
 
 const headers = computed(() => [
-    {title: t('country'), value: 'nameFr'},
+    {title: t('country'), value: 'name'},
     {title: t('action'), value: 'actions'}
 ]);
 
