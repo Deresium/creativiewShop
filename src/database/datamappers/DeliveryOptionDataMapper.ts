@@ -2,6 +2,8 @@ import IDeliveryOptionDataGateway from "../gateways/IDeliveryOptionDataGateway";
 import DeliveryOptionEntity from "../entities/DeliveryOptionEntity";
 import DeliveryOptionUpdateDS from "../../business/models/datastores/DeliveryOptionUpdateDS";
 import {Op} from "sequelize";
+import DeliveryOptionCountryEntity from "../entities/DeliveryOptionCountryEntity";
+import WeightPriceEntity from "../entities/WeightPriceEntity";
 
 export default class DeliveryOptionDataMapper implements IDeliveryOptionDataGateway {
     public async addDeliveryOption(customerId: number): Promise<string> {
@@ -64,5 +66,38 @@ export default class DeliveryOptionDataMapper implements IDeliveryOptionDataGate
             }
         });
     }
+
+    public async getDeliveryOptionsForCountry(customerId: number, countryId: number): Promise<Array<DeliveryOptionEntity>> {
+        const now = new Date();
+        return await DeliveryOptionEntity.findAll({
+            where: {
+                customerId: customerId,
+                active: true,
+                deletedAt: {[Op.eq]: null}
+            },
+            include: [
+                {
+                    model: DeliveryOptionCountryEntity,
+                    as: 'deliveryOptionCountries',
+                    where: {countryId: countryId},
+                    required: true
+                },
+                {
+                    model: WeightPriceEntity,
+                    as: 'weightPrices',
+                    where: {
+                        startDate: {[Op.lte]: now},
+                        endDate: {
+                            [Op.or]: [{[Op.gte]: now}, {[Op.is]: null}]
+                        }
+                    },
+                    required: true,
+                    order: [['gram', 'ASC']]
+                }
+            ],
+        });
+    }
+
+
 
 }

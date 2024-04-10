@@ -2,6 +2,7 @@ import IBasketDataGateway from "../gateways/IBasketDataGateway";
 import BasketProductOptionDS from "../../business/models/datastores/BasketProductOptionDS";
 import BasketProductOptionEntity from "../entities/BasketProductOptionEntity";
 import BasketEntity from "../entities/BasketEntity";
+import AddressEntity from "../entities/AddressEntity";
 
 export default class BasketDataMapper implements IBasketDataGateway {
     public async addBasketForUser(userId: string): Promise<BasketEntity> {
@@ -24,7 +25,8 @@ export default class BasketDataMapper implements IBasketDataGateway {
         return await BasketEntity.findOne({
             where: {
                 basketId: basketId
-            }
+            },
+            include: [{model: AddressEntity, as: 'deliveryAddress', required: false}]
         });
     }
 

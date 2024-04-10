@@ -3,12 +3,18 @@ import DeliveryOptionVM from "../models/viewmodels/DeliveryOptionVM";
 import DeliveryOptionUpdateDS from "../models/datastores/DeliveryOptionUpdateDS";
 import IDeliveryOptionDataGateway from "../../database/gateways/IDeliveryOptionDataGateway";
 import DeliveryOptionEntity from "../../database/entities/DeliveryOptionEntity";
+import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
+import DeliveryOptionStoreBuilder from "../utils/DeliveryOptionStoreBuilder";
+import CustomerVM from "../models/viewmodels/CustomerVM";
+import ICurrencyRateDataGateway from "../../database/gateways/ICurrencyRateDataGateway";
 
 export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
     private readonly deliveryOptionDataGateway: IDeliveryOptionDataGateway;
+    private readonly currencyDataGateway: ICurrencyRateDataGateway;
 
-    constructor(deliveryOptionDataGateway: IDeliveryOptionDataGateway) {
+    constructor(deliveryOptionDataGateway: IDeliveryOptionDataGateway, currencyDataGateway: ICurrencyRateDataGateway) {
         this.deliveryOptionDataGateway = deliveryOptionDataGateway;
+        this.currencyDataGateway = currencyDataGateway;
     }
 
     public async addDeliveryOption(customerId: number): Promise<string> {
@@ -41,4 +47,12 @@ export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
         return new DeliveryOptionVM(deliveryOption.getDeliveryOptionId(), deliveryOption.getNameFr(), deliveryOption.getActive());
     }
 
+    public async getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: number, currencyCode: string, language: string): Promise<Array<DeliveryOptionStoreVM>> {
+        const deliveryOptionStores = new Array<DeliveryOptionStoreVM>();
+        const deliveryOptions = await this.deliveryOptionDataGateway.getDeliveryOptionsForCountry(customer.getCustomerId(), countryId);
+        for(const deliveryOption of deliveryOptions){
+            deliveryOptionStores.push(await new DeliveryOptionStoreBuilder(deliveryOption, customer, this.currencyDataGateway, weight, currencyCode, language).buildDeliveryOptionStore());
+        }
+        return deliveryOptionStores;
+    }
 }

@@ -13,4 +13,6 @@ export default interface IDeliveryOptionDataGateway {
     getDeliveryOption(deliveryOptionId: string, customerId: number): Promise<DeliveryOptionEntity>;
 
     getDeliveryOptions(customerId: number): Promise<Array<DeliveryOptionEntity>>;
+
+    getDeliveryOptionsForCountry(customerId: number, countryId: number): Promise<Array<DeliveryOptionEntity>>;
 }

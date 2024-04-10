@@ -2,6 +2,7 @@ import BasketProductOptionDS from "../models/datastores/BasketProductOptionDS";
 import BasketVM from "../models/viewmodels/BasketVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import BasketErrorReportVM from "../models/viewmodels/BasketErrorReportVM";
+import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 
 export default interface IBasketRequester {
     getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM>;
@@ -21,4 +22,6 @@ export default interface IBasketRequester {
     checkBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, language: string): Promise<BasketErrorReportVM>;
 
     getBasketNbItems(basketId: string): Promise<number>;
+
+    getDeliveryOptionsForBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<Array<DeliveryOptionStoreVM>>;
 }

@@ -4,6 +4,7 @@ import CountryEntity from "./CountryEntity";
 
 export default class DeliveryOptionCountryEntity extends Model {
     private deliveryOptionId: string;
+    private countryId: number;
     private country: CountryEntity;
 
 

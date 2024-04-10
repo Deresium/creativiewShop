@@ -1,5 +1,7 @@
 import DeliveryOptionUpdateDS from "../models/datastores/DeliveryOptionUpdateDS";
 import DeliveryOptionVM from "../models/viewmodels/DeliveryOptionVM";
+import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
+import CustomerVM from "../models/viewmodels/CustomerVM";
 
 export default interface IDeliveryOptionRequester {
     addDeliveryOption(customerId: number): Promise<string>;
@@ -13,4 +15,6 @@ export default interface IDeliveryOptionRequester {
     getDeliveryOption(deliveryOptionId: string, customerId: number): Promise<DeliveryOptionVM>;
 
     getDeliveryOptions(customerId: number): Promise<Array<DeliveryOptionVM>>;
+
+    getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: number, currencyCode: string, language: string): Promise<Array<DeliveryOptionStoreVM>>;
 }

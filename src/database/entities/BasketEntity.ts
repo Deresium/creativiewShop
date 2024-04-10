@@ -1,5 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import CountryEntity from "./CountryEntity";
+import AddressEntity from "./AddressEntity";
 
 export default class BasketEntity extends Model {
     private readonly basketId: string;
@@ -14,6 +16,8 @@ export default class BasketEntity extends Model {
     private readonly deliveredAt: Date;
     private readonly deletedAt: Date;
     private readonly createdAt: Date;
+
+    private readonly deliveryAddress: AddressEntity;
 
 
     getBasketId(): string {
@@ -30,6 +34,10 @@ export default class BasketEntity extends Model {
 
     getBillingAddressId() {
         return this.billingAddressId;
+    }
+
+    getDeliveryAddress(){
+        return this.deliveryAddress;
     }
 }
 
@@ -50,4 +58,10 @@ BasketEntity.init({
 }, {
     tableName: 'Basket',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
+});
+
+BasketEntity.hasOne(AddressEntity, {
+    sourceKey: 'deliveryAddressId',
+    foreignKey: 'addressId',
+    as: 'deliveryAddress'
 });

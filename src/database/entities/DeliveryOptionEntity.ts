@@ -1,5 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import DeliveryOptionCountryEntity from "./DeliveryOptionCountryEntity";
+import WeightPriceEntity from "./WeightPriceEntity";
 
 export default class DeliveryOptionEntity extends Model {
     private deliveryOptionId: string;
@@ -7,6 +9,8 @@ export default class DeliveryOptionEntity extends Model {
     private active: boolean;
     private customerId: number;
     private deletedAt: Date;
+
+    private weightPrices: Array<WeightPriceEntity>;
 
 
     getDeliveryOptionId(): string {
@@ -28,6 +32,11 @@ export default class DeliveryOptionEntity extends Model {
     getDeletedAt(): Date {
         return this.deletedAt;
     }
+
+
+    getWeightPrices(): Array<WeightPriceEntity> {
+        return this.weightPrices;
+    }
 }
 
 DeliveryOptionEntity.init({
@@ -39,4 +48,16 @@ DeliveryOptionEntity.init({
 }, {
     tableName: 'DeliveryOption',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
+});
+
+DeliveryOptionEntity.hasMany(DeliveryOptionCountryEntity, {
+    sourceKey: 'deliveryOptionId',
+    foreignKey: 'deliveryOptionId',
+    as: 'deliveryOptionCountries'
+});
+
+DeliveryOptionEntity.hasMany(WeightPriceEntity, {
+    sourceKey: 'deliveryOptionId',
+    foreignKey: 'deliveryOptionId',
+    as: 'weightPrices'
 });
