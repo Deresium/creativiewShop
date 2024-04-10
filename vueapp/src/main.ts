@@ -1,8 +1,6 @@
 import {createApp} from 'vue'
 import App from './App.vue'
 
-import 'vuetify/styles'
-import '@mdi/font/css/materialdesignicons.css'
 import router from "./router/router.ts";
 import i18n from "./i18n/i18n.ts";
 import {createPinia} from "pinia";

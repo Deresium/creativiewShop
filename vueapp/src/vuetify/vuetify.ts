@@ -2,6 +2,8 @@ import {createVuetify} from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import {en, fr} from "vuetify/locale";
+import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
 
 let language = navigator.language.split('-')[0];
 if (language !== 'en') {
