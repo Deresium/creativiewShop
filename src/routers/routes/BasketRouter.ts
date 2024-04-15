@@ -66,6 +66,13 @@ export default class BasketRouter extends ApplicationRouter {
             res.send(basketReport);
         });
 
+        this.getRouter().put('/basket/deliveryOption', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
+            const basketId = req.basketId;
+            const deliveryOptionId = req.body.deliveryOptionId;
+            await this.basketRequester.updateBasketDeliveryOption(basketId, deliveryOptionId);
+            res.send();
+        });
+
         this.getRouter().put('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const productOptionId = String(req.params.productOptionId);
@@ -100,7 +107,7 @@ export default class BasketRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().get('/basket/deliveryOptions', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async(req: any, res: any) => {
+        this.getRouter().get('/basket/deliveryOptions', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const customer = req.customer;
             const groups = req.userGroups;

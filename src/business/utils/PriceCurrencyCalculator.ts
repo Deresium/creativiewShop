@@ -1,5 +1,6 @@
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ICurrencyRateDataGateway from "../../database/gateways/ICurrencyRateDataGateway";
+
 export default class PriceCurrencyCalculator {
     private readonly price: number;
     private readonly currency: string;
@@ -8,13 +9,13 @@ export default class PriceCurrencyCalculator {
 
 
     constructor(price: number, currency: string, customer: CustomerVM, currencyRateDataGateway: ICurrencyRateDataGateway) {
-        this.price = price;
+        this.price = Number(price);
         this.currency = currency;
         this.customer = customer;
         this.currencyRateDataGateway = currencyRateDataGateway;
     }
 
-    public async getPrice(){
+    public async getPrice() {
         const rates = await this.currencyRateDataGateway.getCurrentRatesForCustomer(this.customer.getCustomerId());
         const mapRates = new Map<string, number>();
         rates.forEach(rate => mapRates.set(rate.getCurrencyCode(), rate.getRate()));

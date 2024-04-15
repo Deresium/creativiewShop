@@ -19,6 +19,8 @@ export default interface IBasketRequester {
 
     updateBasketBillingAddress(basketId: string, addressId: string): Promise<void>;
 
+    updateBasketDeliveryOption(basketId: string, deliveryOptionId: string): Promise<void>;
+
     checkBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, language: string): Promise<BasketErrorReportVM>;
 
     getBasketNbItems(basketId: string): Promise<number>;

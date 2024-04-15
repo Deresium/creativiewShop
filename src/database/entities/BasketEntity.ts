@@ -1,6 +1,5 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
-import CountryEntity from "./CountryEntity";
 import AddressEntity from "./AddressEntity";
 
 export default class BasketEntity extends Model {
@@ -36,8 +35,13 @@ export default class BasketEntity extends Model {
         return this.billingAddressId;
     }
 
-    getDeliveryAddress(){
+    getDeliveryAddress() {
         return this.deliveryAddress;
+    }
+
+
+    public getDeliveryOptionId(): string {
+        return this.deliveryOptionId;
     }
 }
 

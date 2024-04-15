@@ -29,8 +29,8 @@ export default class DeliveryOptionStoreBuilder {
 
     private getBasePrice() {
         let basePrice = 0;
-        for(const weightPrice of this.deliveryOption.getWeightPrices()){
-            if(this.weight >= weightPrice.getGram()){
+        for (const weightPrice of this.deliveryOption.getWeightPrices()) {
+            if (this.weight >= weightPrice.getGram()) {
                 basePrice = weightPrice.getPrice();
             }
         }

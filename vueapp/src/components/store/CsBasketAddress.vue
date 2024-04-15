@@ -56,6 +56,8 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits(['deliveryCountryChanged']);
+
 const {t} = useI18n({useScope: "global"});
 
 const {firstColor} = useCustomer();
@@ -104,6 +106,7 @@ const handleDeliveryAddressChange = async () => {
     });
     showSnackbar.value = true;
     textSnackbar.value = t('updateDeliveryAddress.success');
+    emit('deliveryCountryChanged');
 };
 
 const handleBillingAddressChange = async () => {

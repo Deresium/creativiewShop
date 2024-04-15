@@ -99,6 +99,17 @@ export default class BasketDataMapper implements IBasketDataGateway {
         });
     }
 
+    public async updateBasketDeliveryOption(basketId: string, deliveryOptionId: string): Promise<void> {
+        await BasketEntity.update({
+            deliveryOptionId: deliveryOptionId
+        }, {
+            where: {
+                basketId: basketId
+            }
+        });
+    }
+
+
     public async basketToOrder(basketToOrderDS: BasketToOrderDS): Promise<void> {
         const date = Date.now();
         await DatabaseSingleton.getInstance().getSequelize().transaction(async (t: Transaction) => {
@@ -107,17 +118,17 @@ export default class BasketDataMapper implements IBasketDataGateway {
                 orderedAt: date,
                 basketStateCode: 'ORDER',
                 totalWeightAtOrdered: basketToOrderDS.getTotalWeight()
-            },{
+            }, {
                 where: {
                     basketId: basketToOrderDS.getBasketId()
                 },
                 transaction: t
             });
 
-            for(const productOptionId of basketToOrderDS.getProductOptionStocks().keys()){
+            for (const productOptionId of basketToOrderDS.getProductOptionStocks().keys()) {
                 await ProductOptionEntity.update({
                     stock: basketToOrderDS.getProductOptionStocks().get(productOptionId)
-                },{
+                }, {
                     where: {
                         productOptionId: productOptionId
                     },
@@ -125,10 +136,10 @@ export default class BasketDataMapper implements IBasketDataGateway {
                 })
             }
 
-            for(const productOptionId of basketToOrderDS.getBasketProductOptionPrice().keys()){
+            for (const productOptionId of basketToOrderDS.getBasketProductOptionPrice().keys()) {
                 await BasketProductOptionEntity.update({
                     priceAtOrdered: basketToOrderDS.getBasketProductOptionPrice().get(productOptionId)
-                },{
+                }, {
                     where: {
                         productOptionId: productOptionId
                     },

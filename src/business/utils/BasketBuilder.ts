@@ -22,7 +22,7 @@ export default class BasketBuilder {
     public async requestBasketWithPricesForUser(groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
         const basket = await this.basketDataGateway.findBasketById(this.basketId);
         let deliveryAddressCountryId = null;
-        if(basket.getDeliveryAddress()){
+        if (basket.getDeliveryAddress()) {
             deliveryAddressCountryId = basket.getDeliveryAddress().getCountryId();
         }
         const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(this.basketId);
@@ -65,7 +65,7 @@ export default class BasketBuilder {
             productOptionBaskets.push(productOptionBasket);
         }
 
-        return new BasketVM(this.basketId, productOptionBaskets, totalBasket.toFixed(2), totalWeightBasket.toFixed(2), basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId);
+        return new BasketVM(this.basketId, productOptionBaskets, totalBasket.toFixed(2), totalWeightBasket.toFixed(2), basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId());
     }
 
     public async requestBasketWithoutPrices(): Promise<BasketDS> {
@@ -78,7 +78,7 @@ export default class BasketBuilder {
 
     private getTotalWeightBasket(basketProductOptions: Array<BasketProductOptionEntity>): number {
         const totalWeight = 0;
-        for(const basketProductOption of basketProductOptions) {
+        for (const basketProductOption of basketProductOptions) {
             //basketProductOption.getQuantity()
         }
         return totalWeight;

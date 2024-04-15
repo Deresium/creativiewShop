@@ -60,8 +60,18 @@
                     {{ t(error.getReason(), {productName: error.getLabel()}) }}</p>
             </v-alert>
 
-            <CsBasketAddress v-if="!basketErrorReport.hasErrors()" :billing-address-id="basket.getBillingAddressId()"
-                             :delivery-address-id="basket.getDeliveryAddressId()"/>
+            <CsBasketAddress
+                v-if="!basketErrorReport.hasErrors()"
+                :billing-address-id="basket.getBillingAddressId()"
+                :delivery-address-id="basket.getDeliveryAddressId()"
+                @delivery-country-changed="refreshBasket"
+            />
+
+            <CsBasketDeliveryOption v-if="basket.getDeliveryAddressCountryId()"
+                                    :delivery-country-id="basket.getDeliveryAddressCountryId()"
+                                    :delivery-option-id="basket.getDeliveryOptionId()"
+                                    @delivery-option-changed="refreshBasket"/>
+
         </div>
     </div>
 
@@ -103,6 +113,7 @@ import BasketVM from "../../viewmodels/BasketVM";
 import BasketErrorReportVM from "../../viewmodels/BasketErrorReportVM.ts";
 import BasketErrorReportRequester from "../../requesters/BasketErrorReportRequester.ts";
 import CsBasketAddress from "../store/CsBasketAddress.vue";
+import CsBasketDeliveryOption from "../store/CsBasketDeliveryOption.vue";
 
 const {t} = useI18n({useScope: "global"});
 

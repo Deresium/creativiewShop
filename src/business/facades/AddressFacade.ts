@@ -36,21 +36,25 @@ export default class AddressFacade implements IAddressRequester {
     }
 
     private addressEntityToAddressVM(addressEntity: AddressEntity, language: string): AddressVM {
-        let countryName = null;
+        let countryName: string = null;
+        let box: string = null;
         switch (language) {
             case 'fr':
                 countryName = addressEntity.getCountry().getNameFr();
+                box = 'boite';
                 break;
             case 'en':
                 countryName = addressEntity.getCountry().getNameEn();
+                box = 'box';
                 break;
             default:
                 countryName = addressEntity.getCountry().getNameEn();
+                box = 'box';
                 break;
         }
-        let address = `${addressEntity.getStreet()}, ${addressEntity.getStreetNumber()} ${addressEntity.getZipCode()} ${addressEntity.getCity()}`;
+        let address = `${addressEntity.getStreet()}, ${addressEntity.getStreetNumber()} ${addressEntity.getZipCode()} ${addressEntity.getCity()}, ${countryName}`;
         if (addressEntity.getBox()) {
-            address = `${address} (${addressEntity.getBox()})`
+            address = `${address} (${box} ${addressEntity.getBox()})`
         }
         return new AddressVM(addressEntity.getAddressId(), addressEntity.getCountryId(), countryName, addressEntity.getCity(), addressEntity.getStreet(), addressEntity.getStreetNumber(), addressEntity.getBox(), addressEntity.getZipCode(), address);
     }

@@ -9,7 +9,6 @@ import BasketErrorReportVM from "../models/viewmodels/BasketErrorReportVM";
 import BasketChecker from "../utils/BasketChecker";
 import ProductOptionDataMapper from "../../database/datamappers/ProductOptionDataMapper";
 import IDeliveryOptionRequester from "../requesters/IDeliveryOptionRequester";
-import DeliveryOptionVM from "../models/viewmodels/DeliveryOptionVM";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 
 export default class BasketFacade implements IBasketRequester {
@@ -53,7 +52,7 @@ export default class BasketFacade implements IBasketRequester {
     public async getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
         const basket = await this.basketDataGateway.findBasketById(basketId);
         let deliveryAddressCountryId = null;
-        if(basket.getDeliveryAddress()){
+        if (basket.getDeliveryAddress()) {
             deliveryAddressCountryId = basket.getDeliveryAddress().getCountryId();
         }
         const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(basketId);
@@ -96,7 +95,7 @@ export default class BasketFacade implements IBasketRequester {
             productOptionBaskets.push(productOptionBasket);
         }
 
-        return new BasketVM(basketId, productOptionBaskets, totalBasket.toFixed(2), totalWeightBasket.toFixed(2), basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId);
+        return new BasketVM(basketId, productOptionBaskets, totalBasket.toFixed(2), totalWeightBasket.toFixed(2), basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId());
     }
 
     public async updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void> {
@@ -130,10 +129,14 @@ export default class BasketFacade implements IBasketRequester {
 
     public async getDeliveryOptionsForBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<Array<DeliveryOptionStoreVM>> {
         const basket = await this.getBasket(basketId, groupIds, customer, currency, language);
-        if(!basket.getDeliveryAddressCountryId()){
+        if (!basket.getDeliveryAddressCountryId()) {
             return null;
         }
 
         return await this.deliveryOptionRequester.getDeliveryOptionsForCountry(customer, basket.getDeliveryAddressCountryId(), Number(basket.getTotalWeight()), currency, language);
+    }
+
+    public async updateBasketDeliveryOption(basketId: string, deliveryOptionId: string): Promise<void> {
+        await this.basketDataGateway.updateBasketDeliveryOption(basketId, deliveryOptionId);
     }
 }
