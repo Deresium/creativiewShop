@@ -10,19 +10,22 @@ import BasketChecker from "../utils/BasketChecker";
 import ProductOptionDataMapper from "../../database/datamappers/ProductOptionDataMapper";
 import IDeliveryOptionRequester from "../requesters/IDeliveryOptionRequester";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
+import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 
 export default class BasketFacade implements IBasketRequester {
     private readonly basketDataGateway: IBasketDataGateway;
     private readonly productOptionRequester: IProductOptionRequester;
     private readonly productOptionDataMapper: ProductOptionDataMapper;
     private readonly deliveryOptionRequester: IDeliveryOptionRequester;
+    private readonly currencyRateRequester: ICurrencyRateRequester;
 
 
-    constructor(basketDataGateway: IBasketDataGateway, productOptionRequester: IProductOptionRequester, productOptionDataMapper: ProductOptionDataMapper, deliveryOptionRequester: IDeliveryOptionRequester) {
+    constructor(basketDataGateway: IBasketDataGateway, productOptionRequester: IProductOptionRequester, productOptionDataMapper: ProductOptionDataMapper, deliveryOptionRequester: IDeliveryOptionRequester, currencyRateRequester: ICurrencyRateRequester) {
         this.basketDataGateway = basketDataGateway;
         this.productOptionRequester = productOptionRequester;
         this.productOptionDataMapper = productOptionDataMapper;
         this.deliveryOptionRequester = deliveryOptionRequester;
+        this.currencyRateRequester = currencyRateRequester;
     }
 
     public async addOpenBasketIfNotExists(userId: string): Promise<string> {
@@ -55,12 +58,13 @@ export default class BasketFacade implements IBasketRequester {
         if (basket.getDeliveryAddress()) {
             deliveryAddressCountryId = basket.getDeliveryAddress().getCountryId();
         }
+        const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
         const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(basketId);
         const productOptionBaskets = new Array<ProductOptionBasketVM>();
         let totalBasket = 0;
         let totalWeightBasket = 0;
         for (const basketProductOption of basketProductOptions) {
-            const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language);
+            const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language, currencyRates);
             let price = Number(productOptionStore.getBasePrice());
             if (productOptionStore.getDiscountPrice()) {
                 price = Number(productOptionStore.getDiscountPrice());

@@ -5,33 +5,32 @@ import ProductOptionDiscountEntity from "../../database/entities/ProductOptionDi
 import PercentCalculator from "./PercentCalculator";
 import TitleValueVM from "../models/viewmodels/TitleValueVM";
 import PriceCurrencyCalculator from "./PriceCurrencyCalculator";
-import ICurrencyRateDataGateway from "../../database/gateways/ICurrencyRateDataGateway";
 
 export default class ProductOptionStoreBuilder {
     private readonly productOption: ProductOptionEntity;
     private readonly allOptionsForProduct: Array<ProductOptionEntity>;
-    private readonly currencyRateDataGateway: ICurrencyRateDataGateway;
+    private readonly currencyRates: Map<string, number>;
     private readonly customer: CustomerVM;
     private readonly currency: string;
     private readonly language: string;
 
-    constructor(productOption: ProductOptionEntity, allOptionsForProduct: Array<ProductOptionEntity>, currencyRateDataGateway: ICurrencyRateDataGateway, customer: CustomerVM, currency: string, language: string) {
+    constructor(productOption: ProductOptionEntity, allOptionsForProduct: Array<ProductOptionEntity>, currencyRates: Map<string, number>, customer: CustomerVM, currency: string, language: string) {
         this.productOption = productOption;
         this.allOptionsForProduct = allOptionsForProduct;
-        this.currencyRateDataGateway = currencyRateDataGateway;
+        this.currencyRates = currencyRates;
         this.customer = customer;
         this.currency = currency;
         this.language = language;
     }
 
-    public async buildProductOptionStore(): Promise<ProductOptionStoreVM> {
+    public buildProductOptionStore(): ProductOptionStoreVM {
         const prices = this.productOption.getListPrices();
         if (prices.length !== 1) {
             return null;
         }
 
         const price = prices[0].getPrice();
-        const priceCurrency = await new PriceCurrencyCalculator(price, this.currency, this.customer, this.currencyRateDataGateway).getPrice();
+        const priceCurrency = new PriceCurrencyCalculator(price, this.currency, this.customer, this.currencyRates).getPrice();
 
         const productOptionId = this.productOption.getProductOptionId();
         const productId = this.productOption.getProductId();

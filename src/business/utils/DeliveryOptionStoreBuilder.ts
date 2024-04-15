@@ -1,29 +1,26 @@
 import DeliveryOptionEntity from "../../database/entities/DeliveryOptionEntity";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
-import ICurrencyRateDataGateway from "../../database/gateways/ICurrencyRateDataGateway";
 import PriceCurrencyCalculator from "./PriceCurrencyCalculator";
 
 export default class DeliveryOptionStoreBuilder {
     private readonly deliveryOption: DeliveryOptionEntity;
     private readonly customer: CustomerVM;
-    private readonly currencyDataGateway: ICurrencyRateDataGateway;
+    private readonly currencyRates: Map<string, number>;
     private readonly weight: number;
     private readonly currency: string;
-    private readonly language: string;
 
 
-    constructor(deliveryOption: DeliveryOptionEntity, customer: CustomerVM, currencyDataGateway: ICurrencyRateDataGateway, weight: number, currency: string, language: string) {
+    constructor(deliveryOption: DeliveryOptionEntity, customer: CustomerVM, currencyRates: Map<string, number>, weight: number, currency: string) {
         this.deliveryOption = deliveryOption;
         this.customer = customer;
-        this.currencyDataGateway = currencyDataGateway;
+        this.currencyRates = currencyRates;
         this.weight = weight;
         this.currency = currency;
-        this.language = language;
     }
 
-    public async buildDeliveryOptionStore(): Promise<DeliveryOptionStoreVM> {
-        const price = await new PriceCurrencyCalculator(this.getBasePrice(), this.currency, this.customer, this.currencyDataGateway).getPrice();
+    public buildDeliveryOptionStore(): DeliveryOptionStoreVM {
+        const price = new PriceCurrencyCalculator(this.getBasePrice(), this.currency, this.customer, this.currencyRates).getPrice();
         return new DeliveryOptionStoreVM(this.deliveryOption.getDeliveryOptionId(), price.toFixed(2), this.deliveryOption.getNameFr());
     }
 

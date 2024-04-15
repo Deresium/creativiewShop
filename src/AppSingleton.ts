@@ -128,18 +128,18 @@ export default class AppSingleton {
         const categoryFacade = new CategoryFacade(categoryDataMapper, fileDataMapper);
         const manufacturerFacade = new ManufacturerFacade(manufacturerDataMapper);
         const productFacade = new ProductFacade(productDataMapper);
-        const productOptionFacade = new ProductOptionFacade(productOptionDataMapper, currencyRateDataMapper);
         const productOptionPriceFacade = new ProductOptionPriceFacade(productOptionPriceDataMapper);
         const productOptionCategoryFacade = new ProductOptionCategoryFacade(productOptionCategoryDataMapper);
         const productOptionPictureFacade = new ProductOptionPictureFacade(productOptionPictureDataMapper, fileDataMapper);
         const productOptionDiscountFacade = new ProductOptionDiscountFacade(productOptionDiscountDataMapper);
         const currencyRateFacade = new CurrencyRateFacade(currencyRateDataMapper);
+        const productOptionFacade = new ProductOptionFacade(productOptionDataMapper, currencyRateFacade);
         const groupFacade = new GroupFacade(groupDataMapper);
-        const deliveryOptionFacade = new DeliveryOptionFacade(deliveryOptionDataMapper, currencyRateDataMapper);
+        const deliveryOptionFacade = new DeliveryOptionFacade(deliveryOptionDataMapper, currencyRateFacade);
         const deliveryOptionCountryFacade = new DeliveryOptionCountryFacade(deliveryOptionCountryDataMapper);
         const countryFacade = new CountryFacade(countryDataMapper);
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
-        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade);
+        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade);
         const addressFacade = new AddressFacade(addressDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {

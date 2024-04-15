@@ -33,4 +33,11 @@ export default class CurrencyRateFacade implements ICurrencyRateRequester {
         const currencies = await this.currencyRateDataGateway.getCustomerCurrency(customerId);
         return currencies.map(currency => new CurrencyVM(currency.getCurrency().getCurrencyCode(), currency.getCurrency().getName(), currency.getCurrency().getSymbol()));
     }
+
+    public async getCurrentCurrencyRateForCustomer(customerId: number): Promise<Map<string, number>> {
+        const rates = await this.currencyRateDataGateway.getCurrentRatesForCustomer(customerId);
+        const mapRates = new Map<string, number>();
+        rates.forEach(rate => mapRates.set(rate.getCurrencyCode(), rate.getRate()));
+        return mapRates
+    }
 }

@@ -6,17 +6,20 @@ import BasketOrderVM from "../models/viewmodels/BasketOrderVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ProductOptionBasketVM from "../models/viewmodels/ProductOptionBasketVM";
 import BasketProductOptionEntity from "../../database/entities/BasketProductOptionEntity";
+import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 
 export default class BasketBuilder {
     private readonly basketId: string;
     private readonly basketDataGateway: IBasketDataGateway;
     private readonly productOptionRequester: IProductOptionRequester;
+    private readonly currencyRateRequester: ICurrencyRateRequester;
 
 
-    constructor(basketId: string, basketDataGateway: IBasketDataGateway, productOptionRequester: IProductOptionRequester) {
+    constructor(basketId: string, basketDataGateway: IBasketDataGateway, productOptionRequester: IProductOptionRequester, currencyRateRequester: ICurrencyRateRequester) {
         this.basketId = basketId;
         this.basketDataGateway = basketDataGateway;
         this.productOptionRequester = productOptionRequester;
+        this.currencyRateRequester = currencyRateRequester;
     }
 
     public async requestBasketWithPricesForUser(groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
@@ -29,8 +32,9 @@ export default class BasketBuilder {
         const productOptionBaskets = new Array<ProductOptionBasketVM>();
         let totalBasket = 0;
         let totalWeightBasket = 0;
+        const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
         for (const basketProductOption of basketProductOptions) {
-            const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language);
+            const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language, currencyRates);
             let price = Number(productOptionStore.getBasePrice());
             if (productOptionStore.getDiscountPrice()) {
                 price = Number(productOptionStore.getDiscountPrice());

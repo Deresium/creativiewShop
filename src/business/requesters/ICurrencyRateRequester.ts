@@ -7,4 +7,6 @@ export default interface ICurrencyRateRequester {
     getCurrencyRates(currencyCode: string, customerId: number): Promise<Array<CurrencyRateVM>>;
 
     getCurrency(customerId: number): Promise<Array<CurrencyVM>>;
+
+    getCurrentCurrencyRateForCustomer(customerId: number): Promise<Map<string, number>>
 }

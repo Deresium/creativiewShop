@@ -6,15 +6,15 @@ import DeliveryOptionEntity from "../../database/entities/DeliveryOptionEntity";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import DeliveryOptionStoreBuilder from "../utils/DeliveryOptionStoreBuilder";
 import CustomerVM from "../models/viewmodels/CustomerVM";
-import ICurrencyRateDataGateway from "../../database/gateways/ICurrencyRateDataGateway";
+import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 
 export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
     private readonly deliveryOptionDataGateway: IDeliveryOptionDataGateway;
-    private readonly currencyDataGateway: ICurrencyRateDataGateway;
+    private readonly currencyRateRequester: ICurrencyRateRequester;
 
-    constructor(deliveryOptionDataGateway: IDeliveryOptionDataGateway, currencyDataGateway: ICurrencyRateDataGateway) {
+    constructor(deliveryOptionDataGateway: IDeliveryOptionDataGateway, currencyRateRequester: ICurrencyRateRequester) {
         this.deliveryOptionDataGateway = deliveryOptionDataGateway;
-        this.currencyDataGateway = currencyDataGateway;
+        this.currencyRateRequester = currencyRateRequester;
     }
 
     public async addDeliveryOption(customerId: number): Promise<string> {
@@ -43,16 +43,17 @@ export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
         await this.deliveryOptionDataGateway.updateDeliveryOption(deliveryOptionUpdate);
     }
 
-    private deliveryOptionToDeliveryOptionVM(deliveryOption: DeliveryOptionEntity): DeliveryOptionVM {
-        return new DeliveryOptionVM(deliveryOption.getDeliveryOptionId(), deliveryOption.getNameFr(), deliveryOption.getActive());
-    }
-
-    public async getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: number, currencyCode: string, language: string): Promise<Array<DeliveryOptionStoreVM>> {
+    public async getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: number, currencyCode: string): Promise<Array<DeliveryOptionStoreVM>> {
         const deliveryOptionStores = new Array<DeliveryOptionStoreVM>();
         const deliveryOptions = await this.deliveryOptionDataGateway.getDeliveryOptionsForCountry(customer.getCustomerId(), countryId);
-        for(const deliveryOption of deliveryOptions){
-            deliveryOptionStores.push(await new DeliveryOptionStoreBuilder(deliveryOption, customer, this.currencyDataGateway, weight, currencyCode, language).buildDeliveryOptionStore());
+        const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
+        for (const deliveryOption of deliveryOptions) {
+            deliveryOptionStores.push(new DeliveryOptionStoreBuilder(deliveryOption, customer, currencyRates, weight, currencyCode).buildDeliveryOptionStore());
         }
         return deliveryOptionStores;
+    }
+
+    private deliveryOptionToDeliveryOptionVM(deliveryOption: DeliveryOptionEntity): DeliveryOptionVM {
+        return new DeliveryOptionVM(deliveryOption.getDeliveryOptionId(), deliveryOption.getNameFr(), deliveryOption.getActive());
     }
 }
