@@ -23,5 +23,7 @@ export default interface IBasketDataGateway {
 
     findBasketById(basketId: string): Promise<BasketEntity>;
 
+    findBasketWithProductOptionWeight(basketId: string): Promise<BasketEntity>;
+
     updateBasketDeliveryOption(basketId: string, deliveryOptionId: string): Promise<void>;
 }

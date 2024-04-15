@@ -43,14 +43,18 @@ export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
         await this.deliveryOptionDataGateway.updateDeliveryOption(deliveryOptionUpdate);
     }
 
-    public async getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: number, currencyCode: string): Promise<Array<DeliveryOptionStoreVM>> {
+    public async getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: number, currencyCode: string, currencyRates: Map<string, number>): Promise<Array<DeliveryOptionStoreVM>> {
         const deliveryOptionStores = new Array<DeliveryOptionStoreVM>();
         const deliveryOptions = await this.deliveryOptionDataGateway.getDeliveryOptionsForCountry(customer.getCustomerId(), countryId);
-        const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
         for (const deliveryOption of deliveryOptions) {
             deliveryOptionStores.push(new DeliveryOptionStoreBuilder(deliveryOption, customer, currencyRates, weight, currencyCode).buildDeliveryOptionStore());
         }
         return deliveryOptionStores;
+    }
+
+    public async getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: number, currencyCode: string, currencyRates: Map<string, number>): Promise<DeliveryOptionStoreVM> {
+        const deliveryOption = await this.deliveryOptionDataGateway.getDeliveryOption(deliveryOptionId, customer.getCustomerId());
+        return new DeliveryOptionStoreBuilder(deliveryOption, customer, currencyRates, weight, currencyCode).buildDeliveryOptionStore();
     }
 
     private deliveryOptionToDeliveryOptionVM(deliveryOption: DeliveryOptionEntity): DeliveryOptionVM {

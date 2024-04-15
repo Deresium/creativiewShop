@@ -34,6 +34,25 @@ export default class BasketDataMapper implements IBasketDataGateway {
         });
     }
 
+    public async findBasketWithProductOptionWeight(basketId: string): Promise<BasketEntity> {
+        return await BasketEntity.findOne({
+            where: {
+                basketId: basketId
+            },
+            include: [
+                {
+                    model: AddressEntity, as: 'deliveryAddress', required: false
+                },
+                {
+                    model: BasketProductOptionEntity,
+                    attributes: ['productOptionId', 'quantity'],
+                    as: 'basketProductOptions',
+                    include: [{model: ProductOptionEntity, attributes: ['weight'], as: 'productOption'}]
+                }
+            ]
+        });
+    }
+
     public async findProductOptionBasket(basketId: string, productOptionId: string): Promise<BasketProductOptionEntity> {
         return await BasketProductOptionEntity.findOne({
             where: {

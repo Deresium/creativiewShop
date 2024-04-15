@@ -1,5 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import ProductOptionEntity from "./ProductOptionEntity";
 
 export default class BasketProductOptionEntity extends Model {
     private readonly basketId: string;
@@ -7,12 +8,18 @@ export default class BasketProductOptionEntity extends Model {
     private readonly quantity: number;
     private readonly priceAtOrdered: number;
 
+    private readonly productOption: ProductOptionEntity;
+
     getProductOptionId(): string {
         return this.productOptionId;
     }
 
     getQuantity(): number {
         return this.quantity;
+    }
+
+    getProductOption() {
+        return this.productOption;
     }
 }
 
@@ -24,4 +31,10 @@ BasketProductOptionEntity.init({
 }, {
     tableName: 'BasketProductOption',
     sequelize: DatabaseSingleton.getInstance().getSequelize()
+});
+
+BasketProductOptionEntity.hasOne(ProductOptionEntity, {
+    sourceKey: 'productOptionId',
+    foreignKey: 'productOptionId',
+    as: 'productOption'
 });

@@ -91,13 +91,11 @@ export default class DeliveryOptionDataMapper implements IDeliveryOptionDataGate
                             [Op.or]: [{[Op.gte]: now}, {[Op.is]: null}]
                         }
                     },
-                    required: true,
-                    order: [['gram', 'ASC']]
+                    required: true
                 }
             ],
         });
     }
-
 
 
 }

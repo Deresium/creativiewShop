@@ -4,13 +4,13 @@ import BasketProductOptionDS from "../models/datastores/BasketProductOptionDS";
 import BasketVM from "../models/viewmodels/BasketVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import IProductOptionRequester from "../requesters/IProductOptionRequester";
-import ProductOptionBasketVM from "../models/viewmodels/ProductOptionBasketVM";
 import BasketErrorReportVM from "../models/viewmodels/BasketErrorReportVM";
 import BasketChecker from "../utils/BasketChecker";
 import ProductOptionDataMapper from "../../database/datamappers/ProductOptionDataMapper";
 import IDeliveryOptionRequester from "../requesters/IDeliveryOptionRequester";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
+import BasketBuilder from "../utils/BasketBuilder";
 
 export default class BasketFacade implements IBasketRequester {
     private readonly basketDataGateway: IBasketDataGateway;
@@ -53,53 +53,7 @@ export default class BasketFacade implements IBasketRequester {
     }
 
     public async getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
-        const basket = await this.basketDataGateway.findBasketById(basketId);
-        let deliveryAddressCountryId = null;
-        if (basket.getDeliveryAddress()) {
-            deliveryAddressCountryId = basket.getDeliveryAddress().getCountryId();
-        }
-        const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
-        const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(basketId);
-        const productOptionBaskets = new Array<ProductOptionBasketVM>();
-        let totalBasket = 0;
-        let totalWeightBasket = 0;
-        for (const basketProductOption of basketProductOptions) {
-            const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language, currencyRates);
-            let price = Number(productOptionStore.getBasePrice());
-            if (productOptionStore.getDiscountPrice()) {
-                price = Number(productOptionStore.getDiscountPrice());
-            }
-
-            const total = (price * basketProductOption.getQuantity());
-            const totalWeight = (productOptionStore.getWeight() * basketProductOption.getQuantity());
-            totalBasket += total;
-            totalWeightBasket += totalWeight;
-            const totalString = total.toFixed(2);
-            const productOptionBasket = new ProductOptionBasketVM(
-                productOptionStore.getProductOptionId(),
-                productOptionStore.getProductId(),
-                productOptionStore.getHasStock(),
-                productOptionStore.getWeight(),
-                productOptionStore.getManufacturerId(),
-                productOptionStore.getManufacturer(),
-                productOptionStore.getPreorder(),
-                productOptionStore.getBasePrice(),
-                productOptionStore.getDiscountPrice(),
-                productOptionStore.getPercent(),
-                productOptionStore.getStartDateDiscount(),
-                productOptionStore.getEndDateDiscount(),
-                productOptionStore.getTitle(),
-                productOptionStore.getTitleOption(),
-                productOptionStore.getDescription(),
-                productOptionStore.getPictures(),
-                productOptionStore.getAllOptions(),
-                basketProductOption.getQuantity(),
-                totalString
-            );
-            productOptionBaskets.push(productOptionBasket);
-        }
-
-        return new BasketVM(basketId, productOptionBaskets, totalBasket.toFixed(2), totalWeightBasket.toFixed(2), basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId());
+        return await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester).requestBasketForUser(groupIds, customer, currency, language);
     }
 
     public async updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void> {
@@ -132,12 +86,18 @@ export default class BasketFacade implements IBasketRequester {
     }
 
     public async getDeliveryOptionsForBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<Array<DeliveryOptionStoreVM>> {
-        const basket = await this.getBasket(basketId, groupIds, customer, currency, language);
-        if (!basket.getDeliveryAddressCountryId()) {
+        const basket = await this.basketDataGateway.findBasketWithProductOptionWeight(basketId);
+        if (!basket.getDeliveryAddress() || !basket.getDeliveryAddress().getCountryId()) {
             return null;
         }
 
-        return await this.deliveryOptionRequester.getDeliveryOptionsForCountry(customer, basket.getDeliveryAddressCountryId(), Number(basket.getTotalWeight()), currency, language);
+        let totalWeight = 0;
+        for (const basketProductOption of basket.getBasketProductOptions()) {
+            totalWeight += (basketProductOption.getProductOption().getWeight() * basketProductOption.getQuantity());
+        }
+
+        const rates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
+        return await this.deliveryOptionRequester.getDeliveryOptionsForCountry(customer, basket.getDeliveryAddress().getCountryId(), totalWeight, currency, rates);
     }
 
     public async updateBasketDeliveryOption(basketId: string, deliveryOptionId: string): Promise<void> {

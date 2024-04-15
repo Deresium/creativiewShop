@@ -1,6 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 import AddressEntity from "./AddressEntity";
+import BasketProductOptionEntity from "./BasketProductOptionEntity";
 
 export default class BasketEntity extends Model {
     private readonly basketId: string;
@@ -17,6 +18,7 @@ export default class BasketEntity extends Model {
     private readonly createdAt: Date;
 
     private readonly deliveryAddress: AddressEntity;
+    private readonly basketProductOptions: Array<BasketProductOptionEntity>;
 
 
     getBasketId(): string {
@@ -43,6 +45,11 @@ export default class BasketEntity extends Model {
     public getDeliveryOptionId(): string {
         return this.deliveryOptionId;
     }
+
+
+    public getBasketProductOptions(): Array<BasketProductOptionEntity> {
+        return this.basketProductOptions;
+    }
 }
 
 BasketEntity.init({
@@ -68,4 +75,10 @@ BasketEntity.hasOne(AddressEntity, {
     sourceKey: 'deliveryAddressId',
     foreignKey: 'addressId',
     as: 'deliveryAddress'
+});
+
+BasketEntity.hasMany(BasketProductOptionEntity, {
+    sourceKey: 'basketId',
+    foreignKey: 'basketId',
+    as: 'basketProductOptions'
 });
