@@ -7,7 +7,7 @@ export default class ProductOptionDiscountEntity extends Model {
     private productOptionDiscountId: string;
     private productOption: ProductOptionEntity;
     private group: GroupEntity;
-    private percent: number;
+    private percent: string;
     private minQuantity: number;
     private startDate: Date;
     private endDate: Date;
@@ -41,7 +41,7 @@ export default class ProductOptionDiscountEntity extends Model {
     }
 
     getPercent(): number {
-        return this.percent;
+        return Number(this.percent);
     }
 
     getMinQuantity(): number {

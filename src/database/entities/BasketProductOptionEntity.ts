@@ -6,7 +6,7 @@ export default class BasketProductOptionEntity extends Model {
     private readonly basketId: string;
     private readonly productOptionId: string;
     private readonly quantity: number;
-    private readonly priceAtOrdered: number;
+    private readonly priceAtOrdered: string;
 
     private readonly productOption: ProductOptionEntity;
 

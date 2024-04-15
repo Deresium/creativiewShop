@@ -4,7 +4,7 @@ import DatabaseSingleton from "../DatabaseSingleton";
 export default class CurrencyRateEntity extends Model {
     private currencyRateId: string;
     private currencyCode: string;
-    private rate: number;
+    private rate: string;
     private customerId: number;
     private startDate: Date;
     private endDate: Date;
@@ -19,7 +19,7 @@ export default class CurrencyRateEntity extends Model {
     }
 
     getRate(): number {
-        return this.rate;
+        return Number(this.rate);
     }
 
     getStartDate(): Date {

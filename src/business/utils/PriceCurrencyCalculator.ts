@@ -8,7 +8,7 @@ export default class PriceCurrencyCalculator {
 
 
     constructor(price: number, currency: string, customer: CustomerVM, currencyRates: Map<string, number>) {
-        this.price = Number(price);
+        this.price = price;
         this.currency = currency;
         this.customer = customer;
         this.currencyRates = currencyRates;

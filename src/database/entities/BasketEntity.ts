@@ -10,7 +10,7 @@ export default class BasketEntity extends Model {
     private readonly deliveryOptionId: string;
     private readonly deliveryAddressId: string;
     private readonly billingAddressId: string;
-    private readonly totalWeightAtOrdered: number;
+    private readonly totalWeightAtOrdered: string;
     private readonly orderedAt: Date;
     private readonly paidAt: Date;
     private readonly deliveredAt: Date;

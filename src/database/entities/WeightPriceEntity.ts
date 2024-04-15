@@ -4,18 +4,18 @@ import DatabaseSingleton from "../DatabaseSingleton";
 export default class WeightPriceEntity extends Model {
     private weightPriceId: string;
     private deliveryOptionId: string;
-    private gram: number;
-    private price: number;
+    private gram: string;
+    private price: string;
     private startDate: Date;
     private endDate: Date;
 
 
     getGram(): number {
-        return this.gram;
+        return Number(this.gram);
     }
 
     getPrice(): number {
-        return this.price;
+        return Number(this.price);
     }
 
     getStartDate(): Date {

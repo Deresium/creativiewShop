@@ -4,7 +4,7 @@ import DatabaseSingleton from "../DatabaseSingleton";
 export default class ProductOptionPriceEntity extends Model {
     private productOptionPriceId: string;
     private productOptionId: string;
-    private price: number;
+    private price: string;
     private startDate: Date;
     private endDate: Date;
 
@@ -18,7 +18,7 @@ export default class ProductOptionPriceEntity extends Model {
     }
 
     public getPrice(): number {
-        return this.price;
+        return Number(this.price);
     }
 
     public getStartDate(): Date {

@@ -17,7 +17,7 @@ export default class ProductOptionEntity extends Model {
     private active: boolean;
     private featured: boolean;
     private click: string;
-    private weight: number;
+    private weight: string;
     private preorder: boolean;
     private deletedAt: Date;
     private createdAt: Date;
@@ -68,7 +68,7 @@ export default class ProductOptionEntity extends Model {
     }
 
     public getWeight(): number {
-        return this.weight;
+        return Number(this.weight);
     }
 
     public getPreorder(): boolean {
