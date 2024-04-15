@@ -3,6 +3,10 @@ import BasketProductOptionDS from "../../business/models/datastores/BasketProduc
 import BasketProductOptionEntity from "../entities/BasketProductOptionEntity";
 import BasketEntity from "../entities/BasketEntity";
 import AddressEntity from "../entities/AddressEntity";
+import BasketToOrderDS from "../../business/models/datastores/BasketToOrderDS";
+import DatabaseSingleton from "../DatabaseSingleton";
+import {Transaction} from "sequelize";
+import ProductOptionEntity from "../entities/ProductOptionEntity";
 
 export default class BasketDataMapper implements IBasketDataGateway {
     public async addBasketForUser(userId: string): Promise<BasketEntity> {
@@ -91,6 +95,45 @@ export default class BasketDataMapper implements IBasketDataGateway {
         }, {
             where: {
                 basketId: basketId
+            }
+        });
+    }
+
+    public async basketToOrder(basketToOrderDS: BasketToOrderDS): Promise<void> {
+        const date = Date.now();
+        await DatabaseSingleton.getInstance().getSequelize().transaction(async (t: Transaction) => {
+
+            await BasketEntity.update({
+                orderedAt: date,
+                basketStateCode: 'ORDER',
+                totalWeightAtOrdered: basketToOrderDS.getTotalWeight()
+            },{
+                where: {
+                    basketId: basketToOrderDS.getBasketId()
+                },
+                transaction: t
+            });
+
+            for(const productOptionId of basketToOrderDS.getProductOptionStocks().keys()){
+                await ProductOptionEntity.update({
+                    stock: basketToOrderDS.getProductOptionStocks().get(productOptionId)
+                },{
+                    where: {
+                        productOptionId: productOptionId
+                    },
+                    transaction: t
+                })
+            }
+
+            for(const productOptionId of basketToOrderDS.getBasketProductOptionPrice().keys()){
+                await BasketProductOptionEntity.update({
+                    priceAtOrdered: basketToOrderDS.getBasketProductOptionPrice().get(productOptionId)
+                },{
+                    where: {
+                        productOptionId: productOptionId
+                    },
+                    transaction: t
+                })
             }
         });
     }
