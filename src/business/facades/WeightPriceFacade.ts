@@ -21,13 +21,13 @@ export default class WeightPriceFacade implements IWeightPriceRequester {
             const startDate = weightPrice.getStartDate().toISOString();
 
             let price: string = null;
-            if (weightPrice.getPrice()) {
-                price = Number(weightPrice.getPrice()).toFixed(2);
+            if (weightPrice.getPrice() !== null) {
+                price = weightPrice.getPrice().toFixed(2);
             }
 
             let gram: string = null;
-            if (weightPrice.getGram()) {
-                gram = Number(weightPrice.getGram()).toString();
+            if (weightPrice.getGram() !== null) {
+                gram = weightPrice.getGram().toString();
             }
 
             return new WeightPriceVM(gram, price, startDate);

@@ -43,8 +43,8 @@ export default class ProductOptionDiscountFacade implements IProductOptionDiscou
             if (productDiscount.getDeletedAt()) {
                 deletedAtDate = productDiscount.getDeletedAt().toISOString();
             }
-            const percent = Number(productDiscount.getPercent());
-            const lastPrice = Number(productDiscount.getProductOption().getListPrices()[0].getPrice());
+            const percent = productDiscount.getPercent();
+            const lastPrice = productDiscount.getProductOption().getListPrices()[0].getPrice();
             const discountPrice = PercentCalculator.calculateDiscountPriceBasedOnPercent(lastPrice, percent);
             let groupName = null;
             if (productDiscount.getGroup()) {

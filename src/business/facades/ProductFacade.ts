@@ -53,7 +53,7 @@ export default class ProductFacade implements IProductRequester {
         for (const productOption of productEntity.getProductOptions()) {
             let price = null;
             if (productOption.getListPrices() && productOption.getListPrices().length === 1) {
-                price = Number(productOption.getListPrices()[0].getPrice()).toFixed(2);
+                price = productOption.getListPrices()[0].getPrice().toFixed(2);
             }
             let pictureId = null;
             if (productOption.getListPrices() && productOption.getListPictures().length >= 1) {

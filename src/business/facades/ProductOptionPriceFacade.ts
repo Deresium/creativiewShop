@@ -23,7 +23,7 @@ export default class ProductOptionPriceFacade implements IProductOptionPriceRequ
             if (price.getEndDate()) {
                 endDate = price.getEndDate().toISOString();
             }
-            pricesReturn.push(new ProductOptionPriceVM(startDate, endDate, Number(price.getPrice()).toFixed(2)));
+            pricesReturn.push(new ProductOptionPriceVM(startDate, endDate, price.getPrice().toFixed(2)));
         }
         return pricesReturn;
     }
@@ -35,7 +35,7 @@ export default class ProductOptionPriceFacade implements IProductOptionPriceRequ
     public async getLastPriceForProductOption(productOptionId: string): Promise<string> {
         const price = await this.productOptionPriceDataGateway.getLastPriceForProductOption(productOptionId);
         if (price) {
-            return Number(price.getPrice()).toFixed(2);
+            return price.getPrice().toFixed(2);
         }
         return null;
     }

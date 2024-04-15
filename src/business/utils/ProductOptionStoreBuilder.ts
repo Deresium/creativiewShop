@@ -47,8 +47,8 @@ export default class ProductOptionStoreBuilder {
 
         let discountPrice: string, percent: string, startDateDiscount: string, endDateDiscount: string;
         if (discount !== null) {
-            discountPrice = Number(PercentCalculator.calculateDiscountPriceBasedOnPercent(priceCurrency, discount.getPercent())).toFixed(2);
-            percent = Number(discount.getPercent()).toFixed(2);
+            discountPrice = PercentCalculator.calculateDiscountPriceBasedOnPercent(priceCurrency, discount.getPercent()).toFixed(2);
+            percent = discount.getPercent().toFixed(2);
             startDateDiscount = discount.getStartDate().toISOString();
             endDateDiscount = discount.getEndDate().toISOString();
         }
@@ -65,7 +65,7 @@ export default class ProductOptionStoreBuilder {
             manufacturerId,
             manufacturer,
             preorder,
-            Number(priceCurrency).toFixed(2),
+            priceCurrency.toFixed(2),
             discountPrice,
             percent,
             startDateDiscount,
