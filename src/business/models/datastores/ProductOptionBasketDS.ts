@@ -1,17 +1,18 @@
 import TitleValueVM from "../viewmodels/TitleValueVM";
+import Decimal from "decimal.js";
 
 export default class ProductOptionBasketDS {
     private readonly productOptionId: string;
     private readonly productId: string;
     private readonly hasStock: boolean;
     private readonly stock: number;
-    private readonly weight: number;
+    private readonly weight: Decimal;
     private readonly manufacturerId: string;
     private readonly manufacturer: string;
     private readonly preorder: boolean;
-    private readonly basePrice: number;
-    private readonly discountPrice: number;
-    private readonly percent: number;
+    private readonly basePrice: Decimal;
+    private readonly discountPrice: Decimal;
+    private readonly percent: Decimal;
     private readonly startDateDiscount: Date;
     private readonly endDateDiscount: Date;
     private readonly title: string;
@@ -20,10 +21,10 @@ export default class ProductOptionBasketDS {
     private readonly pictures: Array<string>;
     private readonly allOptions: Array<TitleValueVM<string, string>>;
     private readonly quantity: number;
-    private readonly total: number;
+    private readonly total: Decimal;
 
 
-    constructor(productOptionId: string, productId: string, hasStock: boolean, stock: number, weight: number, manufacturerId: string, manufacturer: string, preorder: boolean, basePrice: number, discountPrice: number, percent: number, startDateDiscount: Date, endDateDiscount: Date, title: string, titleOption: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>, quantity: number, total: number) {
+    constructor(productOptionId: string, productId: string, hasStock: boolean, stock: number, weight: Decimal, manufacturerId: string, manufacturer: string, preorder: boolean, basePrice: Decimal, discountPrice: Decimal, percent: Decimal, startDateDiscount: Date, endDateDiscount: Date, title: string, titleOption: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>, quantity: number, total: Decimal) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.hasStock = hasStock;
@@ -63,7 +64,7 @@ export default class ProductOptionBasketDS {
         return this.stock;
     }
 
-    getWeight(): number {
+    getWeight(): Decimal {
         return this.weight;
     }
 
@@ -79,15 +80,15 @@ export default class ProductOptionBasketDS {
         return this.preorder;
     }
 
-    getBasePrice(): number {
+    getBasePrice(): Decimal {
         return this.basePrice;
     }
 
-    getDiscountPrice(): number {
+    getDiscountPrice(): Decimal {
         return this.discountPrice;
     }
 
-    getPercent(): number {
+    getPercent(): Decimal {
         return this.percent;
     }
 
@@ -123,7 +124,7 @@ export default class ProductOptionBasketDS {
         return this.quantity;
     }
 
-    getTotal(): number {
+    getTotal(): Decimal {
         return this.total;
     }
 }

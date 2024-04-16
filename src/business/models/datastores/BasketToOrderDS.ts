@@ -1,11 +1,13 @@
+import Decimal from "decimal.js";
+
 export default class BasketToOrderDS {
     private readonly basketId: string;
-    private readonly totalWeight: number;
+    private readonly totalWeight: Decimal;
     private readonly productOptionStocks: Map<string, number>;
-    private readonly basketProductOptionPrice: Map<string, number>;
+    private readonly basketProductOptionPrice: Map<string, Decimal>;
 
 
-    constructor(basketId: string, totalWeight: number, productOptionStocks: Map<string, number>, basketProductOptionPrice: Map<string, number>) {
+    constructor(basketId: string, totalWeight: Decimal, productOptionStocks: Map<string, number>, basketProductOptionPrice: Map<string, Decimal>) {
         this.basketId = basketId;
         this.totalWeight = totalWeight;
         this.productOptionStocks = productOptionStocks;
@@ -17,7 +19,7 @@ export default class BasketToOrderDS {
         return this.basketId;
     }
 
-    getTotalWeight(): number {
+    getTotalWeight(): Decimal {
         return this.totalWeight;
     }
 
@@ -25,7 +27,7 @@ export default class BasketToOrderDS {
         return this.productOptionStocks;
     }
 
-    getBasketProductOptionPrice(): Map<string, number> {
+    getBasketProductOptionPrice(): Map<string, Decimal> {
         return this.basketProductOptionPrice;
     }
 }

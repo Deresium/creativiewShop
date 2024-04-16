@@ -6,7 +6,7 @@ import CurrencyEntity from "../entities/CurrencyEntity";
 import CurrencyCustomerEntity from "../entities/CurrencyCustomerEntity";
 
 export default class CurrencyRateDataMapper implements ICurrencyRateDataGateway {
-    public async addCurrencyRate(currencyCode: string, rate: number, customerId: number): Promise<void> {
+    public async addCurrencyRate(currencyCode: string, rate: string, customerId: number): Promise<void> {
         const now = Date.now();
         await DatabaseSingleton.getInstance().getSequelize().transaction(async (t: Transaction) => {
             await CurrencyRateEntity.update({

@@ -1,5 +1,6 @@
 import ProductOptionDiscountDS from "../models/datastores/ProductOptionDiscountDS";
 import ProductOptionDiscountVM from "../models/viewmodels/ProductOptionDiscountVM";
+import Decimal from "decimal.js";
 
 export default interface IProductOptionDiscountRequester {
     getDiscountsForProductOption(productOptionId: string): Promise<Array<ProductOptionDiscountVM>>;
@@ -8,5 +9,5 @@ export default interface IProductOptionDiscountRequester {
 
     deleteProductOptionDiscount(productOptionDiscountId: string): Promise<void>;
 
-    calculateDiscountPercent(originalPrice: number, discountPrice: number): number;
+    calculateDiscountPercent(originalPrice: Decimal, discountPrice: Decimal): Decimal;
 }

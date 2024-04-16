@@ -17,7 +17,7 @@ export default class CurrencyRateRouter extends ApplicationRouter {
     public initRoutes() {
         this.getRouter().post('/currencyRate/:currencyCode', this.onlyAdminMiddleware, async (req: any, res: any) => {
             const currencyCode = String(req.params.currencyCode);
-            const rate = req.body.rate;
+            const rate = String(req.body.rate);
             const customerId = req.customer.getCustomerId();
             await this.currencyRateRequester.addCurrencyRate(currencyCode, rate, customerId);
             res.send();

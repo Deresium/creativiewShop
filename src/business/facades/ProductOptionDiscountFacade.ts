@@ -3,6 +3,7 @@ import ProductOptionDiscountDS from "../models/datastores/ProductOptionDiscountD
 import ProductOptionDiscountVM from "../models/viewmodels/ProductOptionDiscountVM";
 import IProductOptionDiscountDataGateway from "../../database/gateways/IProductOptionDiscountDataGateway";
 import PercentCalculator from "../utils/PercentCalculator";
+import Decimal from "decimal.js";
 
 export default class ProductOptionDiscountFacade implements IProductOptionDiscountRequester {
     private readonly productOptionDiscountDataGateway: IProductOptionDiscountDataGateway;
@@ -55,7 +56,7 @@ export default class ProductOptionDiscountFacade implements IProductOptionDiscou
         return discountsReturn;
     }
 
-    public calculateDiscountPercent(originalPrice: number, discountPrice: number): number {
+    public calculateDiscountPercent(originalPrice: Decimal, discountPrice: Decimal): Decimal {
         return PercentCalculator.calculatePercentBasedOnPrices(originalPrice, discountPrice);
     }
 }

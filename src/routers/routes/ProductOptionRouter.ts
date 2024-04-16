@@ -8,6 +8,7 @@ import IProductOptionPictureRequester from "../../business/requesters/IProductOp
 import multer from "multer";
 import ProductOptionDiscountDS from "../../business/models/datastores/ProductOptionDiscountDS";
 import IProductOptionDiscountRequester from "../../business/requesters/IProductOptionDiscountRequester";
+import Decimal from "decimal.js";
 
 export default class ProductOptionRouter extends ApplicationRouter {
     private readonly productOptionRequester: IProductOptionRequester;
@@ -56,7 +57,7 @@ export default class ProductOptionRouter extends ApplicationRouter {
             const nameFr = req.body.nameFr;
             const nameEn = req.body.nameEn;
             const stock = req.body.stock;
-            const weight = req.body.weight;
+            const weight = String(req.body.weight);
             const active = req.body.active;
             const preorder = req.body.preorder;
             const featured = req.body.featured;
@@ -122,7 +123,7 @@ export default class ProductOptionRouter extends ApplicationRouter {
         this.getRouter().post('/product/:productId/productOption/:productOptionId/discount', this.onlyAdminStoreMiddleware, this.checkProductOwnerMiddleware, async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
             const groupId = req.body.groupId;
-            const percent = req.body.percent;
+            const percent = String(req.body.percent);
             const startDate = new Date(req.body.startDate);
             const endDate = new Date(req.body.endDate);
             const productOptionDiscount = new ProductOptionDiscountDS(productOptionId, groupId, percent, startDate, endDate);
@@ -148,7 +149,7 @@ export default class ProductOptionRouter extends ApplicationRouter {
 
         this.getRouter().get('/product/:productId/productOption/:productOptionId/percentCalculator', async (req: any, res: any) => {
             const productOptionId = String(req.params.productOptionId);
-            const discountPrice = Number(req.query.discountPrice);
+            const discountPrice = new Decimal(req.query.discountPrice);
             const percent = await this.productOptionPriceRequester.calculatePercentForProductOption(productOptionId, discountPrice);
             res.send({percent: percent});
         });

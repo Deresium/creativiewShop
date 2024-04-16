@@ -2,6 +2,7 @@ import IProductOptionPriceRequester from "../requesters/IProductOptionPriceReque
 import ProductOptionPriceVM from "../models/viewmodels/ProductOptionPriceVM";
 import IProductOptionPriceDataGateway from "../../database/gateways/IProductOptionPriceDataGateway";
 import PercentCalculator from "../utils/PercentCalculator";
+import Decimal from "decimal.js";
 
 export default class ProductOptionPriceFacade implements IProductOptionPriceRequester {
     private readonly productOptionPriceDataGateway: IProductOptionPriceDataGateway;
@@ -28,7 +29,7 @@ export default class ProductOptionPriceFacade implements IProductOptionPriceRequ
         return pricesReturn;
     }
 
-    public async updatePrice(productOptionId: string, price: number): Promise<void> {
+    public async updatePrice(productOptionId: string, price: string): Promise<void> {
         await this.productOptionPriceDataGateway.updatePrice(productOptionId, price);
     }
 
@@ -40,7 +41,7 @@ export default class ProductOptionPriceFacade implements IProductOptionPriceRequ
         return null;
     }
 
-    public async calculatePercentForProductOption(productOptionId: string, discountPrice: number): Promise<string> {
+    public async calculatePercentForProductOption(productOptionId: string, discountPrice: Decimal): Promise<string> {
         const price = await this.productOptionPriceDataGateway.getLastPriceForProductOption(productOptionId);
         if (!price.getPrice() || !discountPrice) {
             return null;

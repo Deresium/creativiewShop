@@ -5,6 +5,7 @@ import ProductOptionPictureEntity from "./ProductOptionPictureEntity";
 import ProductEntity from "./ProductEntity";
 import ProductOptionDiscountEntity from "./ProductOptionDiscountEntity";
 import ProductOptionCategoryEntity from "./ProductOptionCategoryEntity";
+import Decimal from "decimal.js";
 
 export default class ProductOptionEntity extends Model {
     private productOptionId: string;
@@ -67,8 +68,8 @@ export default class ProductOptionEntity extends Model {
         return this.click;
     }
 
-    public getWeight(): number {
-        return Number(this.weight);
+    public getWeight(): Decimal {
+        return new Decimal(this.weight);
     }
 
     public getPreorder(): boolean {

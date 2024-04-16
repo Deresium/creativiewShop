@@ -1,17 +1,18 @@
 import TitleValueVM from "../viewmodels/TitleValueVM";
+import Decimal from "decimal.js";
 
 export default class ProductOptionStoreDS {
     private readonly productOptionId: string;
     private readonly productId: string;
     private readonly hasStock: boolean;
     private readonly stock: number;
-    private readonly weight: number;
+    private readonly weight: Decimal;
     private readonly manufacturerId: string;
     private readonly manufacturer: string;
     private readonly preorder: boolean;
-    private readonly basePrice: number;
-    private readonly discountPrice: number;
-    private readonly percent: number;
+    private readonly basePrice: Decimal;
+    private readonly discountPrice: Decimal;
+    private readonly percent: Decimal;
     private readonly startDateDiscount: Date;
     private readonly endDateDiscount: Date;
     private readonly title: string;
@@ -21,7 +22,7 @@ export default class ProductOptionStoreDS {
     private readonly allOptions: Array<TitleValueVM<string, string>>;
 
 
-    constructor(productOptionId: string, productId: string, hasStock: boolean, stock: number, weight: number, manufacturerId: string, manufacturer: string, preorder: boolean, basePrice: number, discountPrice: number, percent: number, startDateDiscount: Date, endDateDiscount: Date, title: string, titleOption: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>) {
+    constructor(productOptionId: string, productId: string, hasStock: boolean, stock: number, weight: Decimal, manufacturerId: string, manufacturer: string, preorder: boolean, basePrice: Decimal, discountPrice: Decimal, percent: Decimal, startDateDiscount: Date, endDateDiscount: Date, title: string, titleOption: string, description: string, pictures: Array<string>, allOptions: Array<TitleValueVM<string, string>>) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.hasStock = hasStock;
@@ -54,7 +55,7 @@ export default class ProductOptionStoreDS {
         return this.hasStock;
     }
 
-    public getWeight(): number {
+    public getWeight(): Decimal {
         return this.weight;
     }
 
@@ -70,15 +71,15 @@ export default class ProductOptionStoreDS {
         return this.preorder;
     }
 
-    public getBasePrice(): number {
+    public getBasePrice(): Decimal {
         return this.basePrice;
     }
 
-    public getDiscountPrice(): number {
+    public getDiscountPrice(): Decimal {
         return this.discountPrice;
     }
 
-    public getPercent(): number {
+    public getPercent(): Decimal {
         return this.percent;
     }
 

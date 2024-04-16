@@ -1,12 +1,12 @@
 export default class ProductOptionDiscountDS {
     private readonly productOptionId: string;
     private readonly groupId: string;
-    private readonly percent: number;
+    private readonly percent: string;
     private readonly startDate: Date;
     private readonly endDate: Date;
 
 
-    constructor(productOptionId: string, groupId: string, percent: number, startDate: Date, endDate: Date) {
+    constructor(productOptionId: string, groupId: string, percent: string, startDate: Date, endDate: Date) {
         this.productOptionId = productOptionId;
         this.groupId = groupId;
         this.percent = percent;
@@ -22,7 +22,7 @@ export default class ProductOptionDiscountDS {
         return this.groupId;
     }
 
-    getPercent(): number {
+    getPercent(): string {
         return this.percent;
     }
 

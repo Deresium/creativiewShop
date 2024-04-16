@@ -1,5 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import Decimal from "decimal.js";
 
 export default class ProductOptionPriceEntity extends Model {
     private productOptionPriceId: string;
@@ -17,8 +18,8 @@ export default class ProductOptionPriceEntity extends Model {
         return this.productOptionId;
     }
 
-    public getPrice(): number {
-        return Number(this.price);
+    public getPrice(): Decimal {
+        return new Decimal(this.price);
     }
 
     public getStartDate(): Date {

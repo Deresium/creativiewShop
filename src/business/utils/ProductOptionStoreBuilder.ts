@@ -6,16 +6,17 @@ import PercentCalculator from "./PercentCalculator";
 import TitleValueVM from "../models/viewmodels/TitleValueVM";
 import PriceCurrencyCalculator from "./PriceCurrencyCalculator";
 import ProductOptionStoreDS from "../models/datastores/ProductOptionStoreDS";
+import Decimal from "decimal.js";
 
 export default class ProductOptionStoreBuilder {
     private readonly productOption: ProductOptionEntity;
     private readonly allOptionsForProduct: Array<ProductOptionEntity>;
-    private readonly currencyRates: Map<string, number>;
+    private readonly currencyRates: Map<string, Decimal>;
     private readonly customer: CustomerVM;
     private readonly currency: string;
     private readonly language: string;
 
-    constructor(productOption: ProductOptionEntity, allOptionsForProduct: Array<ProductOptionEntity>, currencyRates: Map<string, number>, customer: CustomerVM, currency: string, language: string) {
+    constructor(productOption: ProductOptionEntity, allOptionsForProduct: Array<ProductOptionEntity>, currencyRates: Map<string, Decimal>, customer: CustomerVM, currency: string, language: string) {
         this.productOption = productOption;
         this.allOptionsForProduct = allOptionsForProduct;
         this.currencyRates = currencyRates;
@@ -47,7 +48,7 @@ export default class ProductOptionStoreBuilder {
         const pictureIds = this.productOption.getListPictures().map(picture => picture.getProductOptionPictureId());
         const discount = this.getMaxDiscountOption();
 
-        let discountPrice: number, percent: number, startDateDiscount: Date, endDateDiscount: Date;
+        let discountPrice: Decimal, percent: Decimal, startDateDiscount: Date, endDateDiscount: Date;
         if (discount !== null) {
             discountPrice = PercentCalculator.calculateDiscountPriceBasedOnPercent(priceCurrency, discount.getPercent());
             percent = discount.getPercent();
@@ -114,10 +115,10 @@ export default class ProductOptionStoreBuilder {
     }
 
     private getMaxDiscountOption(): ProductOptionDiscountEntity {
-        let currentDiscountPercent = 0;
+        let currentDiscountPercent = new Decimal(0);
         let discountToReturn: ProductOptionDiscountEntity = null;
         for (const discount of this.productOption.getProductOptionDiscounts()) {
-            if (discount.getPercent() > currentDiscountPercent) {
+            if (discount.getPercent().greaterThan(currentDiscountPercent)) {
                 discountToReturn = discount;
             }
         }

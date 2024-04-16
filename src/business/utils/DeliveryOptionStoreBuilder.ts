@@ -2,16 +2,17 @@ import DeliveryOptionEntity from "../../database/entities/DeliveryOptionEntity";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import PriceCurrencyCalculator from "./PriceCurrencyCalculator";
+import Decimal from "decimal.js";
 
 export default class DeliveryOptionStoreBuilder {
     private readonly deliveryOption: DeliveryOptionEntity;
     private readonly customer: CustomerVM;
-    private readonly currencyRates: Map<string, number>;
-    private readonly weight: number;
+    private readonly currencyRates: Map<string, Decimal>;
+    private readonly weight: Decimal;
     private readonly currency: string;
 
 
-    constructor(deliveryOption: DeliveryOptionEntity, customer: CustomerVM, currencyRates: Map<string, number>, weight: number, currency: string) {
+    constructor(deliveryOption: DeliveryOptionEntity, customer: CustomerVM, currencyRates: Map<string, Decimal>, weight: Decimal, currency: string) {
         this.deliveryOption = deliveryOption;
         this.customer = customer;
         this.currencyRates = currencyRates;
@@ -25,10 +26,10 @@ export default class DeliveryOptionStoreBuilder {
     }
 
     private getBasePrice() {
-        let basePrice = 0;
+        let basePrice = new Decimal(0);
         const weightPrices = this.deliveryOption.getWeightPrices().sort();
         for (const weightPrice of weightPrices) {
-            if (this.weight >= weightPrice.getGram()) {
+            if (this.weight.greaterThanOrEqualTo(weightPrice.getGram())) {
                 basePrice = weightPrice.getPrice();
             }
         }

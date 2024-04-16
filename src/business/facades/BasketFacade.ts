@@ -13,6 +13,7 @@ import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 import BasketBuilder from "../utils/BasketBuilder";
 import BasketToOrderDS from "../models/datastores/BasketToOrderDS";
 import * as readline from "readline";
+import Decimal from "decimal.js";
 
 export default class BasketFacade implements IBasketRequester {
     private readonly basketDataGateway: IBasketDataGateway;
@@ -93,9 +94,9 @@ export default class BasketFacade implements IBasketRequester {
             return null;
         }
 
-        let totalWeight = 0;
+        let totalWeight = new Decimal(0);
         for (const basketProductOption of basket.getBasketProductOptions()) {
-            totalWeight += (basketProductOption.getProductOption().getWeight() * basketProductOption.getQuantity());
+            totalWeight = totalWeight.add(basketProductOption.getProductOption().getWeight().mul(basketProductOption.getQuantity()));
         }
 
         const rates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
@@ -110,7 +111,7 @@ export default class BasketFacade implements IBasketRequester {
         const basket = await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester).requestBasket(groupIds, customer, currency, language);
 
         const productOptionStock = new Map<string, number>();
-        const productOptionPrices = new Map<string, number>();
+        const productOptionPrices = new Map<string, Decimal>();
         for(const productOptionBasket of basket.getProductOptionStores()){
             const remainingStock = productOptionBasket.getStock() - productOptionBasket.getQuantity();
             let price = productOptionBasket.getBasePrice();

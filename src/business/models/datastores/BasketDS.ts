@@ -1,18 +1,19 @@
 import ProductOptionBasketDS from "./ProductOptionBasketDS";
+import Decimal from "decimal.js";
 
 
 export default class BasketDS {
     private readonly basketId: string;
     private readonly productOptionStores: Array<ProductOptionBasketDS>;
-    private readonly total: number;
-    private readonly totalWeight: number;
+    private readonly total: Decimal;
+    private readonly totalWeight: Decimal;
     private readonly deliveryAddressId: string;
     private readonly billingAddressId: string;
     private readonly deliveryAddressCountryId: number;
     private readonly deliveryOptionId: string;
 
 
-    constructor(basketId: string, productOptionStores: Array<ProductOptionBasketDS>, total: number, totalWeight: number, deliveryAddressId: string, billingAddressId: string, deliveryAddressCountryId: number, deliveryOptionId: string) {
+    constructor(basketId: string, productOptionStores: Array<ProductOptionBasketDS>, total: Decimal, totalWeight: Decimal, deliveryAddressId: string, billingAddressId: string, deliveryAddressCountryId: number, deliveryOptionId: string) {
         this.basketId = basketId;
         this.productOptionStores = productOptionStores;
         this.total = total;
@@ -32,11 +33,11 @@ export default class BasketDS {
         return this.productOptionStores;
     }
 
-    getTotal(): number {
+    getTotal(): Decimal {
         return this.total;
     }
 
-    getTotalWeight(): number {
+    getTotalWeight(): Decimal {
         return this.totalWeight;
     }
 

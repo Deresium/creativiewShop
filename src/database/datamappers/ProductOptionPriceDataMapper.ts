@@ -16,7 +16,7 @@ export default class ProductOptionPriceDataMapper implements IProductOptionPrice
         });
     }
 
-    public async updatePrice(productOptionId: string, price: number): Promise<void> {
+    public async updatePrice(productOptionId: string, price: string): Promise<void> {
         const date = Date.now();
         await DatabaseSingleton.getInstance().getSequelize().transaction(async (t: Transaction) => {
             await ProductOptionPriceEntity.update({

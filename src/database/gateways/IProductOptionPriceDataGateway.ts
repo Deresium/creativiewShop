@@ -1,7 +1,7 @@
 import ProductOptionPriceEntity from "../entities/ProductOptionPriceEntity";
 
 export default interface IProductOptionPriceDataGateway {
-    updatePrice(productOptionId: string, price: number): Promise<void>;
+    updatePrice(productOptionId: string, price: string): Promise<void>;
 
     getPricesForProductOption(productOptionId: string): Promise<Array<ProductOptionPriceEntity>>;
 

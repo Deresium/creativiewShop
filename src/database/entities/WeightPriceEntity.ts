@@ -1,5 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import Decimal from "decimal.js";
 
 export default class WeightPriceEntity extends Model {
     private weightPriceId: string;
@@ -10,12 +11,12 @@ export default class WeightPriceEntity extends Model {
     private endDate: Date;
 
 
-    getGram(): number {
-        return Number(this.gram);
+    getGram(): Decimal {
+        return new Decimal(this.gram);
     }
 
-    getPrice(): number {
-        return Number(this.price);
+    getPrice(): Decimal {
+        return new Decimal(this.price);
     }
 
     getStartDate(): Date {

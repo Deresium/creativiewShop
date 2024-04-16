@@ -9,6 +9,7 @@ import CustomerVM from "../models/viewmodels/CustomerVM";
 import ProductOptionStoreFilter from "../utils/ProductOptionStoreFilter";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 import ProductOptionStoreDS from "../models/datastores/ProductOptionStoreDS";
+import Decimal from "decimal.js";
 
 export default class ProductOptionFacade implements IProductOptionRequester {
     private readonly productOptionDataGateway: IProductOptionDataGateway;
@@ -87,7 +88,7 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         }).map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, number>): Promise<ProductOptionStoreDS> {
+    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreDS> {
         let currencyRatesLocal = currencyRates;
         if (!currencyRatesLocal) {
             currencyRatesLocal = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
@@ -97,7 +98,7 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         return new ProductOptionStoreBuilder(productOption, allOptionsForProduct, currencyRatesLocal, customer, currency, language).buildProductOptionStore();
     }
 
-    public async getProductOptionStoreVM(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, number>): Promise<ProductOptionStoreVM>{
+    public async getProductOptionStoreVM(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreVM>{
         const productOptionStore = await this.getProductOptionStore(productOptionId, groupIds, customer, currency, language, currencyRates);
         let startDateDiscount: string;
         let endDateDiscount: string;
@@ -113,7 +114,7 @@ export default class ProductOptionFacade implements IProductOptionRequester {
             productOptionStore.getProductOptionId(),
             productOptionStore.getProductId(),
             productOptionStore.getHasStock(),
-            productOptionStore.getWeight(),
+            productOptionStore.getWeight().toFixed(2),
             productOptionStore.getManufacturerId(),
             productOptionStore.getManufacturer(),
             productOptionStore.getPreorder(),
@@ -136,6 +137,6 @@ export default class ProductOptionFacade implements IProductOptionRequester {
             price = productOption.getListPrices()[0].getPrice().toFixed(2);
         }
         return new ProductOptionVM(productOption.getProductOptionId(), productOption.getProductId(), productOption.getNameFr(), productOption.getNameEn(),
-            productOption.getCode(), productOption.getStock(), productOption.getActive(), productOption.getFeatured(), productOption.getClick(), productOption.getWeight(), productOption.getPreorder(), price);
+            productOption.getCode(), productOption.getStock(), productOption.getActive(), productOption.getFeatured(), productOption.getClick(), productOption.getWeight().toFixed(2), productOption.getPreorder(), price);
     }
 }

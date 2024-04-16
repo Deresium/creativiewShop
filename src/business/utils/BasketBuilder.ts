@@ -8,6 +8,7 @@ import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 import BasketDS from "../models/datastores/BasketDS";
 import ProductOptionBasketDS from "../models/datastores/ProductOptionBasketDS";
 import BasketProductOptionVM from "../models/viewmodels/BasketProductOptionVM";
+import Decimal from "decimal.js";
 
 export default class BasketBuilder {
     private readonly basketId: string;
@@ -30,23 +31,23 @@ export default class BasketBuilder {
             deliveryAddressCountryId = basket.getDeliveryAddress().getCountryId();
         }
         const productOptionBaskets = new Array<ProductOptionBasketDS>();
-        let totalBasket = 0;
-        let totalWeightBasket = 0;
+        let totalBasket = new Decimal(0);
+        let totalWeightBasket = new Decimal(0);
         const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
 
 
         const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(this.basketId);
         for (const basketProductOption of basketProductOptions) {
             const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language, currencyRates);
-            let price = Number(productOptionStore.getBasePrice());
+            let price = productOptionStore.getBasePrice();
             if (productOptionStore.getDiscountPrice()) {
-                price = Number(productOptionStore.getDiscountPrice());
+                price = productOptionStore.getDiscountPrice();
             }
 
-            const total = (price * basketProductOption.getQuantity());
-            const totalWeight = (productOptionStore.getWeight() * basketProductOption.getQuantity());
-            totalBasket += total;
-            totalWeightBasket += totalWeight;
+            const total = (price.mul(basketProductOption.getQuantity()));
+            const totalWeight = (productOptionStore.getWeight().mul(basketProductOption.getQuantity()));
+            totalBasket = totalBasket.add(total);
+            totalWeightBasket = totalWeightBasket.add(totalWeight);
             const productOptionBasket = new ProductOptionBasketDS(
                 productOptionStore.getProductOptionId(),
                 productOptionStore.getProductId(),
@@ -94,7 +95,7 @@ export default class BasketBuilder {
                 basketProductOption.getProductOptionId(),
                 basketProductOption.getProductId(),
                 basketProductOption.getHasStock(),
-                basketProductOption.getWeight(),
+                basketProductOption.getWeight().toFixed(2),
                 basketProductOption.getManufacturerId(),
                 basketProductOption.getManufacturer(),
                 basketProductOption.getPreorder(),

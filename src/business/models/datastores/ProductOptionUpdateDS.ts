@@ -3,14 +3,14 @@ export default class ProductOptionUpdateDS {
     private readonly code: string;
     private readonly nameFr: string;
     private readonly nameEn: string;
-    private readonly weight: number;
+    private readonly weight: string;
     private readonly stock: number;
     private readonly active: boolean;
     private readonly preorder: boolean;
     private readonly featured: boolean;
 
 
-    constructor(productOptionId: string, code: string, nameFr: string, nameEn: string, weight: number, stock: number, active: boolean, preorder: boolean, featured: boolean) {
+    constructor(productOptionId: string, code: string, nameFr: string, nameEn: string, weight: string, stock: number, active: boolean, preorder: boolean, featured: boolean) {
         this.productOptionId = productOptionId;
         this.code = code;
         this.nameFr = nameFr;
@@ -39,7 +39,7 @@ export default class ProductOptionUpdateDS {
         return this.nameEn;
     }
 
-    public getWeight(): number {
+    public getWeight(): string {
         return this.weight;
     }
 

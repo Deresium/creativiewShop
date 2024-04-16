@@ -2,6 +2,7 @@ import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 import ProductOptionEntity from "./ProductOptionEntity";
 import GroupEntity from "./GroupEntity";
+import Decimal from "decimal.js";
 
 export default class ProductOptionDiscountEntity extends Model {
     private productOptionDiscountId: string;
@@ -40,8 +41,8 @@ export default class ProductOptionDiscountEntity extends Model {
         return this.group;
     }
 
-    getPercent(): number {
-        return Number(this.percent);
+    getPercent(): Decimal {
+        return new Decimal(this.percent);
     }
 
     getMinQuantity(): number {

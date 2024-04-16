@@ -1,5 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
+import Decimal from "decimal.js";
 
 export default class CurrencyRateEntity extends Model {
     private currencyRateId: string;
@@ -18,8 +19,8 @@ export default class CurrencyRateEntity extends Model {
         return this.currencyCode;
     }
 
-    getRate(): number {
-        return Number(this.rate);
+    getRate(): Decimal {
+        return new Decimal(this.rate);
     }
 
     getStartDate(): Date {

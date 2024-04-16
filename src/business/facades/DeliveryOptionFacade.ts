@@ -7,6 +7,7 @@ import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import DeliveryOptionStoreBuilder from "../utils/DeliveryOptionStoreBuilder";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
+import Decimal from "decimal.js";
 
 export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
     private readonly deliveryOptionDataGateway: IDeliveryOptionDataGateway;
@@ -43,7 +44,7 @@ export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
         await this.deliveryOptionDataGateway.updateDeliveryOption(deliveryOptionUpdate);
     }
 
-    public async getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: number, currencyCode: string, currencyRates: Map<string, number>): Promise<Array<DeliveryOptionStoreVM>> {
+    public async getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<Array<DeliveryOptionStoreVM>> {
         const deliveryOptionStores = new Array<DeliveryOptionStoreVM>();
         const deliveryOptions = await this.deliveryOptionDataGateway.getDeliveryOptionsForCountry(customer.getCustomerId(), countryId);
         for (const deliveryOption of deliveryOptions) {
@@ -52,7 +53,7 @@ export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
         return deliveryOptionStores;
     }
 
-    public async getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: number, currencyCode: string, currencyRates: Map<string, number>): Promise<DeliveryOptionStoreVM> {
+    public async getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<DeliveryOptionStoreVM> {
         const deliveryOption = await this.deliveryOptionDataGateway.getDeliveryOption(deliveryOptionId, customer.getCustomerId());
         return new DeliveryOptionStoreBuilder(deliveryOption, customer, currencyRates, weight, currencyCode).buildDeliveryOptionStore();
     }

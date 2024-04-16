@@ -92,8 +92,8 @@ export default class DeliveryOptionRouter extends ApplicationRouter {
 
         this.getRouter().post('/deliveryOption/:deliveryOptionId/weightPrice', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any) => {
             const deliveryOptionId = String(req.params.deliveryOptionId);
-            const gram = req.body.gram;
-            const price = req.body.price;
+            const gram = String(req.body.gram);
+            const price = String(req.body.price);
 
             const weightPrice = new WeightPriceDS(deliveryOptionId, gram, price);
             await this.weightPriceRequester.addWeightPriceForDeliveryOption(weightPrice);

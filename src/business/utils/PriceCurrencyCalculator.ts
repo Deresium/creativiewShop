@@ -1,13 +1,14 @@
 import CustomerVM from "../models/viewmodels/CustomerVM";
+import Decimal from "decimal.js";
 
 export default class PriceCurrencyCalculator {
-    private readonly price: number;
+    private readonly price: Decimal;
     private readonly currency: string;
     private readonly customer: CustomerVM;
-    private readonly currencyRates: Map<string, number>;
+    private readonly currencyRates: Map<string, Decimal>;
 
 
-    constructor(price: number, currency: string, customer: CustomerVM, currencyRates: Map<string, number>) {
+    constructor(price: Decimal, currency: string, customer: CustomerVM, currencyRates: Map<string, Decimal>) {
         this.price = price;
         this.currency = currency;
         this.customer = customer;
@@ -23,6 +24,6 @@ export default class PriceCurrencyCalculator {
         if (!rate) {
             return this.price;
         }
-        return this.price * rate;
+        return this.price.mul(rate);
     }
 }
