@@ -5,6 +5,9 @@ import BasketOrderVM from "../models/viewmodels/BasketOrderVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ProductOptionBasketVM from "../models/viewmodels/ProductOptionBasketVM";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
+import BasketDS from "../models/datastores/BasketDS";
+import ProductOptionBasketDS from "../models/datastores/ProductOptionBasketDS";
+import BasketProductOptionVM from "../models/viewmodels/BasketProductOptionVM";
 
 export default class BasketBuilder {
     private readonly basketId: string;
@@ -20,13 +23,13 @@ export default class BasketBuilder {
         this.currencyRateRequester = currencyRateRequester;
     }
 
-    public async requestBasketForUser(groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
+    public async requestBasket(groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketDS> {
         const basket = await this.basketDataGateway.findBasketById(this.basketId);
         let deliveryAddressCountryId = null;
         if (basket.getDeliveryAddress()) {
             deliveryAddressCountryId = basket.getDeliveryAddress().getCountryId();
         }
-        const productOptionBaskets = new Array<ProductOptionBasketVM>();
+        const productOptionBaskets = new Array<ProductOptionBasketDS>();
         let totalBasket = 0;
         let totalWeightBasket = 0;
         const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
@@ -44,11 +47,11 @@ export default class BasketBuilder {
             const totalWeight = (productOptionStore.getWeight() * basketProductOption.getQuantity());
             totalBasket += total;
             totalWeightBasket += totalWeight;
-            const totalString = total.toFixed(2);
-            const productOptionBasket = new ProductOptionBasketVM(
+            const productOptionBasket = new ProductOptionBasketDS(
                 productOptionStore.getProductOptionId(),
                 productOptionStore.getProductId(),
                 productOptionStore.getHasStock(),
+                productOptionStore.getStock(),
                 productOptionStore.getWeight(),
                 productOptionStore.getManufacturerId(),
                 productOptionStore.getManufacturer(),
@@ -64,13 +67,62 @@ export default class BasketBuilder {
                 productOptionStore.getPictures(),
                 productOptionStore.getAllOptions(),
                 basketProductOption.getQuantity(),
-                totalString
+                total
             );
             productOptionBaskets.push(productOptionBasket);
         }
 
 
-        return new BasketVM(this.basketId, productOptionBaskets, totalBasket.toFixed(2), totalWeightBasket.toFixed(2), basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId());
+        return new BasketDS(this.basketId, productOptionBaskets, totalBasket, totalWeightBasket, basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId());
+    }
+
+    public async requestBasketVM(groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
+        const basket = await this.requestBasket(groupIds, customer, currency, language);
+        const basketProductOptions = new Array<ProductOptionBasketVM>();
+        for (const basketProductOption of basket.getProductOptionStores()) {
+            let startDateDiscount: string;
+            let endDateDiscount: string;
+            let discountPrice: string;
+            let percent: string;
+            if (basketProductOption.getDiscountPrice()) {
+                startDateDiscount = basketProductOption.getStartDateDiscount().toISOString();
+                endDateDiscount = basketProductOption.getEndDateDiscount().toISOString();
+                discountPrice = basketProductOption.getDiscountPrice().toFixed(2);
+                percent = basketProductOption.getPercent().toFixed(2);
+            }
+            const basketProductOptionVM = new ProductOptionBasketVM(
+                basketProductOption.getProductOptionId(),
+                basketProductOption.getProductId(),
+                basketProductOption.getHasStock(),
+                basketProductOption.getWeight(),
+                basketProductOption.getManufacturerId(),
+                basketProductOption.getManufacturer(),
+                basketProductOption.getPreorder(),
+                basketProductOption.getBasePrice().toFixed(2),
+                discountPrice,
+                percent,
+                startDateDiscount,
+                endDateDiscount,
+                basketProductOption.getTitle(),
+                basketProductOption.getTitleOption(),
+                basketProductOption.getDescription(),
+                basketProductOption.getPictures(),
+                basketProductOption.getAllOptions(),
+                basketProductOption.getQuantity(),
+                basketProductOption.getTotal().toFixed(2)
+            )
+            basketProductOptions.push(basketProductOptionVM);
+        }
+        return new BasketVM(
+            basket.getBasketId(),
+            basketProductOptions,
+            basket.getTotal().toFixed(2),
+            basket.getTotalWeight().toFixed(2),
+            basket.getDeliveryAddressId(),
+            basket.getBillingAddressId(),
+            basket.getDeliveryAddressCountryId(),
+            basket.getDeliveryOptionId()
+        )
     }
 
     public async requestBasketOrder(): Promise<BasketOrderVM> {

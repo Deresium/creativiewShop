@@ -21,14 +21,4 @@ export default class BasketVM {
         this.deliveryAddressCountryId = deliveryAddressCountryId;
         this.deliveryOptionId = deliveryOptionId;
     }
-
-
-    getDeliveryAddressCountryId(): number {
-        return this.deliveryAddressCountryId;
-    }
-
-
-    getTotalWeight(): string {
-        return this.totalWeight;
-    }
 }

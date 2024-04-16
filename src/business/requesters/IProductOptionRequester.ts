@@ -2,6 +2,7 @@ import ProductOptionUpdateDS from "../models/datastores/ProductOptionUpdateDS";
 import ProductOptionVM from "../models/viewmodels/ProductOptionVM";
 import ProductOptionStoreVM from "../models/viewmodels/ProductOptionStoreVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
+import ProductOptionStoreDS from "../models/datastores/ProductOptionStoreDS";
 
 export default interface IProductOptionRequester {
     createProductOption(productId: string): Promise<string>;
@@ -26,5 +27,7 @@ export default interface IProductOptionRequester {
 
     getProductOptionSearch(customerId: string, searchTerm: string, categoryIds: Array<string>, manufacturerIds: Array<string>, language: string): Promise<Array<string>>;
 
-    getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, number>): Promise<ProductOptionStoreVM>;
+    getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, number>): Promise<ProductOptionStoreDS>;
+
+    getProductOptionStoreVM(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, number>): Promise<ProductOptionStoreVM>;
 }

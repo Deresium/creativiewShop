@@ -11,6 +11,8 @@ import IDeliveryOptionRequester from "../requesters/IDeliveryOptionRequester";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 import BasketBuilder from "../utils/BasketBuilder";
+import BasketToOrderDS from "../models/datastores/BasketToOrderDS";
+import * as readline from "readline";
 
 export default class BasketFacade implements IBasketRequester {
     private readonly basketDataGateway: IBasketDataGateway;
@@ -53,7 +55,7 @@ export default class BasketFacade implements IBasketRequester {
     }
 
     public async getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
-        return await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester).requestBasketForUser(groupIds, customer, currency, language);
+        return await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester).requestBasketVM(groupIds, customer, currency, language);
     }
 
     public async updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void> {
@@ -102,5 +104,24 @@ export default class BasketFacade implements IBasketRequester {
 
     public async updateBasketDeliveryOption(basketId: string, deliveryOptionId: string): Promise<void> {
         await this.basketDataGateway.updateBasketDeliveryOption(basketId, deliveryOptionId);
+    }
+
+    public async basketToOrder(customer: CustomerVM, basketId: string, groupIds: Array<string>, currency: string, language: string): Promise<void> {
+        const basket = await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester).requestBasket(groupIds, customer, currency, language);
+
+        const productOptionStock = new Map<string, number>();
+        const productOptionPrices = new Map<string, number>();
+        for(const productOptionBasket of basket.getProductOptionStores()){
+            const remainingStock = productOptionBasket.getStock() - productOptionBasket.getQuantity();
+            let price = productOptionBasket.getBasePrice();
+            if(productOptionBasket.getDiscountPrice()){
+                price = productOptionBasket.getDiscountPrice();
+            }
+            productOptionStock.set(productOptionBasket.getProductOptionId(), remainingStock);
+            productOptionPrices.set(productOptionBasket.getProductOptionId(), price);
+        }
+
+        const basketToOrderDS = new BasketToOrderDS(basketId, basket.getTotalWeight(), productOptionStock, productOptionPrices);
+        await this.basketDataGateway.basketToOrder(basketToOrderDS);
     }
 }

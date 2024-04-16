@@ -5,6 +5,7 @@ import ProductOptionDiscountEntity from "../../database/entities/ProductOptionDi
 import PercentCalculator from "./PercentCalculator";
 import TitleValueVM from "../models/viewmodels/TitleValueVM";
 import PriceCurrencyCalculator from "./PriceCurrencyCalculator";
+import ProductOptionStoreDS from "../models/datastores/ProductOptionStoreDS";
 
 export default class ProductOptionStoreBuilder {
     private readonly productOption: ProductOptionEntity;
@@ -23,7 +24,7 @@ export default class ProductOptionStoreBuilder {
         this.language = language;
     }
 
-    public buildProductOptionStore(): ProductOptionStoreVM {
+    public buildProductOptionStore(): ProductOptionStoreDS {
         const prices = this.productOption.getListPrices();
         if (prices.length !== 1) {
             return null;
@@ -35,6 +36,7 @@ export default class ProductOptionStoreBuilder {
         const productOptionId = this.productOption.getProductOptionId();
         const productId = this.productOption.getProductId();
         const hasStock = this.productOption.getStock() > 0;
+        const stock = this.productOption.getStock();
         const weight = this.productOption.getWeight();
         const manufacturerId = this.productOption.getProduct().getManufacturerId();
         const manufacturer = this.productOption.getProduct().getManufacturerName();
@@ -45,27 +47,28 @@ export default class ProductOptionStoreBuilder {
         const pictureIds = this.productOption.getListPictures().map(picture => picture.getProductOptionPictureId());
         const discount = this.getMaxDiscountOption();
 
-        let discountPrice: string, percent: string, startDateDiscount: string, endDateDiscount: string;
+        let discountPrice: number, percent: number, startDateDiscount: Date, endDateDiscount: Date;
         if (discount !== null) {
-            discountPrice = PercentCalculator.calculateDiscountPriceBasedOnPercent(priceCurrency, discount.getPercent()).toFixed(2);
-            percent = discount.getPercent().toFixed(2);
-            startDateDiscount = discount.getStartDate().toISOString();
-            endDateDiscount = discount.getEndDate().toISOString();
+            discountPrice = PercentCalculator.calculateDiscountPriceBasedOnPercent(priceCurrency, discount.getPercent());
+            percent = discount.getPercent();
+            startDateDiscount = discount.getStartDate();
+            endDateDiscount = discount.getEndDate();
         }
 
         const allOptions = this.allOptionsForProduct.map(productOption => {
             return new TitleValueVM(this.getOptionName(productOption), productOption.getProductOptionId(),);
         });
 
-        return new ProductOptionStoreVM(
+        return new ProductOptionStoreDS(
             productOptionId,
             productId,
             hasStock,
+            stock,
             weight,
             manufacturerId,
             manufacturer,
             preorder,
-            priceCurrency.toFixed(2),
+            priceCurrency,
             discountPrice,
             percent,
             startDateDiscount,

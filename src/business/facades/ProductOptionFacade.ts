@@ -8,6 +8,7 @@ import ProductOptionStoreBuilder from "../utils/ProductOptionStoreBuilder";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ProductOptionStoreFilter from "../utils/ProductOptionStoreFilter";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
+import ProductOptionStoreDS from "../models/datastores/ProductOptionStoreDS";
 
 export default class ProductOptionFacade implements IProductOptionRequester {
     private readonly productOptionDataGateway: IProductOptionDataGateway;
@@ -86,7 +87,7 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         }).map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, number>): Promise<ProductOptionStoreVM> {
+    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, number>): Promise<ProductOptionStoreDS> {
         let currencyRatesLocal = currencyRates;
         if (!currencyRatesLocal) {
             currencyRatesLocal = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
@@ -94,6 +95,39 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         const productOption = await this.productOptionDataGateway.getProductOptionStore(productOptionId, groupIds);
         const allOptionsForProduct = await this.productOptionDataGateway.getProductOptionByProductActive(productOption.getProductId());
         return new ProductOptionStoreBuilder(productOption, allOptionsForProduct, currencyRatesLocal, customer, currency, language).buildProductOptionStore();
+    }
+
+    public async getProductOptionStoreVM(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, number>): Promise<ProductOptionStoreVM>{
+        const productOptionStore = await this.getProductOptionStore(productOptionId, groupIds, customer, currency, language, currencyRates);
+        let startDateDiscount: string;
+        let endDateDiscount: string;
+        let discountPrice: string;
+        let percent: string;
+        if(productOptionStore.getDiscountPrice()){
+            startDateDiscount = productOptionStore.getStartDateDiscount().toISOString();
+            endDateDiscount = productOptionStore.getEndDateDiscount().toISOString();
+            discountPrice = productOptionStore.getDiscountPrice().toFixed(2);
+            percent = productOptionStore.getPercent().toFixed(2);
+        }
+        return new ProductOptionStoreVM(
+            productOptionStore.getProductOptionId(),
+            productOptionStore.getProductId(),
+            productOptionStore.getHasStock(),
+            productOptionStore.getWeight(),
+            productOptionStore.getManufacturerId(),
+            productOptionStore.getManufacturer(),
+            productOptionStore.getPreorder(),
+            productOptionStore.getBasePrice().toFixed(2),
+            discountPrice,
+            percent,
+            startDateDiscount,
+            endDateDiscount,
+            productOptionStore.getTitle(),
+            productOptionStore.getTitleOption(),
+            productOptionStore.getDescription(),
+            productOptionStore.getPictures(),
+            productOptionStore.getAllOptions()
+        )
     }
 
     private productOptionEntityToVM(productOption: ProductOptionEntity): ProductOptionVM {

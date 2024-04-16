@@ -1,6 +1,7 @@
 import BasketProductOptionEntity from "../entities/BasketProductOptionEntity";
 import BasketProductOptionDS from "../../business/models/datastores/BasketProductOptionDS";
 import BasketEntity from "../entities/BasketEntity";
+import BasketToOrderDS from "../../business/models/datastores/BasketToOrderDS";
 
 export default interface IBasketDataGateway {
     getBasketProductOptions(basketId: string): Promise<Array<BasketProductOptionEntity>>;
@@ -26,4 +27,6 @@ export default interface IBasketDataGateway {
     findBasketWithProductOptionWeight(basketId: string): Promise<BasketEntity>;
 
     updateBasketDeliveryOption(basketId: string, deliveryOptionId: string): Promise<void>;
+
+    basketToOrder(basketToOrderDS: BasketToOrderDS): Promise<void>;
 }

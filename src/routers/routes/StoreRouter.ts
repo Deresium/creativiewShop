@@ -77,7 +77,7 @@ export default class StoreRouter extends ApplicationRouter {
                 res.status(400).send();
                 return;
             }
-            const productOption = await this.productOptionRequester.getProductOptionStore(productOptionId, groups, customer, currency, language);
+            const productOption = await this.productOptionRequester.getProductOptionStoreVM(productOptionId, groups, customer, currency, language);
             res.send(productOption);
         });
     }
