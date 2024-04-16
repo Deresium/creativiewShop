@@ -12,7 +12,6 @@ import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 import BasketBuilder from "../utils/BasketBuilder";
 import BasketToOrderDS from "../models/datastores/BasketToOrderDS";
-import * as readline from "readline";
 import Decimal from "decimal.js";
 
 export default class BasketFacade implements IBasketRequester {
@@ -56,7 +55,7 @@ export default class BasketFacade implements IBasketRequester {
     }
 
     public async getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
-        return await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester).requestBasketVM(groupIds, customer, currency, language);
+        return await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester, this.deliveryOptionRequester).requestBasketVM(groupIds, customer, currency, language);
     }
 
     public async updateProductOptionBasket(basketProductOption: BasketProductOptionDS): Promise<void> {
@@ -108,14 +107,14 @@ export default class BasketFacade implements IBasketRequester {
     }
 
     public async basketToOrder(customer: CustomerVM, basketId: string, groupIds: Array<string>, currency: string, language: string): Promise<void> {
-        const basket = await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester).requestBasket(groupIds, customer, currency, language);
+        const basket = await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester, this.deliveryOptionRequester).requestBasket(groupIds, customer, currency, language);
 
         const productOptionStock = new Map<string, number>();
         const productOptionPrices = new Map<string, Decimal>();
-        for(const productOptionBasket of basket.getProductOptionStores()){
+        for (const productOptionBasket of basket.getProductOptionStores()) {
             const remainingStock = productOptionBasket.getStock() - productOptionBasket.getQuantity();
             let price = productOptionBasket.getBasePrice();
-            if(productOptionBasket.getDiscountPrice()){
+            if (productOptionBasket.getDiscountPrice()) {
                 price = productOptionBasket.getDiscountPrice();
             }
             productOptionStock.set(productOptionBasket.getProductOptionId(), remainingStock);

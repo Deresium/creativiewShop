@@ -7,21 +7,23 @@ import ProductOptionBasketVM from "../models/viewmodels/ProductOptionBasketVM";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 import BasketDS from "../models/datastores/BasketDS";
 import ProductOptionBasketDS from "../models/datastores/ProductOptionBasketDS";
-import BasketProductOptionVM from "../models/viewmodels/BasketProductOptionVM";
 import Decimal from "decimal.js";
+import IDeliveryOptionRequester from "../requesters/IDeliveryOptionRequester";
 
 export default class BasketBuilder {
     private readonly basketId: string;
     private readonly basketDataGateway: IBasketDataGateway;
     private readonly productOptionRequester: IProductOptionRequester;
     private readonly currencyRateRequester: ICurrencyRateRequester;
+    private readonly deliveryOptionRequester: IDeliveryOptionRequester;
 
 
-    constructor(basketId: string, basketDataGateway: IBasketDataGateway, productOptionRequester: IProductOptionRequester, currencyRateRequester: ICurrencyRateRequester) {
+    constructor(basketId: string, basketDataGateway: IBasketDataGateway, productOptionRequester: IProductOptionRequester, currencyRateRequester: ICurrencyRateRequester, deliveryOptionRequester: IDeliveryOptionRequester) {
         this.basketId = basketId;
         this.basketDataGateway = basketDataGateway;
         this.productOptionRequester = productOptionRequester;
         this.currencyRateRequester = currencyRateRequester;
+        this.deliveryOptionRequester = deliveryOptionRequester;
     }
 
     public async requestBasket(groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketDS> {
@@ -73,6 +75,11 @@ export default class BasketBuilder {
             productOptionBaskets.push(productOptionBasket);
         }
 
+        if (basket.getDeliveryOptionId()) {
+            const deliveryOption = await this.deliveryOptionRequester.getDeliveryOptionById(customer, basket.getDeliveryOptionId(), totalWeightBasket, currency, currencyRates);
+            totalBasket = totalBasket.add(deliveryOption.getPrice());
+        }
+
 
         return new BasketDS(this.basketId, productOptionBaskets, totalBasket, totalWeightBasket, basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId());
     }
@@ -111,7 +118,7 @@ export default class BasketBuilder {
                 basketProductOption.getAllOptions(),
                 basketProductOption.getQuantity(),
                 basketProductOption.getTotal().toFixed(2)
-            )
+            );
             basketProductOptions.push(basketProductOptionVM);
         }
         return new BasketVM(

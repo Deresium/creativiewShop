@@ -36,11 +36,25 @@ export default class DeliveryOptionDataMapper implements IDeliveryOptionDataGate
     }
 
     public async getDeliveryOption(deliveryOptionId: string, customerId: number): Promise<DeliveryOptionEntity> {
+        const now = new Date();
         return await DeliveryOptionEntity.findOne({
             where: {
                 customerId: customerId,
                 deliveryOptionId: deliveryOptionId
-            }
+            },
+            include: [
+                {
+                    model: WeightPriceEntity,
+                    as: 'weightPrices',
+                    where: {
+                        startDate: {[Op.lte]: now},
+                        endDate: {
+                            [Op.or]: [{[Op.gte]: now}, {[Op.is]: null}]
+                        }
+                    },
+                    required: true
+                }
+            ]
         });
     }
 

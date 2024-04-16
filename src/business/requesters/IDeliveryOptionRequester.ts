@@ -3,6 +3,7 @@ import DeliveryOptionVM from "../models/viewmodels/DeliveryOptionVM";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import Decimal from "decimal.js";
+import DeliveryOptionStoreDS from "../models/datastores/DeliveryOptionStoreDS";
 
 export default interface IDeliveryOptionRequester {
     addDeliveryOption(customerId: number): Promise<string>;
@@ -19,5 +20,5 @@ export default interface IDeliveryOptionRequester {
 
     getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<Array<DeliveryOptionStoreVM>>;
 
-    getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<DeliveryOptionStoreVM>;
+    getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<DeliveryOptionStoreDS>;
 }

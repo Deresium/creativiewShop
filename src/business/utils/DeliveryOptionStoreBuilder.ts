@@ -3,6 +3,7 @@ import CustomerVM from "../models/viewmodels/CustomerVM";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import PriceCurrencyCalculator from "./PriceCurrencyCalculator";
 import Decimal from "decimal.js";
+import DeliveryOptionStoreDS from "../models/datastores/DeliveryOptionStoreDS";
 
 export default class DeliveryOptionStoreBuilder {
     private readonly deliveryOption: DeliveryOptionEntity;
@@ -20,13 +21,22 @@ export default class DeliveryOptionStoreBuilder {
         this.currency = currency;
     }
 
-    public buildDeliveryOptionStore(): DeliveryOptionStoreVM {
+    public buildDeliveryOptionStore(): DeliveryOptionStoreDS {
         const price = new PriceCurrencyCalculator(this.getBasePrice(), this.currency, this.customer, this.currencyRates).getPrice();
-        return new DeliveryOptionStoreVM(this.deliveryOption.getDeliveryOptionId(), price.toFixed(2), this.deliveryOption.getNameFr());
+        return new DeliveryOptionStoreDS(this.deliveryOption.getDeliveryOptionId(), price, this.deliveryOption.getNameFr());
+    }
+
+    public buildDeliveryOptionStoreVM(): DeliveryOptionStoreVM {
+        const deliveryOption = this.buildDeliveryOptionStore();
+        return new DeliveryOptionStoreVM(deliveryOption.getDeliveryOptionId(), deliveryOption.getPrice().toFixed(2), deliveryOption.getName());
     }
 
     private getBasePrice() {
         let basePrice = new Decimal(0);
+        if (!this.deliveryOption.getWeightPrices()) {
+            return basePrice;
+        }
+
         const weightPrices = this.deliveryOption.getWeightPrices().sort((a, b) => {
             return a.getGram().comparedTo(b.getGram());
         });

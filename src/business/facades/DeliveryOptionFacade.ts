@@ -8,6 +8,7 @@ import DeliveryOptionStoreBuilder from "../utils/DeliveryOptionStoreBuilder";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 import Decimal from "decimal.js";
+import DeliveryOptionStoreDS from "../models/datastores/DeliveryOptionStoreDS";
 
 export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
     private readonly deliveryOptionDataGateway: IDeliveryOptionDataGateway;
@@ -48,12 +49,12 @@ export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
         const deliveryOptionStores = new Array<DeliveryOptionStoreVM>();
         const deliveryOptions = await this.deliveryOptionDataGateway.getDeliveryOptionsForCountry(customer.getCustomerId(), countryId);
         for (const deliveryOption of deliveryOptions) {
-            deliveryOptionStores.push(new DeliveryOptionStoreBuilder(deliveryOption, customer, currencyRates, weight, currencyCode).buildDeliveryOptionStore());
+            deliveryOptionStores.push(new DeliveryOptionStoreBuilder(deliveryOption, customer, currencyRates, weight, currencyCode).buildDeliveryOptionStoreVM());
         }
         return deliveryOptionStores;
     }
 
-    public async getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<DeliveryOptionStoreVM> {
+    public async getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<DeliveryOptionStoreDS> {
         const deliveryOption = await this.deliveryOptionDataGateway.getDeliveryOption(deliveryOptionId, customer.getCustomerId());
         return new DeliveryOptionStoreBuilder(deliveryOption, customer, currencyRates, weight, currencyCode).buildDeliveryOptionStore();
     }

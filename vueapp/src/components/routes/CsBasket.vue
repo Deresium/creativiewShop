@@ -67,7 +67,7 @@
                 @delivery-country-changed="refreshBasket"
             />
 
-            <CsBasketDeliveryOption v-if="basket.getDeliveryAddressCountryId()"
+            <CsBasketDeliveryOption v-if="basket.getDeliveryAddressCountryId() && !basketErrorReport.hasErrors()"
                                     :delivery-country-id="basket.getDeliveryAddressCountryId()"
                                     :delivery-option-id="basket.getDeliveryOptionId()"
                                     @delivery-option-changed="refreshBasket"/>
