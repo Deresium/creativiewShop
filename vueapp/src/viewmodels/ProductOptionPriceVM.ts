@@ -1,9 +1,9 @@
 export default class ProductOptionPriceVM {
     private readonly startDate: Date;
     private readonly endDate: Date;
-    private readonly price: number;
+    private readonly price: string;
 
-    constructor(startDate: Date, endDate: Date, price: number) {
+    constructor(startDate: Date, endDate: Date, price: string) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.price = price;
@@ -17,7 +17,7 @@ export default class ProductOptionPriceVM {
         return this.endDate;
     }
 
-    public getPrice(): number {
+    public getPrice(): string {
         return this.price;
     }
 }

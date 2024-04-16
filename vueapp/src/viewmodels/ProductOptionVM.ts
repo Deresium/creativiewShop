@@ -8,12 +8,12 @@ export default class ProductOptionVM {
     private readonly active: boolean;
     private readonly featured: boolean;
     private readonly click: string;
-    private readonly weight: number;
+    private readonly weight: string;
     private readonly preorder: boolean;
     private readonly price: string;
 
 
-    constructor(productOptionId: string, productId: string, nameFr: string, nameEn: string, code: string, stock: number, active: boolean, featured: boolean, click: string, weight: number, preorder: boolean, price: string) {
+    constructor(productOptionId: string, productId: string, nameFr: string, nameEn: string, code: string, stock: number, active: boolean, featured: boolean, click: string, weight: string, preorder: boolean, price: string) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.nameFr = nameFr;
@@ -65,7 +65,7 @@ export default class ProductOptionVM {
         return this.click;
     }
 
-    public getWeight(): number {
+    public getWeight(): string {
         return this.weight;
     }
 
