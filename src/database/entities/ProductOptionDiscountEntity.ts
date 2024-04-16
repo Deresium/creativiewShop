@@ -42,6 +42,9 @@ export default class ProductOptionDiscountEntity extends Model {
     }
 
     getPercent(): Decimal {
+        if (!this.percent) {
+            return null;
+        }
         return new Decimal(this.percent);
     }
 

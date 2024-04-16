@@ -19,6 +19,9 @@ export default class ProductOptionPriceEntity extends Model {
     }
 
     public getPrice(): Decimal {
+        if (!this.price) {
+            return null;
+        }
         return new Decimal(this.price);
     }
 

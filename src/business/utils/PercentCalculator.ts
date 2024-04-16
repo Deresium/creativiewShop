@@ -2,6 +2,9 @@ import Decimal from "decimal.js";
 
 export default class PercentCalculator {
     public static calculatePercentBasedOnPrices(originalPrice: Decimal, discountPrice: Decimal): Decimal {
+        if (originalPrice.equals(0)) {
+            return new Decimal(0);
+        }
         const numerator = originalPrice.minus(discountPrice);
         const fraction = numerator.dividedBy(originalPrice);
         return fraction.mul(100);

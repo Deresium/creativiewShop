@@ -20,6 +20,9 @@ export default class CurrencyRateEntity extends Model {
     }
 
     getRate(): Decimal {
+        if (!this.rate) {
+            return null;
+        }
         return new Decimal(this.rate);
     }
 

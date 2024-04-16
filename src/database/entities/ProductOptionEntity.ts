@@ -69,6 +69,9 @@ export default class ProductOptionEntity extends Model {
     }
 
     public getWeight(): Decimal {
+        if (!this.weight) {
+            return null;
+        }
         return new Decimal(this.weight);
     }
 

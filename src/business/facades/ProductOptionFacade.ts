@@ -98,27 +98,35 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         return new ProductOptionStoreBuilder(productOption, allOptionsForProduct, currencyRatesLocal, customer, currency, language).buildProductOptionStore();
     }
 
-    public async getProductOptionStoreVM(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreVM>{
+    public async getProductOptionStoreVM(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreVM> {
         const productOptionStore = await this.getProductOptionStore(productOptionId, groupIds, customer, currency, language, currencyRates);
         let startDateDiscount: string;
         let endDateDiscount: string;
         let discountPrice: string;
         let percent: string;
-        if(productOptionStore.getDiscountPrice()){
+        let weight: string;
+        let basePrice: string;
+        if (productOptionStore.getDiscountPrice()) {
             startDateDiscount = productOptionStore.getStartDateDiscount().toISOString();
             endDateDiscount = productOptionStore.getEndDateDiscount().toISOString();
             discountPrice = productOptionStore.getDiscountPrice().toFixed(2);
             percent = productOptionStore.getPercent().toFixed(2);
         }
+        if (productOptionStore.getWeight()) {
+            weight = productOptionStore.getWeight().toFixed(2);
+        }
+        if (productOptionStore.getBasePrice()) {
+            basePrice = productOptionStore.getBasePrice().toFixed(2);
+        }
         return new ProductOptionStoreVM(
             productOptionStore.getProductOptionId(),
             productOptionStore.getProductId(),
             productOptionStore.getHasStock(),
-            productOptionStore.getWeight().toFixed(2),
+            weight,
             productOptionStore.getManufacturerId(),
             productOptionStore.getManufacturer(),
             productOptionStore.getPreorder(),
-            productOptionStore.getBasePrice().toFixed(2),
+            basePrice,
             discountPrice,
             percent,
             startDateDiscount,

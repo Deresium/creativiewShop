@@ -12,10 +12,16 @@ export default class WeightPriceEntity extends Model {
 
 
     getGram(): Decimal {
+        if (!this.gram) {
+            return null;
+        }
         return new Decimal(this.gram);
     }
 
     getPrice(): Decimal {
+        if (!this.price) {
+            return null;
+        }
         return new Decimal(this.price);
     }
 

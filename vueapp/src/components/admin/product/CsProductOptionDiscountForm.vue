@@ -16,7 +16,9 @@
                         <v-progress-circular v-if="loadingPercent" :color="firstColor" :size="30" indeterminate/>
                     </v-alert>
                 </div>
-                <v-alert v-if="!originalPrice" class="error" color="error">{{ t('noOriginalPrice') }}</v-alert>
+                <v-alert v-if="!originalPrice" class="error" color="error">
+                    {{ t('noOriginalPrice') }}
+                </v-alert>
             </div>
 
             <v-text-field v-model="startDate" :label="t('startDate')" :rules="startDateRules" name="startDate"
@@ -91,7 +93,7 @@ axiosServer.get('/groupDiscount').then(response => {
     listGroupDiscount.value = TitleValueParser.parseTitleValues(response.data);
 });
 const handleCalculatePercent = async () => {
-    if (!discountPrice.value || !originalPrice.value) {
+    if (!discountPrice.value || !originalPrice.value || originalPrice.value === '0.00') {
         loadingPercent.value = false;
         return;
     }
@@ -116,7 +118,7 @@ watch(discountPrice, () => {
 const submitForm = async () => {
     isSending.value = true;
     firstSubmit.value = true;
-    if (!formValid.value) {
+    if (!formValid.value || originalPrice.value === '0.00') {
         isSending.value = false;
         return;
     }
