@@ -11,6 +11,7 @@ export default class BasketEntity extends Model {
     private readonly deliveryAddressId: string;
     private readonly billingAddressId: string;
     private readonly totalWeightAtOrdered: string;
+    private readonly paymentMethodCode: string;
     private readonly orderedAt: Date;
     private readonly paidAt: Date;
     private readonly deliveredAt: Date;
@@ -47,6 +48,10 @@ export default class BasketEntity extends Model {
     }
 
 
+    public getPaymentMethodCode(): string {
+        return this.paymentMethodCode;
+    }
+
     public getBasketProductOptions(): Array<BasketProductOptionEntity> {
         return this.basketProductOptions;
     }
@@ -60,6 +65,7 @@ BasketEntity.init({
     deliveryAddressId: DataTypes.BIGINT,
     billingAddressId: DataTypes.BIGINT,
     totalWeightAtOrdered: DataTypes.DECIMAL,
+    paymentMethodCode: DataTypes.STRING,
     orderedAt: DataTypes.DATE,
     paidAt: DataTypes.DATE,
     deliveredAt: DataTypes.DATE,

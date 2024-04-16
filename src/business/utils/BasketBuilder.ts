@@ -81,7 +81,7 @@ export default class BasketBuilder {
         }
 
 
-        return new BasketDS(this.basketId, productOptionBaskets, totalBasket, totalWeightBasket, basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId());
+        return new BasketDS(this.basketId, productOptionBaskets, totalBasket, totalWeightBasket, basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId(), basket.getPaymentMethodCode());
     }
 
     public async requestBasketVM(groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
@@ -129,7 +129,8 @@ export default class BasketBuilder {
             basket.getDeliveryAddressId(),
             basket.getBillingAddressId(),
             basket.getDeliveryAddressCountryId(),
-            basket.getDeliveryOptionId()
+            basket.getDeliveryOptionId(),
+            basket.getPaymentMethod()
         )
     }
 

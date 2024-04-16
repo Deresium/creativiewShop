@@ -71,6 +71,10 @@
                                     :delivery-country-id="basket.getDeliveryAddressCountryId()"
                                     :delivery-option-id="basket.getDeliveryOptionId()"
                                     @delivery-option-changed="refreshBasket"/>
+            <CsBasketPaymentMethod v-if="!basketErrorReport.hasErrors()"
+                                   :payment-method="basket.getPaymentMethod()"
+            />
+
 
         </div>
     </div>
@@ -114,6 +118,7 @@ import BasketErrorReportVM from "../../viewmodels/BasketErrorReportVM.ts";
 import BasketErrorReportRequester from "../../requesters/BasketErrorReportRequester.ts";
 import CsBasketAddress from "../store/CsBasketAddress.vue";
 import CsBasketDeliveryOption from "../store/CsBasketDeliveryOption.vue";
+import CsBasketPaymentMethod from "../store/CsBasketPaymentMethod.vue";
 
 const {t} = useI18n({useScope: "global"});
 

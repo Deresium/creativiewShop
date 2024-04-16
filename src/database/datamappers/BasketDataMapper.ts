@@ -128,6 +128,16 @@ export default class BasketDataMapper implements IBasketDataGateway {
         });
     }
 
+    public async updateBasketPaymentMethod(basketId: string, paymentMethod: string): Promise<void> {
+        await BasketEntity.update({
+            paymentMethodCode: paymentMethod
+        }, {
+            where: {
+                basketId: basketId
+            }
+        });
+    }
+
 
     public async basketToOrder(basketToOrderDS: BasketToOrderDS): Promise<void> {
         const date = Date.now();

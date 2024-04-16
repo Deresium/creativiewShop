@@ -28,5 +28,7 @@ export default interface IBasketDataGateway {
 
     updateBasketDeliveryOption(basketId: string, deliveryOptionId: string): Promise<void>;
 
+    updateBasketPaymentMethod(basketId: string, paymentMethod: string): Promise<void>;
+
     basketToOrder(basketToOrderDS: BasketToOrderDS): Promise<void>;
 }

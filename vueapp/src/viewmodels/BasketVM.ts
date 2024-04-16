@@ -9,9 +9,10 @@ export default class BasketVM {
     private readonly billingAddressId: string;
     private readonly deliveryAddressCountryId: number;
     private readonly deliveryOptionId: string;
+    private readonly paymentMethod: string;
 
 
-    constructor(basketId: string, productOptionStores: Array<ProductOptionBasketVM>, total: string, totalWeight: string, deliveryAddressId: string, billingAddressId: string, deliveryAddressCountryId: number, deliveryOptionId: string) {
+    constructor(basketId: string, productOptionStores: Array<ProductOptionBasketVM>, total: string, totalWeight: string, deliveryAddressId: string, billingAddressId: string, deliveryAddressCountryId: number, deliveryOptionId: string, paymentMethod: string) {
         this.basketId = basketId;
         this.productOptionStores = productOptionStores;
         this.total = total;
@@ -20,6 +21,7 @@ export default class BasketVM {
         this.billingAddressId = billingAddressId;
         this.deliveryAddressCountryId = deliveryAddressCountryId;
         this.deliveryOptionId = deliveryOptionId;
+        this.paymentMethod = paymentMethod;
     }
 
 
@@ -57,5 +59,9 @@ export default class BasketVM {
 
     public getDeliveryOptionId(): string {
         return this.deliveryOptionId;
+    }
+
+    public getPaymentMethod() {
+        return this.paymentMethod;
     }
 }

@@ -106,6 +106,11 @@ export default class BasketFacade implements IBasketRequester {
         await this.basketDataGateway.updateBasketDeliveryOption(basketId, deliveryOptionId);
     }
 
+    public async updateBasketPaymentMethod(basketId: string, paymentMethod: string): Promise<void> {
+        await this.basketDataGateway.updateBasketPaymentMethod(basketId, paymentMethod);
+    }
+
+
     public async basketToOrder(customer: CustomerVM, basketId: string, groupIds: Array<string>, currency: string, language: string): Promise<void> {
         const basket = await new BasketBuilder(basketId, this.basketDataGateway, this.productOptionRequester, this.currencyRateRequester, this.deliveryOptionRequester).requestBasket(groupIds, customer, currency, language);
 

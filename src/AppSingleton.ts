@@ -74,6 +74,9 @@ import BasketRouter from "./routers/routes/BasketRouter";
 import AddressDataMapper from "./database/datamappers/AddressDataMapper";
 import AddressFacade from "./business/facades/AddressFacade";
 import AddressRouter from "./routers/routes/AddressRouter";
+import PaymentMethodDataMapper from "./database/datamappers/PaymentMethodDataMapper";
+import PaymentMethodFacade from "./business/facades/PaymentMethodFacade";
+import PaymentMethodRouter from "./routers/routes/PaymentMethodRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -120,6 +123,7 @@ export default class AppSingleton {
         const sendMailDataMapper = new SendMailDataMapper();
         const basketDataMapper = new BasketDataMapper();
         const addressDataMapper = new AddressDataMapper();
+        const paymentMethodDataMapper = new PaymentMethodDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
@@ -141,6 +145,7 @@ export default class AppSingleton {
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
         const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade);
         const addressFacade = new AddressFacade(addressDataMapper);
+        const paymentMethodFacade = new PaymentMethodFacade(paymentMethodDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -200,5 +205,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new StoreRouter(productOptionFacade, checkStoreAccessMiddleware).getRouter());
         this.expressApp.use('/api', new BasketRouter(basketFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware, extractOpenBasketIdMiddleware).getRouter());
         this.expressApp.use('/api', new AddressRouter(addressFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware).getRouter());
+        this.expressApp.use('/api', new PaymentMethodRouter(paymentMethodFacade).getRouter());
     }
 }
