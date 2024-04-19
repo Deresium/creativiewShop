@@ -193,7 +193,7 @@ export default class AppSingleton {
         const extractOpenBasketIdMiddleware = new ExtractOpenBasketIdMiddleware(basketFacade).getRequestHandler();
 
         this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminMiddleware, checkUserOwnerMiddleware, checkTokenRecaptchaMiddleware).getRouter());
-        this.expressApp.use('/api', new CustomerRouter().getRouter());
+        this.expressApp.use('/api', new CustomerRouter(customerFacade).getRouter());
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
         this.expressApp.use('/api', new CategoryRouter(categoryFacade, onlyAdminMiddleware).getRouter());
         this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade, onlyAdminMiddleware).getRouter());
