@@ -10,7 +10,15 @@ export default class BasketErrorReportVM {
     }
 
     public hasErrors() {
-        return this.productOptionErrors.length > 0 || this.basketErrors.length > 0;
+        return this.hasProductOptionErrors() || this.hasBasketErrors();
+    }
+
+    public hasProductOptionErrors() {
+        return this.productOptionErrors.length > 0;
+    }
+
+    public hasBasketErrors() {
+        return this.basketErrors.length > 0;
     }
 
 

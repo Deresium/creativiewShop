@@ -38,6 +38,18 @@ export default class BasketChecker {
             return report;
         }
 
+        if (!basket.getDeliveryAddressId()) {
+            report.addErrorToBasketErrors(new BasketErrorVM(this.basketId, null, "noDeliveryAddress"));
+        }
+
+        if (!basket.getBillingAddressId()) {
+            report.addErrorToBasketErrors(new BasketErrorVM(this.basketId, null, "noBillingAddress"));
+        }
+
+        if (!basket.getPaymentMethodCode()) {
+            report.addErrorToBasketErrors(new BasketErrorVM(this.basketId, null, "noPaymentMethod"));
+        }
+
         const productOptionBaskets = await this.basketDataGateway.getBasketProductOptions(this.basketId);
         for (const productOptionBasket of productOptionBaskets) {
             const error = await this.checkProductOption(productOptionBasket);

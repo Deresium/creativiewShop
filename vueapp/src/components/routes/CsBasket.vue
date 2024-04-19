@@ -51,30 +51,37 @@
                 </template>
             </v-data-table>
 
-            <div class="basketTotal">
-                <p>{{ t('total') }}: {{ basket.getTotal() }}{{ currencySymbol }}</p>
-            </div>
-
-            <v-alert v-if="basketErrorReport.hasErrors()" type="error">
-                <p v-for="error in basketErrorReport.getProductOptionErrors()" :key="error.getId()">
-                    {{ t(error.getReason(), {productName: error.getLabel()}) }}</p>
-            </v-alert>
-
             <CsBasketAddress
-                v-if="!basketErrorReport.hasErrors()"
+                v-if="!basketErrorReport.hasProductOptionErrors()"
                 :billing-address-id="basket.getBillingAddressId()"
                 :delivery-address-id="basket.getDeliveryAddressId()"
                 @delivery-country-changed="refreshBasket"
             />
 
-            <CsBasketDeliveryOption v-if="basket.getDeliveryAddressCountryId() && !basketErrorReport.hasErrors()"
-                                    :delivery-country-id="basket.getDeliveryAddressCountryId()"
-                                    :delivery-option-id="basket.getDeliveryOptionId()"
-                                    @delivery-option-changed="refreshBasket"/>
-            <CsBasketPaymentMethod v-if="!basketErrorReport.hasErrors()"
+            <CsBasketDeliveryOption
+                v-if="basket.getDeliveryAddressCountryId() && !basketErrorReport.hasProductOptionErrors()"
+                :delivery-country-id="basket.getDeliveryAddressCountryId()"
+                :delivery-option-id="basket.getDeliveryOptionId()"
+                @delivery-option-changed="refreshBasket"/>
+
+            <CsBasketPaymentMethod v-if="!basketErrorReport.hasProductOptionErrors()"
                                    :payment-method="basket.getPaymentMethod()"
             />
 
+            <div class="basketTotal">
+                <p>{{ t('total') }}: {{ basket.getTotal() }}{{ currencySymbol }}</p>
+            </div>
+
+            <v-alert v-if="basketErrorReport.hasProductOptionErrors()" type="error">
+                <p v-for="error in basketErrorReport.getProductOptionErrors()" :key="error.getId()">
+                    {{ t(error.getReason(), {productName: error.getLabel()}) }}</p>
+            </v-alert>
+
+            <v-alert v-if="!basketErrorReport.hasProductOptionErrors() && basketErrorReport.hasBasketErrors()"
+                     type="error">
+                <p v-for="error in basketErrorReport.getBasketErrors()" :key="error.getId()">
+                    {{ t(error.getReason()) }}</p>
+            </v-alert>
 
         </div>
     </div>
