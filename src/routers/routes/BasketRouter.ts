@@ -20,7 +20,7 @@ export default class BasketRouter extends ApplicationRouter {
     }
 
     public initRoutes() {
-        this.getRouter().post('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
+        this.getRouter().post('/basket/productOption/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const productOptionId = String(req.params.productOptionId);
             const quantity = req.body.quantity;
@@ -80,7 +80,7 @@ export default class BasketRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().put('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
+        this.getRouter().put('/basket/productOption/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const productOptionId = String(req.params.productOptionId);
             const quantity = req.body.quantity;
@@ -93,7 +93,7 @@ export default class BasketRouter extends ApplicationRouter {
             }
         });
 
-        this.getRouter().delete('/basket/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
+        this.getRouter().delete('/basket/productOption/:productOptionId', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
             const basketId = req.basketId;
             const productOptionId = String(req.params.productOptionId);
             await this.basketRequester.deleteProductOptionBasket(basketId, productOptionId);
@@ -127,6 +127,22 @@ export default class BasketRouter extends ApplicationRouter {
 
             const deliveryOptions = await this.basketRequester.getDeliveryOptionsForBasket(basketId, groups, customer, currency, language);
             res.send(deliveryOptions);
+        });
+
+        this.getRouter().post('/basket/basketToOrder', this.checkStoreAccessMiddleware, this.extractOrCreateUserTempMiddleware, this.extractOpenBasketIdMiddleware, async (req: any, res: any) => {
+            const basketId = req.basketId;
+            const customer = req.customer;
+            const groups = req.userGroups;
+            const language = req.query.language;
+            const currency = req.query.currency;
+
+            const basketChecker = await this.basketRequester.checkBasket(basketId, groups, customer, language);
+            if (basketChecker.hasErrors()) {
+                res.status(400).send();
+                return;
+            }
+            await this.basketRequester.basketToOrder(customer, basketId, groups, currency, language);
+            res.send();
         });
     }
 }

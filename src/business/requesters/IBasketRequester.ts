@@ -28,4 +28,6 @@ export default interface IBasketRequester {
     getBasketNbItems(basketId: string): Promise<number>;
 
     getDeliveryOptionsForBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<Array<DeliveryOptionStoreVM>>;
+
+    basketToOrder(customer: CustomerVM, basketId: string, groupIds: Array<string>, currency: string, language: string): Promise<void>;
 }

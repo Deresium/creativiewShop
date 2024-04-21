@@ -72,6 +72,10 @@
                 <p>{{ t('total') }}: {{ basket.getTotal() }}{{ currencySymbol }}</p>
             </div>
 
+            <div class="validate">
+                <v-btn @click="validateBasket">{{ t('validateBasket') }}</v-btn>
+            </div>
+
             <v-alert v-if="basketErrorReport.hasProductOptionErrors()" type="error">
                 <p v-for="error in basketErrorReport.getProductOptionErrors()" :key="error.getId()">
                     {{ t(error.getReason(), {productName: error.getLabel()}) }}</p>
@@ -126,6 +130,7 @@ import BasketErrorReportRequester from "../../requesters/BasketErrorReportReques
 import CsBasketAddress from "../store/CsBasketAddress.vue";
 import CsBasketDeliveryOption from "../store/CsBasketDeliveryOption.vue";
 import CsBasketPaymentMethod from "../store/CsBasketPaymentMethod.vue";
+import router from "../../router/router.ts";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -168,7 +173,7 @@ const handleConfirm = async () => {
     if (!tempProductOptionId.value) {
         return;
     }
-    await axiosServer.delete(`/basket/${tempProductOptionId.value}`);
+    await axiosServer.delete(`/basket/productOption/${tempProductOptionId.value}`);
     await refreshBasket();
     await storeStore.refreshNbItemsInStore();
     askConfirmDelete.value = false;
@@ -191,6 +196,19 @@ const handleQuantityUpdated = async () => {
 const handleErrorQuantity = (errorMessage: string) => {
     showSnackbar.value = true;
     txtSnackbar.value = t(errorMessage);
+};
+
+const validateBasket = async () => {
+    try {
+        await axiosServer.post('/basket/basketToOrder', {}, {
+            params: {
+                currency: currencyCode.value
+            }
+        });
+        await router.push({name: 'basketOrderSuccess'});
+    } catch (error) {
+        await refreshBasket();
+    }
 };
 
 const imageSrc = (productId: string, productOptionId: string, productPictureId: string) => {

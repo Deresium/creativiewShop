@@ -147,7 +147,7 @@ const clickOnCarouselItem = (productPictureId: string) => {
 };
 
 const clickOnAddBasket = async () => {
-    await axiosServer.post(`/basket/${productOptionIdString}`, {
+    await axiosServer.post(`/basket/productOption/${productOptionIdString}`, {
         quantity: 1
     });
     showAddBasketSuccess.value = true;

@@ -28,7 +28,7 @@ const quantity = ref(props.quantity);
 
 const updateProductOptionQuantity = async () => {
     try {
-        await axiosServer.put(`/basket/${props.productOptionId}`, {
+        await axiosServer.put(`/basket/productOption/${props.productOptionId}`, {
             quantity: quantity.value
         });
         emit('quantityUpdated');

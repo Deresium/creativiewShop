@@ -11,6 +11,7 @@ export default class BasketEntity extends Model {
     private readonly deliveryAddressId: string;
     private readonly billingAddressId: string;
     private readonly totalWeightAtOrdered: string;
+    private readonly currencyAtOrdered: string;
     private readonly paymentMethodCode: string;
     private readonly orderedAt: Date;
     private readonly paidAt: Date;
@@ -65,6 +66,7 @@ BasketEntity.init({
     deliveryAddressId: DataTypes.BIGINT,
     billingAddressId: DataTypes.BIGINT,
     totalWeightAtOrdered: DataTypes.DECIMAL,
+    currencyAtOrdered: DataTypes.STRING,
     paymentMethodCode: DataTypes.STRING,
     orderedAt: DataTypes.DATE,
     paidAt: DataTypes.DATE,

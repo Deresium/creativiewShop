@@ -145,7 +145,8 @@ export default class BasketDataMapper implements IBasketDataGateway {
 
             await BasketEntity.update({
                 orderedAt: date,
-                basketStateCode: 'ORDER',
+                basketStateCode: 'ORDERED',
+                currencyAtOrdered: basketToOrderDS.getCurrency(),
                 totalWeightAtOrdered: basketToOrderDS.getTotalWeight()
             }, {
                 where: {

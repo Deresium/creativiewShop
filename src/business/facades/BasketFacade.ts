@@ -126,7 +126,7 @@ export default class BasketFacade implements IBasketRequester {
             productOptionPrices.set(productOptionBasket.getProductOptionId(), price);
         }
 
-        const basketToOrderDS = new BasketToOrderDS(basketId, basket.getTotalWeight(), productOptionStock, productOptionPrices);
+        const basketToOrderDS = new BasketToOrderDS(basketId, currency, basket.getTotalWeight(), productOptionStock, productOptionPrices);
         await this.basketDataGateway.basketToOrder(basketToOrderDS);
     }
 }
