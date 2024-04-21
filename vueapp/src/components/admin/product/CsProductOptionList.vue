@@ -41,7 +41,7 @@ import {useRoute} from "vue-router";
 import ProductOptionVM from "../../../viewmodels/ProductOptionVM.ts";
 import ProductOptionRequester from "../../../requesters/ProductOptionRequester.ts";
 import axiosServer from "../../../axios/axiosServer.ts";
-import useCustomer from "../../../compositionfunctions/customer.ts";
+import {useStoreStore} from "../../../pinia/store/StoreStore.ts";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -62,7 +62,9 @@ const headers = computed(() => [
     {title: t('action'), value: 'actions'}
 ]);
 
-const {currencySymbol} = useCustomer();
+const storeStore = useStoreStore();
+
+const currencySymbol = computed(() => storeStore.getCurrencySymbol);
 
 const askConfirmDelete = ref(false);
 const tempProductOptionId = ref();
