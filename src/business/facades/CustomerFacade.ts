@@ -48,7 +48,7 @@ export default class CustomerFacade implements ICustomerRequester {
     private customerToVM(customerEntity: CustomerEntity): CustomerVM {
         return new CustomerVM(customerEntity.getCustomerId(), customerEntity.getName(), customerEntity.getDnsName(),
             customerEntity.getStoreProtectionCode(), customerEntity.getFirstColor(), customerEntity.getSecondColor(),
-            customerEntity.getThirdColor(), customerEntity.getCurrency().getCurrencyCode(), customerEntity.getCurrency().getSymbol(), customerEntity.getEmailFrom(), customerEntity.getDefaultBankCustomerId());
+            customerEntity.getThirdColor(), customerEntity.getCurrencyCode(), customerEntity.getEmailFrom(), customerEntity.getDefaultBankCustomerId());
     }
 
     private getCountryName(country: CountryEntity, language: string): string {

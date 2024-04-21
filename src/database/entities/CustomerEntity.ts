@@ -12,6 +12,7 @@ export default class CustomerEntity extends Model {
     private thirdColor: string;
     private emailFrom: string;
     private defaultBankCustomerId: string;
+    private currencyCode: string;
     private currency: CurrencyEntity;
 
     public getCustomerId(): number {
@@ -46,6 +47,11 @@ export default class CustomerEntity extends Model {
 
     public getEmailFrom(): string {
         return this.emailFrom;
+    }
+
+
+    public getCurrencyCode(): string {
+        return this.currencyCode;
     }
 
     public getCurrency() {

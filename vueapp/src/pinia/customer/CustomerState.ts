@@ -7,7 +7,6 @@ export default class CustomerState {
     private secondColor: string;
     private thirdColor: string;
     private currencyCode: string;
-    private currencySymbol: string;
 
 
     public getCustomerId(): number {
@@ -85,13 +84,5 @@ export default class CustomerState {
 
     public setCurrencyCode(value: string) {
         this.currencyCode = value;
-    }
-
-    public getCurrencySymbol(): string {
-        return this.currencySymbol;
-    }
-
-    public setCurrencySymbol(value: string) {
-        this.currencySymbol = value;
     }
 }

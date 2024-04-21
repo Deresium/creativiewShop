@@ -54,7 +54,7 @@ watch(loggedIn, async () => {
 
 const initApp = async () => {
     await customerStore.retrieveCustomer();
-    storeStore.setCurrency(customerStore.getCurrencyCode, customerStore.getCurrencySymbol);
+    await storeStore.setCurrency(customerStore.getCurrencyCode);
     const messages = await InternalizationRequester.getInternalizationMessages();
     new I18nMessagesMerger().addMessages(messages);
     await userStore.retrieveLoginUserInfo();

@@ -7,7 +7,6 @@ const useCustomer = () => {
 
     const secondColor = computed(() => customerStore.getSecondColorHex);
     const thirdColor = computed(() => customerStore.getThirdColorHex);
-    const currencySymbol = computed(() => customerStore.getCurrencySymbol);
     const currencyCode = computed(() => customerStore.getCurrencyCode);
     const customerId = computed(() => customerStore.getCustomerId);
 
@@ -15,7 +14,6 @@ const useCustomer = () => {
         firstColor,
         secondColor,
         thirdColor,
-        currencySymbol,
         currencyCode,
         customerId
     }

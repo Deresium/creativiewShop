@@ -1,15 +1,12 @@
 import ICustomerDataGateway from "../gateways/ICustomerDataGateway";
 import CustomerEntity from "../entities/CustomerEntity";
-import CurrencyEntity from "../entities/CurrencyEntity";
 import BankCustomerEntity from "../entities/BankCustomerEntity";
 import AddressEntity from "../entities/AddressEntity";
 import CountryEntity from "../entities/CountryEntity";
 
 export default class CustomerDataMapper implements ICustomerDataGateway {
     public async getAllCustomers(): Promise<Array<CustomerEntity>> {
-        return await CustomerEntity.findAll({
-            include: [{model: CurrencyEntity, as: 'currency'}]
-        });
+        return await CustomerEntity.findAll();
     }
 
     public async getCustomerBankById(bankCustomerId: string): Promise<BankCustomerEntity> {

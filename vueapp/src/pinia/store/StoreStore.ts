@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import StoreState from "./StoreState.ts";
 import StoreAccessRequester from "../../requesters/StoreAccessRequester.ts";
 import BasketRequester from "../../requesters/BasketRequester.ts";
+import CurrencyRequester from "../../requesters/CurrencyRequester.ts";
 
 export const useStoreStore = defineStore('store', {
     state: () => ({
@@ -14,9 +15,14 @@ export const useStoreStore = defineStore('store', {
         getNbItemsInBasket: state => state.store.getNbItemsInBasket()
     },
     actions: {
-        setCurrency(currencyCode: string, currencySymbol: string) {
+        async setCurrency(currencyCode: string) {
             this.store.setCurrencyCode(currencyCode);
-            this.store.setCurrencySymbol(currencySymbol);
+            const currencies = await CurrencyRequester.requestCurrencies();
+            for (const currency of currencies) {
+                if (currency.getCurrencyCode() === currencyCode) {
+                    this.store.setCurrencySymbol(currency.getSymbol());
+                }
+            }
         },
 
         async setHasAccessToStore() {
