@@ -78,7 +78,7 @@ import axiosServer from "../../axios/axiosServer.ts";
 import ProductListAdminVM from "../../viewmodels/ProductListAdminVM.ts";
 import ProductOptionListAdminFlatVM from "../../viewmodels/ProductOptionListAdminFlatVM.ts";
 import ProductParser from "../../parsers/ProductParser.ts";
-import {useStoreStore} from "../../pinia/store/StoreStore.ts";
+import useCustomer from "../../compositionfunctions/customer.ts";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -112,9 +112,7 @@ const headersFlatOptions = computed(() => [
     {title: t('action'), value: 'actions'}
 ]);
 
-const storeStore = useStoreStore();
-
-const currencySymbol = computed(() => storeStore.getCurrencySymbol);
+const {currencySymbol} = useCustomer();
 
 const askConfirmDelete = ref(false);
 const tempProductId = ref();

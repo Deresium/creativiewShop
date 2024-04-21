@@ -12,7 +12,8 @@ export const useCustomerStore = defineStore('customer', {
         getFirstColorHex: state => state.customer.getFirstColorHex(),
         getSecondColorHex: state => state.customer.getSecondColorHex(),
         getThirdColorHex: state => state.customer.getThirdColorHex(),
-        getCurrencyCode: state => state.customer.getCurrencyCode()
+        getCurrencyCode: state => state.customer.getCurrencyCode(),
+        getCurrencySymbol: state => state.customer.getCurrencySymbol()
     },
     actions: {
         async retrieveCustomer() {
@@ -25,6 +26,7 @@ export const useCustomerStore = defineStore('customer', {
             this.customer.setSecondColor(customerVM.getSecondColor());
             this.customer.setThirdColor(customerVM.getThirdColor());
             this.customer.setCurrencyCode(customerVM.getCurrencyCode());
+            this.customer.setCurrencySymbol(customerVM.getCurrencySymbol());
         }
     }
 });
