@@ -5,11 +5,12 @@ import BasketEntity from "../entities/BasketEntity";
 import AddressEntity from "../entities/AddressEntity";
 import BasketToOrderDS from "../../business/models/datastores/BasketToOrderDS";
 import DatabaseSingleton from "../DatabaseSingleton";
-import {Transaction} from "sequelize";
+import {Op, Transaction} from "sequelize";
 import ProductOptionEntity from "../entities/ProductOptionEntity";
 import ProductEntity from "../entities/ProductEntity";
 import ProductOptionPictureEntity from "../entities/ProductOptionPictureEntity";
 import UserEntity from "../entities/UserEntity";
+import CustomerEntity from "../entities/CustomerEntity";
 
 export default class BasketDataMapper implements IBasketDataGateway {
     public async addBasketForUser(userId: string): Promise<BasketEntity> {
@@ -152,15 +153,32 @@ export default class BasketDataMapper implements IBasketDataGateway {
     }
 
 
-    public async basketToOrder(basketToOrderDS: BasketToOrderDS): Promise<void> {
+    public async basketToOrder(basketToOrderDS: BasketToOrderDS, customerId: number): Promise<void> {
         const date = Date.now();
         await DatabaseSingleton.getInstance().getSequelize().transaction(async (t: Transaction) => {
+            const customer = await CustomerEntity.findOne({
+                where: {
+                    customerId: customerId
+                },
+                transaction: t
+            });
+            const nextOrder = (customer.getOrderCounter() + BigInt(1)).toString();
+
+            await CustomerEntity.update({
+                orderCounter: nextOrder
+            }, {
+                where: {
+                    customerId: customerId
+                },
+                transaction: t
+            });
 
             await BasketEntity.update({
                 orderedAt: date,
                 basketStateCode: 'ORDERED',
                 currencyAtOrdered: basketToOrderDS.getCurrency(),
-                totalWeightAtOrdered: basketToOrderDS.getTotalWeight()
+                totalWeightAtOrdered: basketToOrderDS.getTotalWeight(),
+                orderNumber: nextOrder
             }, {
                 where: {
                     basketId: basketToOrderDS.getBasketId()
@@ -222,6 +240,9 @@ export default class BasketDataMapper implements IBasketDataGateway {
         return await BasketEntity.findAll({
             where: {
                 userId: userId,
+                basketStateCode: {
+                    [Op.not]: 'BASKET'
+                }
             },
             include: [
                 {
@@ -233,9 +254,14 @@ export default class BasketDataMapper implements IBasketDataGateway {
 
     public async getOrdersForCustomer(customerId: number): Promise<Array<BasketEntity>> {
         return await BasketEntity.findAll({
+            where: {
+                basketStateCode: {
+                    [Op.not]: 'BASKET'
+                }
+            },
             include: [
                 {
-                    model: UserEntity, as: 'user', where:{customerId: customerId}, required: true
+                    model: UserEntity, as: 'user', where: {customerId: customerId}, required: true
                 }
             ]
         });

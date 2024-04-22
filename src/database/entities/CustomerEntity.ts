@@ -13,6 +13,7 @@ export default class CustomerEntity extends Model {
     private emailFrom: string;
     private defaultBankCustomerId: string;
     private currencyCode: string;
+    private orderCounter: string;
     private currency: CurrencyEntity;
 
     public getCustomerId(): number {
@@ -62,6 +63,14 @@ export default class CustomerEntity extends Model {
     public getDefaultBankCustomerId(): string {
         return this.defaultBankCustomerId;
     }
+
+
+    public getOrderCounter(): bigint {
+        if (this.orderCounter) {
+            return BigInt(this.orderCounter);
+        }
+        return null;
+    }
 }
 
 CustomerEntity.init({
@@ -74,7 +83,8 @@ CustomerEntity.init({
     thirdColor: DataTypes.STRING,
     currencyCode: DataTypes.STRING,
     emailFrom: DataTypes.STRING,
-    defaultBankCustomerId: DataTypes.BIGINT
+    defaultBankCustomerId: DataTypes.BIGINT,
+    orderCounter: DataTypes.BIGINT
 }, {
     tableName: 'Customer',
     sequelize: DatabaseSingleton.getInstance().getSequelize()

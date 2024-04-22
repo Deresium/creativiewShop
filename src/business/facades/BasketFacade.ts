@@ -135,7 +135,7 @@ export default class BasketFacade implements IBasketRequester {
         }
 
         const basketToOrderDS = new BasketToOrderDS(basketId, currency, basket.getTotalWeight(), productOptionStock, productOptionPrices);
-        await this.basketDataGateway.basketToOrder(basketToOrderDS);
+        await this.basketDataGateway.basketToOrder(basketToOrderDS, customer.getCustomerId());
     }
 
     public async getBasketOrder(basketId: string, customer: CustomerVM): Promise<BasketOrderVM> {
@@ -160,19 +160,19 @@ export default class BasketFacade implements IBasketRequester {
         let orderedAt: string = null;
         let paidAt: string = null;
         let deliveredAt: string = null;
-        if(basket.getCreatedAt()){
+        if (basket.getCreatedAt()) {
             createdAt = basket.getCreatedAt().toISOString();
         }
 
-        if(basket.getOrderedAt()){
+        if (basket.getOrderedAt()) {
             orderedAt = basket.getOrderedAt().toISOString();
         }
 
-        if(basket.getPaidAt()){
+        if (basket.getPaidAt()) {
             paidAt = basket.getPaidAt().toISOString();
         }
 
-        if(basket.getDeliveredAt()){
+        if (basket.getDeliveredAt()) {
             deliveredAt = basket.getDeliveredAt().toISOString();
         }
 

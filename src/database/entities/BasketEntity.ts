@@ -15,6 +15,7 @@ export default class BasketEntity extends Model {
     private readonly totalWeightAtOrdered: string;
     private readonly currencyAtOrdered: string;
     private readonly paymentMethodCode: string;
+    private readonly orderNumber: string;
     private readonly orderedAt: Date;
     private readonly paidAt: Date;
     private readonly deliveredAt: Date;
@@ -62,7 +63,7 @@ export default class BasketEntity extends Model {
 
 
     getTotalWeightAtOrdered(): Decimal {
-        if(this.totalWeightAtOrdered) {
+        if (this.totalWeightAtOrdered) {
             return new Decimal(this.totalWeightAtOrdered);
         }
         return null;
@@ -106,6 +107,7 @@ BasketEntity.init({
     totalWeightAtOrdered: DataTypes.DECIMAL,
     currencyAtOrdered: DataTypes.STRING,
     paymentMethodCode: DataTypes.STRING,
+    orderNumber: DataTypes.BIGINT,
     orderedAt: DataTypes.DATE,
     paidAt: DataTypes.DATE,
     deliveredAt: DataTypes.DATE,
