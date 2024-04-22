@@ -77,6 +77,8 @@ import AddressRouter from "./routers/routes/AddressRouter";
 import PaymentMethodDataMapper from "./database/datamappers/PaymentMethodDataMapper";
 import PaymentMethodFacade from "./business/facades/PaymentMethodFacade";
 import PaymentMethodRouter from "./routers/routes/PaymentMethodRouter";
+import CheckBasketAccessMiddleware from "./routers/middlewares/CheckBasketAccessMiddleware";
+import OrderRouter from "./routers/routes/OrderRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -183,7 +185,7 @@ export default class AppSingleton {
         this.expressApp.use(new ExtractTokenMiddleware().getRequestHandler());
         this.expressApp.use(new ExtractLanguageMiddleware().getRequestHandler());
 
-        const onlyAdminMiddleware = new OnlyAdminStoreMiddleware().getRequestHandler();
+        const onlyAdminStoreMiddleware = new OnlyAdminStoreMiddleware().getRequestHandler();
         const checkProductOwnerMiddleware = new CheckProductOwnerMiddleware(productFacade).getRequestHandler();
         const checkDeliveryOptionOwnerMiddleware = new CheckDeliveryOptionOwnerMiddleware(deliveryOptionFacade).getRequestHandler();
         const checkUserOwnerMiddleware = new CheckUserOwnerMiddleware(userFacade).getRequestHandler();
@@ -191,20 +193,22 @@ export default class AppSingleton {
         const checkStoreAccessMiddleware = new CheckStoreAccessMiddleware().getRequestHandler();
         const extractOrCreateUserTempMiddleware = new ExtractOrCreateUserTempMiddleware(userFacade).getRequestHandler();
         const extractOpenBasketIdMiddleware = new ExtractOpenBasketIdMiddleware(basketFacade).getRequestHandler();
+        const checkBasketAccessMiddleware = new CheckBasketAccessMiddleware(basketFacade).getRequestHandler();
 
-        this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminMiddleware, checkUserOwnerMiddleware, checkTokenRecaptchaMiddleware).getRouter());
+        this.expressApp.use('/api', new UserRouter(userFacade, userGroupFacade, onlyAdminStoreMiddleware, checkUserOwnerMiddleware, checkTokenRecaptchaMiddleware).getRouter());
         this.expressApp.use('/api', new CustomerRouter(customerFacade).getRouter());
         this.expressApp.use('/api', new InternalizationRouter(internalizationFacade).getRouter());
-        this.expressApp.use('/api', new CategoryRouter(categoryFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new ProductRouter(productFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, productOptionPriceFacade, productOptionCategoryFacade, productOptionPictureFacade, productOptionDiscountFacade, onlyAdminMiddleware, checkProductOwnerMiddleware).getRouter());
-        this.expressApp.use('/api', new CurrencyRateRouter(currencyRateFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new GroupRouter(groupFacade, onlyAdminMiddleware).getRouter());
-        this.expressApp.use('/api', new DeliveryOptionRouter(deliveryOptionFacade, deliveryOptionCountryFacade, countryFacade, weightPriceFacade, onlyAdminMiddleware, checkDeliveryOptionOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new CategoryRouter(categoryFacade, onlyAdminStoreMiddleware).getRouter());
+        this.expressApp.use('/api', new ManufacturerRouter(manufacturerFacade, onlyAdminStoreMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductRouter(productFacade, onlyAdminStoreMiddleware).getRouter());
+        this.expressApp.use('/api', new ProductOptionRouter(productOptionFacade, productOptionPriceFacade, productOptionCategoryFacade, productOptionPictureFacade, productOptionDiscountFacade, onlyAdminStoreMiddleware, checkProductOwnerMiddleware).getRouter());
+        this.expressApp.use('/api', new CurrencyRateRouter(currencyRateFacade, onlyAdminStoreMiddleware).getRouter());
+        this.expressApp.use('/api', new GroupRouter(groupFacade, onlyAdminStoreMiddleware).getRouter());
+        this.expressApp.use('/api', new DeliveryOptionRouter(deliveryOptionFacade, deliveryOptionCountryFacade, countryFacade, weightPriceFacade, onlyAdminStoreMiddleware, checkDeliveryOptionOwnerMiddleware).getRouter());
         this.expressApp.use('/api', new StoreRouter(productOptionFacade, checkStoreAccessMiddleware).getRouter());
         this.expressApp.use('/api', new BasketRouter(basketFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware, extractOpenBasketIdMiddleware).getRouter());
         this.expressApp.use('/api', new AddressRouter(addressFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware).getRouter());
         this.expressApp.use('/api', new PaymentMethodRouter(paymentMethodFacade).getRouter());
+        this.expressApp.use('/api', new OrderRouter(basketFacade, checkBasketAccessMiddleware, onlyAdminStoreMiddleware).getRouter());
     }
 }

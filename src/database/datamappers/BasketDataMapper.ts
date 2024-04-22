@@ -9,6 +9,7 @@ import {Transaction} from "sequelize";
 import ProductOptionEntity from "../entities/ProductOptionEntity";
 import ProductEntity from "../entities/ProductEntity";
 import ProductOptionPictureEntity from "../entities/ProductOptionPictureEntity";
+import UserEntity from "../entities/UserEntity";
 
 export default class BasketDataMapper implements IBasketDataGateway {
     public async addBasketForUser(userId: string): Promise<BasketEntity> {
@@ -34,6 +35,16 @@ export default class BasketDataMapper implements IBasketDataGateway {
             },
             include: [{model: AddressEntity, as: 'deliveryAddress', required: false}]
         });
+    }
+
+    public async findBasketByIdAndUserId(basketId: string, userId: string): Promise<boolean> {
+        const count = await BasketEntity.count({
+            where: {
+                basketId: basketId,
+                userId: userId
+            }
+        });
+        return count === 1;
     }
 
     public async findBasketWithProductOptionWeight(basketId: string): Promise<BasketEntity> {
@@ -202,6 +213,29 @@ export default class BasketDataMapper implements IBasketDataGateway {
                             ]
                         }
                     ]
+                }
+            ]
+        });
+    }
+
+    public async getOrdersForUser(userId: string): Promise<Array<BasketEntity>> {
+        return await BasketEntity.findAll({
+            where: {
+                userId: userId,
+            },
+            include: [
+                {
+                    model: UserEntity, as: 'user', required: true
+                }
+            ]
+        });
+    }
+
+    public async getOrdersForCustomer(customerId: number): Promise<Array<BasketEntity>> {
+        return await BasketEntity.findAll({
+            include: [
+                {
+                    model: UserEntity, as: 'user', where:{customerId: customerId}, required: true
                 }
             ]
         });

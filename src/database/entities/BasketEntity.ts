@@ -3,6 +3,7 @@ import DatabaseSingleton from "../DatabaseSingleton";
 import AddressEntity from "./AddressEntity";
 import BasketProductOptionEntity from "./BasketProductOptionEntity";
 import Decimal from "decimal.js";
+import UserEntity from "./UserEntity";
 
 export default class BasketEntity extends Model {
     private readonly basketId: string;
@@ -21,6 +22,7 @@ export default class BasketEntity extends Model {
     private readonly createdAt: Date;
 
     private readonly deliveryAddress: AddressEntity;
+    private readonly user: UserEntity;
     private readonly basketProductOptions: Array<BasketProductOptionEntity>;
 
 
@@ -75,6 +77,23 @@ export default class BasketEntity extends Model {
     getOrderedAt(): Date {
         return this.orderedAt;
     }
+
+
+    getUser(): UserEntity {
+        return this.user;
+    }
+
+    getPaidAt(): Date {
+        return this.paidAt;
+    }
+
+    getDeliveredAt(): Date {
+        return this.deliveredAt;
+    }
+
+    getCreatedAt(): Date {
+        return this.createdAt;
+    }
 }
 
 BasketEntity.init({
@@ -108,4 +127,10 @@ BasketEntity.hasMany(BasketProductOptionEntity, {
     sourceKey: 'basketId',
     foreignKey: 'basketId',
     as: 'basketProductOptions'
+});
+
+BasketEntity.hasOne(UserEntity, {
+    sourceKey: 'userId',
+    foreignKey: 'userId',
+    as: 'user'
 });

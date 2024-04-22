@@ -4,6 +4,7 @@ import CustomerVM from "../models/viewmodels/CustomerVM";
 import BasketErrorReportVM from "../models/viewmodels/BasketErrorReportVM";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
 import BasketOrderVM from "../models/viewmodels/BasketOrderVM";
+import BasketOrderLightVM from "../models/viewmodels/BasketOrderLightVM";
 
 export default interface IBasketRequester {
     getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM>;
@@ -33,4 +34,10 @@ export default interface IBasketRequester {
     basketToOrder(customer: CustomerVM, basketId: string, groupIds: Array<string>, currency: string, language: string): Promise<void>;
 
     getBasketOrder(basketId: string, customer: CustomerVM): Promise<BasketOrderVM>;
+
+    isBasketOwner(basketId: string, userId: string): Promise<boolean>;
+
+    getOrdersForUser(userId: string): Promise<Array<BasketOrderLightVM>>;
+
+    getOrdersForCustomer(customerId: number): Promise<Array<BasketOrderLightVM>>;
 }

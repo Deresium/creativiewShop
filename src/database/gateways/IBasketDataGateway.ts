@@ -33,4 +33,10 @@ export default interface IBasketDataGateway {
     basketToOrder(basketToOrderDS: BasketToOrderDS): Promise<void>;
 
     getBasketOrder(basketId: string): Promise<BasketEntity>;
+
+    findBasketByIdAndUserId(basketId: string, userId: string): Promise<boolean>;
+
+    getOrdersForUser(userId: string): Promise<Array<BasketEntity>>;
+
+    getOrdersForCustomer(customerId: number): Promise<Array<BasketEntity>>
 }

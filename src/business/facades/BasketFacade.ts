@@ -15,6 +15,8 @@ import BasketToOrderDS from "../models/datastores/BasketToOrderDS";
 import Decimal from "decimal.js";
 import BasketOrderVM from "../models/viewmodels/BasketOrderVM";
 import BasketOrderBuilder from "../utils/BasketOrderBuilder";
+import BasketOrderLightVM from "../models/viewmodels/BasketOrderLightVM";
+import BasketEntity from "../../database/entities/BasketEntity";
 
 export default class BasketFacade implements IBasketRequester {
     private readonly basketDataGateway: IBasketDataGateway;
@@ -70,6 +72,10 @@ export default class BasketFacade implements IBasketRequester {
     public async checkBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, language: string): Promise<BasketErrorReportVM> {
         const basketChecker = new BasketChecker(basketId, groupIds, customer, language, this.basketDataGateway, this.productOptionDataMapper);
         return await basketChecker.checkBasket();
+    }
+
+    public async isBasketOwner(basketId: string, userId: string): Promise<boolean> {
+        return await this.basketDataGateway.findBasketByIdAndUserId(basketId, userId);
     }
 
     public async updateBasketBillingAddress(basketId: string, addressId: string): Promise<void> {
@@ -137,5 +143,39 @@ export default class BasketFacade implements IBasketRequester {
         const rates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
         const deliveryOption = await this.deliveryOptionRequester.getDeliveryOptionById(customer, basket.getDeliveryOptionId(), basket.getTotalWeightAtOrdered(), basket.getCurrencyAtOrdered(), rates, basket.getOrderedAt());
         return new BasketOrderBuilder(basket, deliveryOption).buildBasketOrder();
+    }
+
+    public async getOrdersForUser(userId: string): Promise<Array<BasketOrderLightVM>> {
+        const baskets = await this.basketDataGateway.getOrdersForUser(userId);
+        return baskets.map(basket => this.basketToBasketOrderLightVM(basket));
+    }
+
+    public async getOrdersForCustomer(customerId: number): Promise<Array<BasketOrderLightVM>> {
+        const baskets = await this.basketDataGateway.getOrdersForCustomer(customerId);
+        return baskets.map(basket => this.basketToBasketOrderLightVM(basket));
+    }
+
+    private basketToBasketOrderLightVM(basket: BasketEntity): BasketOrderLightVM {
+        let createdAt: string = null;
+        let orderedAt: string = null;
+        let paidAt: string = null;
+        let deliveredAt: string = null;
+        if(basket.getCreatedAt()){
+            createdAt = basket.getCreatedAt().toISOString();
+        }
+
+        if(basket.getOrderedAt()){
+            orderedAt = basket.getOrderedAt().toISOString();
+        }
+
+        if(basket.getPaidAt()){
+            paidAt = basket.getPaidAt().toISOString();
+        }
+
+        if(basket.getDeliveredAt()){
+            deliveredAt = basket.getDeliveredAt().toISOString();
+        }
+
+        return new BasketOrderLightVM(basket.getBasketId(), basket.getUser().getFirstName(), basket.getUser().getName(), basket.getUser().getEmail(), createdAt, orderedAt, paidAt, deliveredAt, basket.getPaymentMethodCode());
     }
 }
