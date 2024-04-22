@@ -7,6 +7,8 @@ import BasketToOrderDS from "../../business/models/datastores/BasketToOrderDS";
 import DatabaseSingleton from "../DatabaseSingleton";
 import {Transaction} from "sequelize";
 import ProductOptionEntity from "../entities/ProductOptionEntity";
+import ProductEntity from "../entities/ProductEntity";
+import ProductOptionPictureEntity from "../entities/ProductOptionPictureEntity";
 
 export default class BasketDataMapper implements IBasketDataGateway {
     public async addBasketForUser(userId: string): Promise<BasketEntity> {
@@ -176,6 +178,32 @@ export default class BasketDataMapper implements IBasketDataGateway {
                     transaction: t
                 })
             }
+        });
+    }
+
+    public async getBasketOrder(basketId: string): Promise<BasketEntity> {
+        return await BasketEntity.findOne({
+            where: {
+                basketId: basketId
+            },
+            include: [
+                {
+                    model: BasketProductOptionEntity, as: 'basketProductOptions', required: true,
+                    include: [
+                        {
+                            model: ProductOptionEntity, as: 'productOption', required: true,
+                            include: [
+                                {
+                                    model: ProductEntity, as: 'product', required: true
+                                },
+                                {
+                                    model: ProductOptionPictureEntity, as: 'productOptionPictures', required: false
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         });
     }
 

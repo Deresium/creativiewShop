@@ -10,7 +10,7 @@ export default interface IDeliveryOptionDataGateway {
 
     deliveryOptionExistsForCustomer(deliveryOptionId: string, customerId: number): Promise<boolean>;
 
-    getDeliveryOption(deliveryOptionId: string, customerId: number): Promise<DeliveryOptionEntity>;
+    getDeliveryOption(deliveryOptionId: string, customerId: number, date?: Date): Promise<DeliveryOptionEntity>;
 
     getDeliveryOptions(customerId: number): Promise<Array<DeliveryOptionEntity>>;
 

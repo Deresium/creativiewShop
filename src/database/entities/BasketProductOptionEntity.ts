@@ -1,6 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 import ProductOptionEntity from "./ProductOptionEntity";
+import Decimal from "decimal.js";
 
 export default class BasketProductOptionEntity extends Model {
     private readonly basketId: string;
@@ -20,6 +21,14 @@ export default class BasketProductOptionEntity extends Model {
 
     getProductOption() {
         return this.productOption;
+    }
+
+
+    getPriceAtOrdered(): Decimal {
+        if(this.priceAtOrdered) {
+            return new Decimal(this.priceAtOrdered);
+        }
+        return null;
     }
 }
 

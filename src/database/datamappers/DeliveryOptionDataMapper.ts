@@ -35,8 +35,10 @@ export default class DeliveryOptionDataMapper implements IDeliveryOptionDataGate
         return count === 1;
     }
 
-    public async getDeliveryOption(deliveryOptionId: string, customerId: number): Promise<DeliveryOptionEntity> {
-        const now = new Date();
+    public async getDeliveryOption(deliveryOptionId: string, customerId: number, date?: Date): Promise<DeliveryOptionEntity> {
+        if(!date){
+            date = new Date();
+        }
         return await DeliveryOptionEntity.findOne({
             where: {
                 customerId: customerId,
@@ -47,9 +49,9 @@ export default class DeliveryOptionDataMapper implements IDeliveryOptionDataGate
                     model: WeightPriceEntity,
                     as: 'weightPrices',
                     where: {
-                        startDate: {[Op.lte]: now},
+                        startDate: {[Op.lte]: date},
                         endDate: {
-                            [Op.or]: [{[Op.gte]: now}, {[Op.is]: null}]
+                            [Op.or]: [{[Op.gte]: date}, {[Op.is]: null}]
                         }
                     },
                     required: true

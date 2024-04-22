@@ -20,5 +20,5 @@ export default interface IDeliveryOptionRequester {
 
     getDeliveryOptionsForCountry(customer: CustomerVM, countryId: number, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<Array<DeliveryOptionStoreVM>>;
 
-    getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<DeliveryOptionStoreDS>;
+    getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>, date?: Date): Promise<DeliveryOptionStoreDS>;
 }

@@ -2,6 +2,7 @@ import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 import AddressEntity from "./AddressEntity";
 import BasketProductOptionEntity from "./BasketProductOptionEntity";
+import Decimal from "decimal.js";
 
 export default class BasketEntity extends Model {
     private readonly basketId: string;
@@ -55,6 +56,24 @@ export default class BasketEntity extends Model {
 
     public getBasketProductOptions(): Array<BasketProductOptionEntity> {
         return this.basketProductOptions;
+    }
+
+
+    getTotalWeightAtOrdered(): Decimal {
+        if(this.totalWeightAtOrdered) {
+            return new Decimal(this.totalWeightAtOrdered);
+        }
+        return null;
+    }
+
+
+    getCurrencyAtOrdered(): string {
+        return this.currencyAtOrdered;
+    }
+
+
+    getOrderedAt(): Date {
+        return this.orderedAt;
     }
 }
 

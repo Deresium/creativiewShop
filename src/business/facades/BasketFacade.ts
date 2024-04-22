@@ -13,6 +13,8 @@ import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
 import BasketBuilder from "../utils/BasketBuilder";
 import BasketToOrderDS from "../models/datastores/BasketToOrderDS";
 import Decimal from "decimal.js";
+import BasketOrderVM from "../models/viewmodels/BasketOrderVM";
+import BasketOrderBuilder from "../utils/BasketOrderBuilder";
 
 export default class BasketFacade implements IBasketRequester {
     private readonly basketDataGateway: IBasketDataGateway;
@@ -128,5 +130,12 @@ export default class BasketFacade implements IBasketRequester {
 
         const basketToOrderDS = new BasketToOrderDS(basketId, currency, basket.getTotalWeight(), productOptionStock, productOptionPrices);
         await this.basketDataGateway.basketToOrder(basketToOrderDS);
+    }
+
+    public async getBasketOrder(basketId: string, customer: CustomerVM): Promise<BasketOrderVM> {
+        const basket = await this.basketDataGateway.getBasketOrder(basketId);
+        const rates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
+        const deliveryOption = await this.deliveryOptionRequester.getDeliveryOptionById(customer, basket.getDeliveryOptionId(), basket.getTotalWeightAtOrdered(), basket.getCurrencyAtOrdered(), rates, basket.getOrderedAt());
+        return new BasketOrderBuilder(basket, deliveryOption).buildBasketOrder();
     }
 }

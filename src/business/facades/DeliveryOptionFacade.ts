@@ -54,8 +54,8 @@ export default class DeliveryOptionFacade implements IDeliveryOptionRequester {
         return deliveryOptionStores;
     }
 
-    public async getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>): Promise<DeliveryOptionStoreDS> {
-        const deliveryOption = await this.deliveryOptionDataGateway.getDeliveryOption(deliveryOptionId, customer.getCustomerId());
+    public async getDeliveryOptionById(customer: CustomerVM, deliveryOptionId: string, weight: Decimal, currencyCode: string, currencyRates: Map<string, Decimal>, date?: Date): Promise<DeliveryOptionStoreDS> {
+        const deliveryOption = await this.deliveryOptionDataGateway.getDeliveryOption(deliveryOptionId, customer.getCustomerId(), date);
         return new DeliveryOptionStoreBuilder(deliveryOption, customer, currencyRates, weight, currencyCode).buildDeliveryOptionStore();
     }
 

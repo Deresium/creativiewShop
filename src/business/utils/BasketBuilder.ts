@@ -133,8 +133,4 @@ export default class BasketBuilder {
             basket.getPaymentMethod()
         )
     }
-
-    public async requestBasketOrder(): Promise<BasketOrderVM> {
-        return null;
-    }
 }

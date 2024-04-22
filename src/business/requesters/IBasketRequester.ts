@@ -3,6 +3,7 @@ import BasketVM from "../models/viewmodels/BasketVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import BasketErrorReportVM from "../models/viewmodels/BasketErrorReportVM";
 import DeliveryOptionStoreVM from "../models/viewmodels/DeliveryOptionStoreVM";
+import BasketOrderVM from "../models/viewmodels/BasketOrderVM";
 
 export default interface IBasketRequester {
     getBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM>;
@@ -30,4 +31,6 @@ export default interface IBasketRequester {
     getDeliveryOptionsForBasket(basketId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<Array<DeliveryOptionStoreVM>>;
 
     basketToOrder(customer: CustomerVM, basketId: string, groupIds: Array<string>, currency: string, language: string): Promise<void>;
+
+    getBasketOrder(basketId: string, customer: CustomerVM): Promise<BasketOrderVM>;
 }
