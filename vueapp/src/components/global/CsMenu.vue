@@ -11,6 +11,10 @@
                             t('store')
                         }}
                     </RouterLink>
+                    <RouterLink v-if="hasAccessToStore" :to="{name: 'userOrders'}" @click="clickOnRoute">{{
+                            t('myOrders')
+                        }}
+                    </RouterLink>
                 </div>
                 <v-btn v-if="isLoggedIn" @click="clickOnLogout">{{ t('logout') }}</v-btn>
             </div>

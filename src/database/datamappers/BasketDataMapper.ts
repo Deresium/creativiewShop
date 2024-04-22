@@ -60,7 +60,7 @@ export default class BasketDataMapper implements IBasketDataGateway {
                 {
                     model: BasketProductOptionEntity,
                     attributes: ['productOptionId', 'quantity'],
-                    as: 'basketProductOptions',
+                    as: 'basketPO',
                     include: [{model: ProductOptionEntity, attributes: ['weight'], as: 'productOption'}]
                 }
             ]
@@ -217,7 +217,7 @@ export default class BasketDataMapper implements IBasketDataGateway {
             },
             include: [
                 {
-                    model: BasketProductOptionEntity, as: 'basketProductOptions', required: true,
+                    model: BasketProductOptionEntity, as: 'basketPO', required: true,
                     include: [
                         {
                             model: ProductOptionEntity, as: 'productOption', required: true,
@@ -226,7 +226,9 @@ export default class BasketDataMapper implements IBasketDataGateway {
                                     model: ProductEntity, as: 'product', required: true
                                 },
                                 {
-                                    model: ProductOptionPictureEntity, as: 'productOptionPictures', required: false
+                                    model: ProductOptionPictureEntity,
+                                    as: 'pictures',
+                                    required: false
                                 }
                             ]
                         }
@@ -248,7 +250,8 @@ export default class BasketDataMapper implements IBasketDataGateway {
                 {
                     model: UserEntity, as: 'user', required: true
                 }
-            ]
+            ],
+            order: [['orderedAt', 'DESC']]
         });
     }
 
@@ -263,7 +266,8 @@ export default class BasketDataMapper implements IBasketDataGateway {
                 {
                     model: UserEntity, as: 'user', where: {customerId: customerId}, required: true
                 }
-            ]
+            ],
+            order: [['orderedAt', 'DESC']]
         });
     }
 

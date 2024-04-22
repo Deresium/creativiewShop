@@ -9,6 +9,7 @@ import CsStoreProduct from "../components/routes/CsStoreProduct.vue";
 import CsBasket from "../components/routes/CsBasket.vue";
 import CsStore from "../components/routes/CsStore.vue";
 import CsBasketOrderSuccess from "../components/routes/CsBasketOrderSuccess.vue";
+import CsUserOrders from "../components/routes/CsUserOrders.vue";
 
 export const routes: Array<RouteRecordRaw> = [
     {
@@ -64,5 +65,10 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/basketOrderSuccess',
         name: 'basketOrderSuccess',
         component: CsBasketOrderSuccess
+    },
+    {
+        path: '/orders',
+        name: 'userOrders',
+        component: CsUserOrders
     }
 ];

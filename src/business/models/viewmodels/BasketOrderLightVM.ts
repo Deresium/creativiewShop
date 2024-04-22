@@ -1,4 +1,4 @@
-export default class BasketOrderLightVM{
+export default class BasketOrderLightVM {
     private readonly basketId: string;
     private readonly firstName: string;
     private readonly name: string;
@@ -8,9 +8,10 @@ export default class BasketOrderLightVM{
     private readonly paidAt: string;
     private readonly deliveredAt: string;
     private readonly basketStateCode: string;
+    private readonly orderNumber: string;
 
 
-    constructor(basketId: string, firstName: string, name: string, email: string, createdAt: string, orderedAt: string, paidAt: string, deliveredAt: string, basketStateCode: string) {
+    constructor(basketId: string, firstName: string, name: string, email: string, createdAt: string, orderedAt: string, paidAt: string, deliveredAt: string, basketStateCode: string, orderNumber: string) {
         this.basketId = basketId;
         this.firstName = firstName;
         this.name = name;
@@ -20,5 +21,6 @@ export default class BasketOrderLightVM{
         this.paidAt = paidAt;
         this.deliveredAt = deliveredAt;
         this.basketStateCode = basketStateCode;
+        this.orderNumber = orderNumber;
     }
 }

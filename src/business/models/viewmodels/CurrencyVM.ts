@@ -9,4 +9,17 @@ export default class CurrencyVM {
         this.name = name;
         this.symbol = symbol;
     }
+
+
+    public getCurrencyCode(): string {
+        return this.currencyCode;
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public getSymbol(): string {
+        return this.symbol;
+    }
 }

@@ -1,6 +1,5 @@
 import ApplicationRouter from "./ApplicationRouter";
 import IBasketRequester from "../../business/requesters/IBasketRequester";
-import ApplicationMiddleware from "../middlewares/ApplicationMiddleware";
 import {RequestHandler} from "express";
 
 export default class OrderRouter extends ApplicationRouter {
@@ -33,7 +32,8 @@ export default class OrderRouter extends ApplicationRouter {
         this.getRouter().get('/order/:basketId', this.checkBasketAccessMiddleware, async (req: any, res: any) => {
             const basketId = String(req.params.basketId);
             const customer = req.customer;
-            const basket = await this.basketRequester.getBasketOrder(basketId, customer);
+            const language = req.query.language;
+            const basket = await this.basketRequester.getBasketOrder(basketId, customer, language);
             res.send(basket);
         });
     }

@@ -13,7 +13,7 @@ export default class ProductOptionDiscountVM {
     constructor(productOptionDiscountId: string, productOptionId: string, groupName: string, percent: string, lastPrice: string, discountPrice: string, startDate: Date, endDate: Date, deletedAt: Date) {
         this.productOptionDiscountId = productOptionDiscountId;
         this.productOptionId = productOptionId;
-        this.groupName = groupName
+        this.groupName = groupName;
         this.percent = percent;
         this.lastPrice = lastPrice;
         this.discountPrice = discountPrice;

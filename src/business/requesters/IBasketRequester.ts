@@ -33,7 +33,7 @@ export default interface IBasketRequester {
 
     basketToOrder(customer: CustomerVM, basketId: string, groupIds: Array<string>, currency: string, language: string): Promise<void>;
 
-    getBasketOrder(basketId: string, customer: CustomerVM): Promise<BasketOrderVM>;
+    getBasketOrder(basketId: string, customer: CustomerVM, language: string): Promise<BasketOrderVM>;
 
     isBasketOwner(basketId: string, userId: string): Promise<boolean>;
 

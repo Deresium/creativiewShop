@@ -24,7 +24,7 @@ export default class ProductOptionEntity extends Model {
     private createdAt: Date;
 
     private productOptionPrices: Array<ProductOptionPriceEntity>;
-    private productOptionPictures: Array<ProductOptionPictureEntity>;
+    private pictures: Array<ProductOptionPictureEntity>;
     private productOptionDiscounts: Array<ProductOptionDiscountEntity>;
     private productOptionCategories: Array<ProductOptionCategoryEntity>;
 
@@ -84,7 +84,7 @@ export default class ProductOptionEntity extends Model {
     }
 
     public getListPictures() {
-        return this.productOptionPictures;
+        return this.pictures;
     }
 
 
@@ -134,7 +134,7 @@ ProductOptionEntity.hasMany(ProductOptionPriceEntity, {
 ProductOptionEntity.hasMany(ProductOptionPictureEntity, {
     sourceKey: 'productOptionId',
     foreignKey: 'productOptionId',
-    as: 'productOptionPictures'
+    as: 'pictures'
 });
 
 ProductOptionEntity.hasMany(ProductOptionCategoryEntity, {

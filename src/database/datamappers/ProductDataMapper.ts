@@ -71,7 +71,7 @@ export default class ProductDataMapper implements IProductDataGateway {
                         where: {endDate: {[Op.eq]: null}}
                     }, {
                         model: ProductOptionPictureEntity,
-                        as: 'productOptionPictures',
+                        as: 'pictures',
                         required: false
                     }
                 ]

@@ -270,7 +270,7 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
                     attributes: ['productOptionPictureId'],
                     model: ProductOptionPictureEntity,
                     required: false,
-                    as: 'productOptionPictures'
+                    as: 'pictures'
                 },
                 {
                     model: ProductOptionPriceEntity,

@@ -24,7 +24,7 @@ export default class BasketEntity extends Model {
 
     private readonly deliveryAddress: AddressEntity;
     private readonly user: UserEntity;
-    private readonly basketProductOptions: Array<BasketProductOptionEntity>;
+    private readonly basketPO: Array<BasketProductOptionEntity>;
 
 
     getBasketId(): string {
@@ -58,7 +58,7 @@ export default class BasketEntity extends Model {
     }
 
     public getBasketProductOptions(): Array<BasketProductOptionEntity> {
-        return this.basketProductOptions;
+        return this.basketPO;
     }
 
 
@@ -79,6 +79,10 @@ export default class BasketEntity extends Model {
         return this.orderedAt;
     }
 
+
+    public getOrderNumber(): string {
+        return this.orderNumber;
+    }
 
     getUser(): UserEntity {
         return this.user;
@@ -128,7 +132,7 @@ BasketEntity.hasOne(AddressEntity, {
 BasketEntity.hasMany(BasketProductOptionEntity, {
     sourceKey: 'basketId',
     foreignKey: 'basketId',
-    as: 'basketProductOptions'
+    as: 'basketPO'
 });
 
 BasketEntity.hasOne(UserEntity, {

@@ -17,4 +17,40 @@ export default class BasketProductOptionOrderVM {
         this.title = title;
         this.total = total;
     }
+
+
+    public getProductOptionId(): string {
+        return this.productOptionId;
+    }
+
+    public getProductId(): string {
+        return this.productId;
+    }
+
+    public getPrice(): string {
+        return this.price;
+    }
+
+    public getQuantity(): number {
+        return this.quantity;
+    }
+
+    public getPictures(): Array<string> {
+        return this.pictures;
+    }
+
+    public getPictureId(): string {
+        if (this.pictures && this.pictures.length > 0) {
+            return this.pictures[0];
+        }
+        return null;
+    }
+
+    public getTitle(): string {
+        return this.title;
+    }
+
+    public getTotal(): string {
+        return this.total;
+    }
 }

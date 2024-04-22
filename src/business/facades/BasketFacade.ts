@@ -138,11 +138,12 @@ export default class BasketFacade implements IBasketRequester {
         await this.basketDataGateway.basketToOrder(basketToOrderDS, customer.getCustomerId());
     }
 
-    public async getBasketOrder(basketId: string, customer: CustomerVM): Promise<BasketOrderVM> {
+    public async getBasketOrder(basketId: string, customer: CustomerVM, language: string): Promise<BasketOrderVM> {
         const basket = await this.basketDataGateway.getBasketOrder(basketId);
         const rates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
+        const currencies = await this.currencyRateRequester.getCurrency(customer.getCustomerId());
         const deliveryOption = await this.deliveryOptionRequester.getDeliveryOptionById(customer, basket.getDeliveryOptionId(), basket.getTotalWeightAtOrdered(), basket.getCurrencyAtOrdered(), rates, basket.getOrderedAt());
-        return new BasketOrderBuilder(basket, deliveryOption).buildBasketOrder();
+        return new BasketOrderBuilder(basket, deliveryOption, currencies, language).buildBasketOrder();
     }
 
     public async getOrdersForUser(userId: string): Promise<Array<BasketOrderLightVM>> {
@@ -176,6 +177,16 @@ export default class BasketFacade implements IBasketRequester {
             deliveredAt = basket.getDeliveredAt().toISOString();
         }
 
-        return new BasketOrderLightVM(basket.getBasketId(), basket.getUser().getFirstName(), basket.getUser().getName(), basket.getUser().getEmail(), createdAt, orderedAt, paidAt, deliveredAt, basket.getPaymentMethodCode());
+        return new BasketOrderLightVM(
+            basket.getBasketId(),
+            basket.getUser().getFirstName(),
+            basket.getUser().getName(),
+            basket.getUser().getEmail(),
+            createdAt,
+            orderedAt,
+            paidAt,
+            deliveredAt,
+            basket.getBasketStateCode(),
+            basket.getOrderNumber());
     }
 }
