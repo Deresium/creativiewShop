@@ -17,4 +17,21 @@ export default class BasketProductOptionOrderVM {
         this.title = title;
         this.total = total;
     }
+
+
+    getPrice(): string {
+        return this.price;
+    }
+
+    getQuantity(): number {
+        return this.quantity;
+    }
+
+    getTitle(): string {
+        return this.title;
+    }
+
+    getTotal(): string {
+        return this.total;
+    }
 }

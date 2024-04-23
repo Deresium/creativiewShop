@@ -45,7 +45,7 @@ export default class UserFacade implements IUserRequester {
         const userEmail = new UserEmailVM(userCreationDS.getName(), userCreationDS.getFirstName(), userCreationDS.getEmail(), userCreationDS.getLanguage());
         const usersGroupAdminStore = await this.userGroupDataGateway.findUsersInGroup(userCreationDS.getCustomer().getCustomerId(), GroupConst.ADMIN_STORE);
         const userAdminStoreEmail = usersGroupAdminStore.map(userGroupAdmin => userGroupAdmin.getUser().getEmail());
-        await this.sendMailDataGateway.sendEmailNewUserAccount(userEmail, userCreationDS.getCustomer(), userAdminStoreEmail);
+        await this.sendMailDataGateway.sendEmailNewUserAccount(userEmail, userCreationDS.getCustomer(), userAdminStoreEmail, 'fr');
     }
 
     public async createUserTemp(customerId: number, language: string): Promise<string> {

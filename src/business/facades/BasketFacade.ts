@@ -17,6 +17,9 @@ import BasketOrderVM from "../models/viewmodels/BasketOrderVM";
 import BasketOrderBuilder from "../utils/BasketOrderBuilder";
 import BasketOrderLightVM from "../models/viewmodels/BasketOrderLightVM";
 import BasketEntity from "../../database/entities/BasketEntity";
+import ISendMailDataGateway from "../../external/aws/mail/ISendMailDataGateway";
+import GroupConst from "../utils/GroupConst";
+import IUserGroupDataGateway from "../../database/gateways/IUserGroupDataGateway";
 
 export default class BasketFacade implements IBasketRequester {
     private readonly basketDataGateway: IBasketDataGateway;
@@ -24,14 +27,18 @@ export default class BasketFacade implements IBasketRequester {
     private readonly productOptionDataMapper: ProductOptionDataMapper;
     private readonly deliveryOptionRequester: IDeliveryOptionRequester;
     private readonly currencyRateRequester: ICurrencyRateRequester;
+    private readonly sendMailDataGateway: ISendMailDataGateway;
+    private readonly userGroupDataGateway: IUserGroupDataGateway;
 
 
-    constructor(basketDataGateway: IBasketDataGateway, productOptionRequester: IProductOptionRequester, productOptionDataMapper: ProductOptionDataMapper, deliveryOptionRequester: IDeliveryOptionRequester, currencyRateRequester: ICurrencyRateRequester) {
+    constructor(basketDataGateway: IBasketDataGateway, productOptionRequester: IProductOptionRequester, productOptionDataMapper: ProductOptionDataMapper, deliveryOptionRequester: IDeliveryOptionRequester, currencyRateRequester: ICurrencyRateRequester, sendMailDataGateway: ISendMailDataGateway, userGroupDataGateway: IUserGroupDataGateway) {
         this.basketDataGateway = basketDataGateway;
         this.productOptionRequester = productOptionRequester;
         this.productOptionDataMapper = productOptionDataMapper;
         this.deliveryOptionRequester = deliveryOptionRequester;
         this.currencyRateRequester = currencyRateRequester;
+        this.sendMailDataGateway = sendMailDataGateway;
+        this.userGroupDataGateway = userGroupDataGateway;
     }
 
     public async addOpenBasketIfNotExists(userId: string): Promise<string> {
@@ -141,6 +148,12 @@ export default class BasketFacade implements IBasketRequester {
 
         const basketToOrderDS = new BasketToOrderDS(basketId, currency, basket.getTotalWeight(), productOptionStock, productOptionPrices);
         await this.basketDataGateway.basketToOrder(basketToOrderDS, customer.getCustomerId());
+        const basketOrder = await this.getBasketOrder(basketId, customer, language);
+
+        const usersGroupAdminStore = await this.userGroupDataGateway.findUsersInGroup(customer.getCustomerId(), GroupConst.ADMIN_STORE);
+        const userAdminStoreEmail = usersGroupAdminStore.map(userGroupAdmin => userGroupAdmin.getUser().getEmail());
+        await this.sendMailDataGateway.sendEmailNewOrder(customer, basketOrder, userAdminStoreEmail, 'fr');
+        await this.sendMailDataGateway.sendEmailUserOrder(customer, basketOrder, basketOrder.getEmail(), language);
     }
 
     public async getBasketOrder(basketId: string, customer: CustomerVM, language: string): Promise<BasketOrderVM> {

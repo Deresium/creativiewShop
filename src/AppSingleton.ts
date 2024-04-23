@@ -145,7 +145,7 @@ export default class AppSingleton {
         const deliveryOptionCountryFacade = new DeliveryOptionCountryFacade(deliveryOptionCountryDataMapper);
         const countryFacade = new CountryFacade(countryDataMapper);
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
-        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade);
+        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade, sendMailDataMapper, userGroupDataMapper);
         const addressFacade = new AddressFacade(addressDataMapper);
         const paymentMethodFacade = new PaymentMethodFacade(paymentMethodDataMapper);
 

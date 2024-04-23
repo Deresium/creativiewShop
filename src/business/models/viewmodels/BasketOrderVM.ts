@@ -14,13 +14,16 @@ export default class BasketOrderVM {
     private readonly basketStateCode: string;
     private readonly currencyCode: string;
     private readonly currencySymbol: string;
+    private readonly firstName: string;
+    private readonly name: string;
+    private readonly email: string;
     private readonly createdAt: string;
     private readonly orderedAt: string;
     private readonly paidAt: string;
     private readonly deliveredAt: string;
 
 
-    constructor(basketId: string, basketProductOptionOrders: Array<BasketProductOptionOrderVM>, totalWeight: string, deliveryPrice: string, productOptionsPrice: string, totalPrice: string, deliveryAddressId: string, billingAddressId: string, deliveryOptionLabel: string, paymentMethod: string, basketStateCode: string, currencyCode: string, currencySymbol: string, createdAt: string, orderedAt: string, paidAt: string, deliveredAt: string) {
+    constructor(basketId: string, basketProductOptionOrders: Array<BasketProductOptionOrderVM>, totalWeight: string, deliveryPrice: string, productOptionsPrice: string, totalPrice: string, deliveryAddressId: string, billingAddressId: string, deliveryOptionLabel: string, paymentMethod: string, basketStateCode: string, currencyCode: string, currencySymbol: string, firstName: string, name: string, email: string, createdAt: string, orderedAt: string, paidAt: string, deliveredAt: string) {
         this.basketId = basketId;
         this.basketProductOptionOrders = basketProductOptionOrders;
         this.totalWeight = totalWeight;
@@ -34,10 +37,31 @@ export default class BasketOrderVM {
         this.basketStateCode = basketStateCode;
         this.currencyCode = currencyCode;
         this.currencySymbol = currencySymbol;
+        this.firstName = firstName;
+        this.name = name;
+        this.email = email;
         this.createdAt = createdAt;
         this.orderedAt = orderedAt;
         this.deliveredAt = deliveredAt;
         this.paidAt = paidAt;
         this.deliveredAt = deliveredAt;
+    }
+
+
+    public getFirstName(): string {
+        return this.firstName;
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public getEmail(): string {
+        return this.email;
+    }
+
+
+    public getBasketProductOptionOrders(): Array<BasketProductOptionOrderVM> {
+        return this.basketProductOptionOrders;
     }
 }
