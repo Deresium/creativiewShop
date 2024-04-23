@@ -30,6 +30,11 @@ export default class AddressFacade implements IAddressRequester {
         return this.addressEntityToAddressVM(address, language);
     }
 
+    public async getAddressById(addressId: string, language: string): Promise<AddressVM> {
+        const address = await this.addressDataGateway.getAddressById(addressId);
+        return this.addressEntityToAddressVM(address, language);
+    }
+
     public async getAddressesForUser(userId: string, language: string): Promise<Array<AddressVM>> {
         const addresses = await this.addressDataGateway.getAddressesForUser(userId);
         return addresses.map(address => this.addressEntityToAddressVM(address, language));

@@ -23,7 +23,7 @@ export default class NewOrderMailContent extends MailContent {
 
     protected getBodyFr(separator: string): string {
         return `
-        Une nouvelle commande est arrivée sur ${this.order.getFirstName()} ${this.order.getName()}. ${separator}
+        Une nouvelle commande est arrivée de ${this.order.getFirstName()} ${this.order.getName()}. ${separator}
         Vous pouvez le contacter par email: <a href="mailto:${this.order.getEmail()}">${this.order.getEmail()}</a>. ${separator}
         Consultez sa commande sur <a href="https://www.${this.customer.getDnsName()}">${this.customer.getDnsName()}</a>
         `;

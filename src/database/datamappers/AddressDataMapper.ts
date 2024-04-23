@@ -55,6 +55,16 @@ export default class AddressDataMapper implements IAddressDataGateway {
         });
     }
 
+    public async getAddressById(addressId: string): Promise<AddressEntity> {
+        return await AddressEntity.findOne({
+            where: {
+                addressId: addressId
+            },
+            include: [{model: CountryEntity, as: 'country'}]
+        });
+    }
+
+
     public async getAddressesForUser(userId: string): Promise<Array<AddressEntity>> {
         return await AddressEntity.findAll({
             where: {

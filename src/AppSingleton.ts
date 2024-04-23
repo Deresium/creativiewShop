@@ -145,7 +145,7 @@ export default class AppSingleton {
         const deliveryOptionCountryFacade = new DeliveryOptionCountryFacade(deliveryOptionCountryDataMapper);
         const countryFacade = new CountryFacade(countryDataMapper);
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
-        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade, sendMailDataMapper, userGroupDataMapper);
+        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade, sendMailDataMapper, userGroupDataMapper, customerFacade);
         const addressFacade = new AddressFacade(addressDataMapper);
         const paymentMethodFacade = new PaymentMethodFacade(paymentMethodDataMapper);
 
@@ -209,6 +209,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new BasketRouter(basketFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware, extractOpenBasketIdMiddleware).getRouter());
         this.expressApp.use('/api', new AddressRouter(addressFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware).getRouter());
         this.expressApp.use('/api', new PaymentMethodRouter(paymentMethodFacade).getRouter());
-        this.expressApp.use('/api', new OrderRouter(basketFacade, checkBasketAccessMiddleware, onlyAdminStoreMiddleware).getRouter());
+        this.expressApp.use('/api', new OrderRouter(basketFacade, addressFacade, checkBasketAccessMiddleware, onlyAdminStoreMiddleware).getRouter());
     }
 }

@@ -56,7 +56,7 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['deliveryCountryChanged']);
+const emit = defineEmits(['deliveryCountryChanged', 'billingAddressChanged']);
 
 const {t} = useI18n({useScope: "global"});
 
@@ -115,6 +115,7 @@ const handleBillingAddressChange = async () => {
     });
     showSnackbar.value = true;
     textSnackbar.value = t('updateBillingAddress.success');
+    emit('billingAddressChanged');
 };
 
 </script>

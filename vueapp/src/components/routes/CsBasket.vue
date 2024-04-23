@@ -56,6 +56,7 @@
                 :billing-address-id="basket.getBillingAddressId()"
                 :delivery-address-id="basket.getDeliveryAddressId()"
                 @delivery-country-changed="refreshBasket"
+                @billing-address-changed="refreshBasketErrorReport"
             />
 
             <CsBasketDeliveryOption
@@ -66,6 +67,7 @@
 
             <CsBasketPaymentMethod v-if="!basketErrorReport.hasProductOptionErrors()"
                                    :payment-method="basket.getPaymentMethod()"
+                                   @payment-method-changed="refreshBasketErrorReport"
             />
 
             <div class="basketTotal">
@@ -73,7 +75,9 @@
             </div>
 
             <div class="validate">
-                <v-btn @click="validateBasket">{{ t('validateBasket') }}</v-btn>
+                <v-btn v-if="!basketErrorReport.hasErrors()" :disabled="loadingValidationBasket"
+                       :loading="loadingValidationBasket" @click="validateBasket">{{ t('validateBasket') }}
+                </v-btn>
             </div>
 
             <v-alert v-if="basketErrorReport.hasProductOptionErrors()" type="error">
@@ -148,6 +152,7 @@ const basketHeaders = computed(() => [
 ]);
 
 const loaded = ref(false);
+const loadingValidationBasket = ref(false);
 const basket: Ref<BasketVM> = ref(null);
 const basketErrorReport: Ref<BasketErrorReportVM> = ref(null);
 const askConfirmDelete = ref(false);
@@ -161,6 +166,10 @@ const refreshBasket = async () => {
     basket.value = await BasketRequester.requestBasket(currencyCode.value);
     basketErrorReport.value = await BasketErrorReportRequester.requestBasketErrorReport();
     loaded.value = true;
+};
+
+const refreshBasketErrorReport = async () => {
+    basketErrorReport.value = await BasketErrorReportRequester.requestBasketErrorReport();
 };
 
 const askDeleteConfirmProductOptionBasket = (productOptionId: string) => {
@@ -200,12 +209,15 @@ const handleErrorQuantity = (errorMessage: string) => {
 
 const validateBasket = async () => {
     try {
+        loadingValidationBasket.value = true;
         await axiosServer.post('/basket/basketToOrder', {}, {
             params: {
                 currency: currencyCode.value
             }
         });
+        await storeStore.refreshNbItemsInStore();
         await router.push({name: 'basketOrderSuccess'});
+        loadingValidationBasket.value = false;
     } catch (error) {
         await refreshBasket();
     }

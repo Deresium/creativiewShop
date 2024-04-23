@@ -46,6 +46,10 @@ export default class BasketChecker {
             report.addErrorToBasketErrors(new BasketErrorVM(this.basketId, null, "noBillingAddress"));
         }
 
+        if (!basket.getDeliveryOptionId()) {
+            report.addErrorToBasketErrors(new BasketErrorVM(this.basketId, null, "noDeliveryOption"));
+        }
+
         if (!basket.getPaymentMethodCode()) {
             report.addErrorToBasketErrors(new BasketErrorVM(this.basketId, null, "noPaymentMethod"));
         }

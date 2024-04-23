@@ -43,6 +43,8 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits(['paymentMethodChanged']);
+
 const paymentMethod = ref(props.paymentMethod);
 const paymentMethods = ref(new Array<TitleValueVM<string, string>>());
 const customerBank: Ref<CustomerBankVM> = ref();
@@ -62,6 +64,7 @@ const handlePaymentMethodChange = async () => {
     await axiosServer.put('/basket/paymentMethod', {
         paymentMethod: paymentMethod.value
     });
+    emit('paymentMethodChanged');
 };
 
 watch(paymentMethod, async () => {

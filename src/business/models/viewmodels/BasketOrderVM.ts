@@ -60,8 +60,29 @@ export default class BasketOrderVM {
         return this.email;
     }
 
-
     public getBasketProductOptionOrders(): Array<BasketProductOptionOrderVM> {
         return this.basketProductOptionOrders;
+    }
+
+    public getTotalPrice() {
+        return this.totalPrice
+    }
+
+    public getCurrencySymbol() {
+        return this.currencySymbol;
+    }
+
+
+    public getDeliveryPrice(): string {
+        return this.deliveryPrice;
+    }
+
+    public getBasketStateCode(): string {
+        return this.basketStateCode;
+    }
+
+
+    public getPaymentMethod(): string {
+        return this.paymentMethod;
     }
 }

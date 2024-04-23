@@ -50,7 +50,7 @@ export default class BasketDataMapper implements IBasketDataGateway {
 
     public async findBasketByIdAndCustomerId(basketId: string, customerId: string): Promise<boolean> {
         const count = await BasketEntity.count({
-            where:{
+            where: {
                 basketId: basketId
             },
             include: [
@@ -231,6 +231,9 @@ export default class BasketDataMapper implements IBasketDataGateway {
             },
             include: [
                 {
+                    model: UserEntity, as: 'user', required: true,
+                },
+                {
                     model: BasketProductOptionEntity, as: 'basketPO', required: true,
                     include: [
                         {
@@ -290,9 +293,10 @@ export default class BasketDataMapper implements IBasketDataGateway {
         await BasketEntity.update({
             basketStateCode: 'PAID',
             paidAt: now
-        },{
+        }, {
             where: {
-                basketId: basketId
+                basketId: basketId,
+                basketStateCode: 'ORDERED'
             }
         });
     }
@@ -302,9 +306,10 @@ export default class BasketDataMapper implements IBasketDataGateway {
         await BasketEntity.update({
             basketStateCode: 'DELIVERED',
             deliveredAt: now
-        },{
+        }, {
             where: {
-                basketId: basketId
+                basketId: basketId,
+                basketStateCode: 'PAID'
             }
         });
     }

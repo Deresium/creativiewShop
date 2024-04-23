@@ -24,4 +24,49 @@ export default class CustomerBankVM {
         this.box = box;
         this.zipCode = zipCode;
     }
+
+
+    public getIban(): string {
+        return this.iban;
+    }
+
+    public getBic(): string {
+        return this.bic;
+    }
+
+    public getBankName(): string {
+        return this.bankName;
+    }
+
+    public getAccountLabel(): string {
+        return this.accountLabel;
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public getCountryName(): string {
+        return this.countryName;
+    }
+
+    public getCity(): string {
+        return this.city;
+    }
+
+    public getStreet(): string {
+        return this.street;
+    }
+
+    public getStreetNumber(): string {
+        return this.streetNumber;
+    }
+
+    public getBox(): string {
+        return this.box;
+    }
+
+    public getZipCode(): string {
+        return this.zipCode;
+    }
 }

@@ -4,6 +4,7 @@
         <div>
             <v-tabs v-model="tab" :bg-color="firstColor" grow>
                 <v-tab value="product">{{ t('products') }}</v-tab>
+                <v-tab value="order">{{ t('orders') }}</v-tab>
                 <v-tab value="category">{{ t('category') }}</v-tab>
                 <v-tab value="manufacturer">{{ t('manufacturer') }}</v-tab>
                 <v-tab value="currency">{{ t('currencies') }}</v-tab>
@@ -14,6 +15,9 @@
             <v-window v-model="tab" :touch="false" class="window">
                 <v-window-item value="product">
                     <ProductTab/>
+                </v-window-item>
+                <v-window-item value="order">
+                    <CsOrdersTab/>
                 </v-window-item>
                 <v-window-item value="category">
                     <CategoryTab/>
@@ -50,6 +54,7 @@ import CsCurrencyTab from "../admin/CsCurrencyTab.vue";
 import CsDeliveryOptionTab from "../admin/CsDeliveryOptionTab.vue";
 import CsUserTab from "../admin/CsUserTab.vue";
 import CsUserGroupTab from "../admin/CsUserGroupTab.vue";
+import CsOrdersTab from "../admin/CsOrdersTab.vue";
 
 const {t} = useI18n({useScope: 'global'});
 const {firstColor} = useCustomer();

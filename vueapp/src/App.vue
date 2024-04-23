@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <div v-if="!initDone">
-            <p>Chargement en cours</p>
+            <v-skeleton-loader type="card"></v-skeleton-loader>
         </div>
         <div v-if="initDone" class="app">
             <div class="exceptFooter">

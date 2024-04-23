@@ -1,16 +1,19 @@
 import ApplicationRouter from "./ApplicationRouter";
 import IBasketRequester from "../../business/requesters/IBasketRequester";
 import {RequestHandler} from "express";
+import IAddressRequester from "../../business/requesters/IAddressRequester";
 
 export default class OrderRouter extends ApplicationRouter {
     private readonly basketRequester: IBasketRequester;
+    private readonly addressRequester: IAddressRequester;
     private readonly checkBasketAccessMiddleware: RequestHandler;
     private readonly onlyAdminStoreMiddleware: RequestHandler;
 
 
-    constructor(basketRequester: IBasketRequester, checkBasketAccessMiddleware: RequestHandler, onlyAdminStoreMiddleware: RequestHandler) {
+    constructor(basketRequester: IBasketRequester, addressRequester: IAddressRequester, checkBasketAccessMiddleware: RequestHandler, onlyAdminStoreMiddleware: RequestHandler) {
         super();
         this.basketRequester = basketRequester;
+        this.addressRequester = addressRequester;
         this.checkBasketAccessMiddleware = checkBasketAccessMiddleware;
         this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
         this.initRoutes();
@@ -27,6 +30,13 @@ export default class OrderRouter extends ApplicationRouter {
             const customerId = req.customer.getCustomerId();
             const baskets = await this.basketRequester.getOrdersForCustomer(customerId);
             res.send(baskets);
+        });
+
+        this.getRouter().get('/order/address/:addressId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
+            const addressId = String(req.params.addressId);
+            const language = req.query.language;
+            const address = await this.addressRequester.getAddressById(addressId, language);
+            res.send(address);
         });
 
         this.getRouter().get('/order/:basketId', this.checkBasketAccessMiddleware, async (req: any, res: any) => {

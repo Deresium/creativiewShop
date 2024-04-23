@@ -18,4 +18,9 @@ export default class AddressRequester {
         const response = await axiosServer.get(`/address/${addressId}`);
         return AddressParser.parseAddress(response.data);
     }
+
+    public static async requestAddressAdminStore(addressId: string): Promise<AddressVM> {
+        const response = await axiosServer.get(`/order/address/${addressId}`);
+        return AddressParser.parseAddress(response.data);
+    }
 }

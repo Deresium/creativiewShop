@@ -2,6 +2,9 @@
     <h2>{{ t('deliveryOption') }}</h2>
     <v-autocomplete v-model="deliveryOptionId" :items="deliveryOptions"
                     @update:modelValue="handleDeliveryOptionChange"/>
+    <v-alert v-if="deliveryOptions.length === 0" class="infoAlert" type="info">
+        {{ t('noDeliveryOption.info') }}
+    </v-alert>
 </template>
 
 <script lang="ts" setup>
@@ -55,5 +58,7 @@ watch([currencyCode, () => props.deliveryCountryId], async () => {
 </script>
 
 <style scoped>
-
+.infoAlert {
+    margin-bottom: 20px;
+}
 </style>

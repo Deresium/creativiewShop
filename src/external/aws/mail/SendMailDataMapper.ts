@@ -8,6 +8,7 @@ import ForgotPasswordMailContent from "./content/ForgotPasswordMailContent";
 import BasketOrderVM from "../../../business/models/viewmodels/BasketOrderVM";
 import NewOrderMailContent from "./content/NewOrderMailContent";
 import UserOrderMailContent from "./content/UserOrderMailContent";
+import CustomerBankVM from "../../../business/models/viewmodels/CustomerBankVM";
 
 export default class SendMailDataMapper implements ISendMailDataGateway {
     public async sendEmailUserAccess(user: UserEmailVM, customer: CustomerVM): Promise<void> {
@@ -25,13 +26,13 @@ export default class SendMailDataMapper implements ISendMailDataGateway {
         await MailSender.sendEmail(mail.getTitle(), mail.getBody(true), mail.getBody(false), customer.getEmailFrom(), [to]);
     }
 
-    public async sendEmailNewOrder(customer: CustomerVM, basket: BasketOrderVM, userAdminStoreEmail: Array<string>, language: string): Promise<void>{
+    public async sendEmailNewOrder(customer: CustomerVM, basket: BasketOrderVM, userAdminStoreEmail: Array<string>, language: string): Promise<void> {
         const mail = new NewOrderMailContent(language, customer, basket);
         await MailSender.sendEmail(mail.getTitle(), mail.getBody(true), mail.getBody(false), customer.getEmailFrom(), userAdminStoreEmail);
     }
 
-    public async sendEmailUserOrder(customer: CustomerVM, basket: BasketOrderVM, to: string, language: string): Promise<void> {
-        const mail = new UserOrderMailContent(language, customer, basket);
+    public async sendEmailUserOrder(customer: CustomerVM, basket: BasketOrderVM, customerBank: CustomerBankVM, to: string, language: string): Promise<void> {
+        const mail = new UserOrderMailContent(language, customer, basket, customerBank);
         await MailSender.sendEmail(mail.getTitle(), mail.getBody(true), mail.getBody(false), customer.getEmailFrom(), [to]);
     }
 }

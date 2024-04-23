@@ -92,6 +92,7 @@ import BasketOrderRequester from "../../requesters/BasketOrderRequester.ts";
 import {useI18n} from "vue-i18n";
 import AddressVM from "../../viewmodels/AddressVM.ts";
 import AddressRequester from "../../requesters/AddressRequester.ts";
+import {useUserStore} from "../../pinia/user/UserStore.ts";
 
 const props = defineProps({
     basketId: {
@@ -114,14 +115,24 @@ const order: Ref<BasketOrderVM> = ref();
 const deliveryAddress: Ref<AddressVM> = ref();
 const billingAddress: Ref<AddressVM> = ref();
 const isLoaded = ref(false);
+const {isAdminStore} = useUserStore();
+
 
 const requestBasket = async () => {
     order.value = await BasketOrderRequester.requestBasketOrder(props.basketId);
     if (order.value.getDeliveryAddressId()) {
-        deliveryAddress.value = await AddressRequester.requestAddress(order.value.getDeliveryAddressId());
+        if (isAdminStore) {
+            deliveryAddress.value = await AddressRequester.requestAddressAdminStore(order.value.getDeliveryAddressId());
+        } else {
+            deliveryAddress.value = await AddressRequester.requestAddress(order.value.getDeliveryAddressId());
+        }
     }
     if (order.value.getBillingAddressId()) {
-        billingAddress.value = await AddressRequester.requestAddress(order.value.getBillingAddressId());
+        if (isAdminStore) {
+            billingAddress.value = await AddressRequester.requestAddressAdminStore(order.value.getBillingAddressId());
+        } else {
+            billingAddress.value = await AddressRequester.requestAddress(order.value.getBillingAddressId());
+        }
     }
     isLoaded.value = true;
 };
