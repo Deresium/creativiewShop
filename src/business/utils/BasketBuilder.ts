@@ -35,6 +35,7 @@ export default class BasketBuilder {
         const productOptionBaskets = new Array<ProductOptionBasketDS>();
         let totalBasket = new Decimal(0);
         let totalWeightBasket = new Decimal(0);
+        let basketHasPreorderItems = false;
         const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
 
 
@@ -72,6 +73,11 @@ export default class BasketBuilder {
                 basketProductOption.getQuantity(),
                 total
             );
+
+            if(productOptionStore.getPreorder()){
+                basketHasPreorderItems = true;
+            }
+
             productOptionBaskets.push(productOptionBasket);
         }
 
@@ -81,7 +87,7 @@ export default class BasketBuilder {
         }
 
 
-        return new BasketDS(this.basketId, productOptionBaskets, totalBasket, totalWeightBasket, basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId(), basket.getPaymentMethodCode());
+        return new BasketDS(this.basketId, productOptionBaskets, totalBasket, totalWeightBasket, basket.getDeliveryAddressId(), basket.getBillingAddressId(), deliveryAddressCountryId, basket.getDeliveryOptionId(), basket.getPaymentMethodCode(), basketHasPreorderItems);
     }
 
     public async requestBasketVM(groupIds: Array<string>, customer: CustomerVM, currency: string, language: string): Promise<BasketVM> {
@@ -130,7 +136,8 @@ export default class BasketBuilder {
             basket.getBillingAddressId(),
             basket.getDeliveryAddressCountryId(),
             basket.getDeliveryOptionId(),
-            basket.getPaymentMethod()
+            basket.getPaymentMethod(),
+            basket.getHasPreorderItems()
         )
     }
 }

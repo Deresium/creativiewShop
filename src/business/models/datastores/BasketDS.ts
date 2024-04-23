@@ -12,9 +12,10 @@ export default class BasketDS {
     private readonly deliveryAddressCountryId: number;
     private readonly deliveryOptionId: string;
     private readonly paymentMethod: string;
+    private readonly hasPreorderItems: boolean;
 
 
-    constructor(basketId: string, productOptionStores: Array<ProductOptionBasketDS>, total: Decimal, totalWeight: Decimal, deliveryAddressId: string, billingAddressId: string, deliveryAddressCountryId: number, deliveryOptionId: string, paymentMethod: string) {
+    constructor(basketId: string, productOptionStores: Array<ProductOptionBasketDS>, total: Decimal, totalWeight: Decimal, deliveryAddressId: string, billingAddressId: string, deliveryAddressCountryId: number, deliveryOptionId: string, paymentMethod: string, hasPreorderItems: boolean) {
         this.basketId = basketId;
         this.productOptionStores = productOptionStores;
         this.total = total;
@@ -24,6 +25,7 @@ export default class BasketDS {
         this.deliveryAddressCountryId = deliveryAddressCountryId;
         this.deliveryOptionId = deliveryOptionId;
         this.paymentMethod = paymentMethod;
+        this.hasPreorderItems = hasPreorderItems;
     }
 
 
@@ -62,5 +64,10 @@ export default class BasketDS {
 
     public getPaymentMethod(): string {
         return this.paymentMethod;
+    }
+
+
+    public getHasPreorderItems(): boolean {
+        return this.hasPreorderItems;
     }
 }
