@@ -15,8 +15,14 @@ export default class CheckBasketAccessMiddleware extends ApplicationMiddleware {
     defineMiddlewareFunction(): RequestHandler {
         return async(req: any, res: any, next: any) => {
             if (GroupConst.hasAccessTo(GroupConst.ADMIN_STORE, req.userGroups)) {
-                next();
-                return;
+                const isBasketOwner = await this.basketRequester.isBasketOwnerCustomer(String(req.params.basketId), req.customer.getCustomerId());
+                if(isBasketOwner) {
+                    next();
+                    return;
+                }else{
+                    res.status(401).send('Accès refusé');
+                    return;
+                }
             }
 
             if(!req.params.basketId){
@@ -24,7 +30,7 @@ export default class CheckBasketAccessMiddleware extends ApplicationMiddleware {
                 return;
             }
 
-            const isBasketOwner = await this.basketRequester.isBasketOwner(String(req.params.basketId), req.userId);
+            const isBasketOwner = await this.basketRequester.isBasketOwnerUser(String(req.params.basketId), req.userId);
 
             if(isBasketOwner){
                 next();

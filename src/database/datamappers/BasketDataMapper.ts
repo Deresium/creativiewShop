@@ -48,6 +48,20 @@ export default class BasketDataMapper implements IBasketDataGateway {
         return count === 1;
     }
 
+    public async findBasketByIdAndCustomerId(basketId: string, customerId: string): Promise<boolean> {
+        const count = await BasketEntity.count({
+            where:{
+                basketId: basketId
+            },
+            include: [
+                {
+                    model: UserEntity, as: 'user', where: {customerId: customerId}, required: true
+                }
+            ]
+        });
+        return count === 1;
+    }
+
     public async findBasketWithProductOptionWeight(basketId: string): Promise<BasketEntity> {
         return await BasketEntity.findOne({
             where: {
@@ -271,5 +285,27 @@ export default class BasketDataMapper implements IBasketDataGateway {
         });
     }
 
+    public async orderToPaid(basketId: string): Promise<void> {
+        const now = new Date();
+        await BasketEntity.update({
+            basketStateCode: 'PAID',
+            paidAt: now
+        },{
+            where: {
+                basketId: basketId
+            }
+        });
+    }
 
+    public async paidToDelivered(basketId: string): Promise<void> {
+        const now = new Date();
+        await BasketEntity.update({
+            basketStateCode: 'DELIVERED',
+            deliveredAt: now
+        },{
+            where: {
+                basketId: basketId
+            }
+        });
+    }
 }

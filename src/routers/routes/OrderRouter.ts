@@ -36,5 +36,17 @@ export default class OrderRouter extends ApplicationRouter {
             const basket = await this.basketRequester.getBasketOrder(basketId, customer, language);
             res.send(basket);
         });
+
+        this.getRouter().post('/order/:basketId/paid', this.onlyAdminStoreMiddleware, this.checkBasketAccessMiddleware, async (req: any, res: any) => {
+            const basketId = String(req.params.basketId);
+            await this.basketRequester.orderToPaid(basketId);
+            res.send();
+        });
+
+        this.getRouter().post('/order/:basketId/delivered', this.onlyAdminStoreMiddleware, this.checkBasketAccessMiddleware, async (req: any, res: any) => {
+            const basketId = String(req.params.basketId);
+            await this.basketRequester.paidToDelivered(basketId);
+            res.send();
+        });
     }
 }

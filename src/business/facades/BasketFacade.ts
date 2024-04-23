@@ -74,9 +74,14 @@ export default class BasketFacade implements IBasketRequester {
         return await basketChecker.checkBasket();
     }
 
-    public async isBasketOwner(basketId: string, userId: string): Promise<boolean> {
+    public async isBasketOwnerUser(basketId: string, userId: string): Promise<boolean> {
         return await this.basketDataGateway.findBasketByIdAndUserId(basketId, userId);
     }
+
+    public async isBasketOwnerCustomer(basketId: string, customerId: string): Promise<boolean> {
+        return await this.basketDataGateway.findBasketByIdAndCustomerId(basketId, customerId);
+    }
+
 
     public async updateBasketBillingAddress(basketId: string, addressId: string): Promise<void> {
         await this.basketDataGateway.updateBasketBillingAddress(basketId, addressId);
@@ -188,5 +193,13 @@ export default class BasketFacade implements IBasketRequester {
             deliveredAt,
             basket.getBasketStateCode(),
             basket.getOrderNumber());
+    }
+
+    public async orderToPaid(basketId: string): Promise<void> {
+        await this.basketDataGateway.orderToPaid(basketId);
+    }
+
+    public async paidToDelivered(basketId: string): Promise<void> {
+        await this.basketDataGateway.orderToPaid(basketId);
     }
 }

@@ -35,9 +35,16 @@ export default interface IBasketRequester {
 
     getBasketOrder(basketId: string, customer: CustomerVM, language: string): Promise<BasketOrderVM>;
 
-    isBasketOwner(basketId: string, userId: string): Promise<boolean>;
+    isBasketOwnerUser(basketId: string, userId: string): Promise<boolean>;
+
+    isBasketOwnerCustomer(basketId: string, customerId: string): Promise<boolean>;
 
     getOrdersForUser(userId: string): Promise<Array<BasketOrderLightVM>>;
 
     getOrdersForCustomer(customerId: number): Promise<Array<BasketOrderLightVM>>;
+
+    orderToPaid(basketId: string): Promise<void>;
+
+    paidToDelivered(basketId: string): Promise<void>;
+
 }
