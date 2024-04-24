@@ -79,6 +79,7 @@ import PaymentMethodFacade from "./business/facades/PaymentMethodFacade";
 import PaymentMethodRouter from "./routers/routes/PaymentMethodRouter";
 import CheckBasketAccessMiddleware from "./routers/middlewares/CheckBasketAccessMiddleware";
 import OrderRouter from "./routers/routes/OrderRouter";
+import OrderPdfRouter from "./routers/routes/OrderPdfRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -210,5 +211,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new AddressRouter(addressFacade, checkStoreAccessMiddleware, extractOrCreateUserTempMiddleware).getRouter());
         this.expressApp.use('/api', new PaymentMethodRouter(paymentMethodFacade).getRouter());
         this.expressApp.use('/api', new OrderRouter(basketFacade, addressFacade, checkBasketAccessMiddleware, onlyAdminStoreMiddleware).getRouter());
+        this.expressApp.use('/api', new OrderPdfRouter(basketFacade, internalizationFacade, checkBasketAccessMiddleware).getRouter());
     }
 }

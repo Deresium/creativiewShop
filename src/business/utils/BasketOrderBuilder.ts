@@ -110,6 +110,7 @@ export default class BasketOrderBuilder {
             this.basket.getUser().getFirstName(),
             this.basket.getUser().getName(),
             this.basket.getUser().getEmail(),
+            this.basket.getOrderNumber(),
             createdAt,
             orderedAt,
             paidAt,

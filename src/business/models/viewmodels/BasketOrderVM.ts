@@ -17,13 +17,14 @@ export default class BasketOrderVM {
     private readonly firstName: string;
     private readonly name: string;
     private readonly email: string;
+    private readonly orderNumber: string;
     private readonly createdAt: string;
     private readonly orderedAt: string;
     private readonly paidAt: string;
     private readonly deliveredAt: string;
 
 
-    constructor(basketId: string, basketProductOptionOrders: Array<BasketProductOptionOrderVM>, totalWeight: string, deliveryPrice: string, productOptionsPrice: string, totalPrice: string, deliveryAddressId: string, billingAddressId: string, deliveryOptionLabel: string, paymentMethod: string, basketStateCode: string, currencyCode: string, currencySymbol: string, firstName: string, name: string, email: string, createdAt: string, orderedAt: string, paidAt: string, deliveredAt: string) {
+    constructor(basketId: string, basketProductOptionOrders: Array<BasketProductOptionOrderVM>, totalWeight: string, deliveryPrice: string, productOptionsPrice: string, totalPrice: string, deliveryAddressId: string, billingAddressId: string, deliveryOptionLabel: string, paymentMethod: string, basketStateCode: string, currencyCode: string, currencySymbol: string, firstName: string, name: string, email: string, orderNumber: string, createdAt: string, orderedAt: string, paidAt: string, deliveredAt: string) {
         this.basketId = basketId;
         this.basketProductOptionOrders = basketProductOptionOrders;
         this.totalWeight = totalWeight;
@@ -40,6 +41,7 @@ export default class BasketOrderVM {
         this.firstName = firstName;
         this.name = name;
         this.email = email;
+        this.orderNumber = orderNumber;
         this.createdAt = createdAt;
         this.orderedAt = orderedAt;
         this.deliveredAt = deliveredAt;
@@ -84,5 +86,10 @@ export default class BasketOrderVM {
 
     public getPaymentMethod(): string {
         return this.paymentMethod;
+    }
+
+
+    public getOrderNumber(): string {
+        return this.orderNumber;
     }
 }

@@ -27,4 +27,24 @@ export default class InternalizationFacade implements IInternalizationRequester 
         return Array.from(mapMessages.values());
     }
 
+    public async getInternalizationMessagesForCustomerInOneLanguage(customerId: number, language: string): Promise<Map<string, string>> {
+        const internalizationMessages = await this.getInternalizationMessagesForCustomer(customerId);
+        const map = new Map<string, string>();
+        for (const internalizationMessage of internalizationMessages) {
+            let message = null;
+            switch (language) {
+                case 'fr':
+                    message = internalizationMessage.getTextFR();
+                    break;
+                case 'en':
+                    message = internalizationMessage.getTextEN();
+                    break;
+                default:
+                    message = internalizationMessage.getTextEN();
+            }
+            map.set(internalizationMessage.getInternalizationKey(), message);
+        }
+        return map;
+    }
+
 }

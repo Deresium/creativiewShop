@@ -21,6 +21,7 @@
             </template>
             <template #item.action="{item}">
                 <v-btn density="compact" @click="clickOnDetail(item.getBasketId())">{{ t('detail') }}</v-btn>
+                <v-btn :href="getPdfSrc(item.getBasketId())" density="compact" download>{{ t('pdf') }}</v-btn>
             </template>
         </v-data-table>
 
@@ -46,7 +47,7 @@ const headers = computed(() => [
     {title: t('action'), value: 'action'}
 ]);
 
-const {t, d} = useI18n({useScope: 'global'});
+const {t, d, locale} = useI18n({useScope: 'global'});
 
 const orders = ref(new Array<BasketOrderLightVM>());
 const showOverlayOrderDetails = ref(false);
@@ -61,7 +62,11 @@ requestUserOrders();
 const clickOnDetail = (basketId: string) => {
     selectedBasketId.value = basketId;
     showOverlayOrderDetails.value = true;
-}
+};
+
+const getPdfSrc = (basketId: string) => {
+    return `${import.meta.env.VITE_APP_URL_CREATIVIEWSHOP}/api/order/${basketId}/pdf?language=${locale.value}`;
+};
 
 </script>
 

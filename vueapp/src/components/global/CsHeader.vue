@@ -44,7 +44,7 @@ const storeStore = useStoreStore();
 
 
 const hasAccessToStore = computed(() => storeStore.getHasAccessToStore);
-const srcImg = computed((() => `${import.meta.env.BASE_URL}logos/${customerId.value}.png`));
+const srcImg = computed((() => `${import.meta.env.VITE_APP_URL_CREATIVIEWSHOP}/logos/${customerId.value}.png`));
 
 const showSearchOverlay = ref(false);
 const formValid = ref(false);
