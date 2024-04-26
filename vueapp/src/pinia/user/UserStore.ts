@@ -10,6 +10,7 @@ export const useUserStore = defineStore('user', {
         getNameFirstName: state => state.user.getNameFirstName(),
         getEmail: state => state.user.getEmail(),
         isAdminStore: state => state.user.getIsAdminStore(),
+        isAdminGlobal: state => state.user.getIsAdminGlobal(),
         isLoggedIn: state => state.user.getIsLoggedIn()
     },
     actions: {
@@ -23,6 +24,7 @@ export const useUserStore = defineStore('user', {
             this.user.setFirstName(userVM.getFirstName());
             this.user.setEmail(userVM.getEmail());
             this.user.setIsAdminStore(userVM.getIsAdminStore());
+            this.user.setIsAdminGlobal(userVM.getIsAdminGlobal());
             this.user.setIsLoggedIn(userVM.getIsLoggedIn());
         },
 
@@ -32,6 +34,7 @@ export const useUserStore = defineStore('user', {
             this.user.setFirstName(null);
             this.user.setEmail(null);
             this.user.setIsAdminStore(false);
+            this.user.setIsAdminGlobal(false);
             this.user.setIsLoggedIn(false);
         }
     }

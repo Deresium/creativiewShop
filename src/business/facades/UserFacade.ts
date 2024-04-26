@@ -72,7 +72,7 @@ export default class UserFacade implements IUserRequester {
         if (!userEntity) {
             return null;
         }
-        return new UserVM(userEntity.getName(), userEntity.getFirstName(), userEntity.getEmail(), GroupConst.hasAccessTo(GroupConst.ADMIN_STORE, userGroups), true);
+        return new UserVM(userEntity.getName(), userEntity.getFirstName(), userEntity.getEmail(), GroupConst.hasAccessTo(GroupConst.ADMIN_STORE, userGroups), GroupConst.hasAccessTo(GroupConst.ADMIN_GLOBAL, userGroups), true);
     }
 
     public async findUserPurchasers(customerId: number): Promise<Array<UserPurchaserVM>> {

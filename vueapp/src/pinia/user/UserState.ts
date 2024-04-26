@@ -3,6 +3,7 @@ export default class UserState {
     private name: string;
     private firstName: string;
     private isAdminStore: boolean;
+    private isAdminGlobal: boolean;
     private isLoggedIn: boolean;
 
 
@@ -40,5 +41,14 @@ export default class UserState {
 
     public setIsLoggedIn(value: boolean) {
         this.isLoggedIn = value;
+    }
+
+
+    public getIsAdminGlobal(): boolean {
+        return this.isAdminGlobal;
+    }
+
+    public setIsAdminGlobal(value: boolean) {
+        this.isAdminGlobal = value;
     }
 }

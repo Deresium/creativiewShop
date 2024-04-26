@@ -6,11 +6,13 @@ const useUser = () => {
     const nameFirstName = computed(() => userStore.getNameFirstName);
     const isLoggedIn = computed(() => userStore.isLoggedIn);
     const isAdminStore = computed(() => userStore.isAdminStore);
+    const isAdminGlobal = computed(() => userStore.isAdminGlobal);
 
     return {
         nameFirstName,
         isLoggedIn,
-        isAdminStore
+        isAdminStore,
+        isAdminGlobal
     }
 };
 

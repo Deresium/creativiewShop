@@ -34,7 +34,7 @@ import ProductRouter from "./routers/routes/ProductRouter";
 import ProductOptionDataMapper from "./database/datamappers/ProductOptionDataMapper";
 import ProductOptionFacade from "./business/facades/ProductOptionFacade";
 import ProductOptionRouter from "./routers/routes/ProductOptionRouter";
-import OnlyAdminStoreMiddleware from "./routers/middlewares/OnlyAdminMiddleware";
+import OnlyAdminStoreMiddleware from "./routers/middlewares/OnlyAdminStoreMiddleware";
 import CheckProductOwnerMiddleware from "./routers/middlewares/CheckProductOwnerMiddleware";
 import ProductOptionCategoryDataMapper from "./database/datamappers/ProductOptionCategoryDataMapper";
 import ProductOptionPictureDataMapper from "./database/datamappers/ProductOptionPictureDataMapper";
@@ -80,6 +80,8 @@ import PaymentMethodRouter from "./routers/routes/PaymentMethodRouter";
 import CheckBasketAccessMiddleware from "./routers/middlewares/CheckBasketAccessMiddleware";
 import OrderRouter from "./routers/routes/OrderRouter";
 import OrderPdfRouter from "./routers/routes/OrderPdfRouter";
+import OnlyAdminGlobalMiddleware from "./routers/middlewares/OnlyAdminGlobalMiddleware";
+import AdminGlobalRouter from "./routers/routes/AdminGlobalRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -187,6 +189,7 @@ export default class AppSingleton {
         this.expressApp.use(new ExtractLanguageMiddleware().getRequestHandler());
 
         const onlyAdminStoreMiddleware = new OnlyAdminStoreMiddleware().getRequestHandler();
+        const onlyAdminGlobalMiddleware = new OnlyAdminGlobalMiddleware().getRequestHandler();
         const checkProductOwnerMiddleware = new CheckProductOwnerMiddleware(productFacade).getRequestHandler();
         const checkDeliveryOptionOwnerMiddleware = new CheckDeliveryOptionOwnerMiddleware(deliveryOptionFacade).getRequestHandler();
         const checkUserOwnerMiddleware = new CheckUserOwnerMiddleware(userFacade).getRequestHandler();
@@ -212,5 +215,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new PaymentMethodRouter(paymentMethodFacade).getRouter());
         this.expressApp.use('/api', new OrderRouter(basketFacade, addressFacade, checkBasketAccessMiddleware, onlyAdminStoreMiddleware).getRouter());
         this.expressApp.use('/api', new OrderPdfRouter(basketFacade, internalizationFacade, checkBasketAccessMiddleware).getRouter());
+        this.expressApp.use('/api', new AdminGlobalRouter(paymentMethodFacade, onlyAdminGlobalMiddleware).getRouter());
     }
 }
