@@ -31,8 +31,8 @@ export default class SendMailDataMapper implements ISendMailDataGateway {
         await MailSender.sendEmail(mail.getTitle(), mail.getBody(true), mail.getBody(false), customer.getEmailFrom(), userAdminStoreEmail);
     }
 
-    public async sendEmailUserOrder(customer: CustomerVM, basket: BasketOrderVM, customerBank: CustomerBankVM, to: string, language: string): Promise<void> {
-        const mail = new UserOrderMailContent(language, customer, basket, customerBank);
+    public async sendEmailUserOrder(customer: CustomerVM, basket: BasketOrderVM, customerBank: CustomerBankVM, to: string, language: string, paypalLink: string, paypalQrCode: string): Promise<void> {
+        const mail = new UserOrderMailContent(language, customer, basket, customerBank, paypalLink, paypalQrCode);
         await MailSender.sendEmail(mail.getTitle(), mail.getBody(true), mail.getBody(false), customer.getEmailFrom(), [to]);
     }
 }

@@ -12,5 +12,5 @@ export default interface ISendMailDataGateway {
 
     sendEmailNewOrder(customer: CustomerVM, basket: BasketOrderVM, userAdminStoreEmail: Array<string>, language: string): Promise<void>;
 
-    sendEmailUserOrder(customer: CustomerVM, basket: BasketOrderVM, customerBank: CustomerBankVM, to: string, language: string): Promise<void>
+    sendEmailUserOrder(customer: CustomerVM, basket: BasketOrderVM, customerBank: CustomerBankVM, to: string, language: string, paypalLink: string, paypalQrCode: string): Promise<void>
 }

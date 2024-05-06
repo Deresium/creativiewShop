@@ -75,6 +75,10 @@ export default class BasketOrderVM {
     }
 
 
+    public getCurrencyCode(): string {
+        return this.currencyCode;
+    }
+
     public getDeliveryPrice(): string {
         return this.deliveryPrice;
     }

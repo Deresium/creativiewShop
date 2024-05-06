@@ -39,36 +39,43 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/passwordRequest',
         name: 'passwordRequest',
-        component: CsPasswordRequest
+        component: CsPasswordRequest,
+        meta: {title: 'Password'}
     },
     {
         path: '/newPassword',
         name: 'newPassword',
-        component: CsNewPassword
+        component: CsNewPassword,
+        meta: {title: 'Password'}
     },
     {
         path: '/store/:productOptionId',
         name: 'productOptionStore',
-        component: CsStoreProduct
+        component: CsStoreProduct,
+        meta: {title: 'Store'}
     },
     {
         path: '/basket',
         name: 'basket',
-        component: CsBasket
+        component: CsBasket,
+        meta: {title: 'Basket'}
     },
     {
         path: '/store',
         name: 'store',
-        component: CsStore
+        component: CsStore,
+        meta: {title: 'Store'}
     },
     {
         path: '/basketOrderSuccess',
         name: 'basketOrderSuccess',
-        component: CsBasketOrderSuccess
+        component: CsBasketOrderSuccess,
+        meta: {title: 'Basket'}
     },
     {
         path: '/orders',
         name: 'userOrders',
-        component: CsUserOrders
+        component: CsUserOrders,
+        meta: {title: 'Admin'}
     }
 ];

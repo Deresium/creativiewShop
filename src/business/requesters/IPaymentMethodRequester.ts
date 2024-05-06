@@ -7,4 +7,8 @@ export default interface IPaymentMethodRequester {
     updateKeySecretForCustomerOnlinePayment(key: string, secret: string, customerId: number): Promise<void>;
 
     getPaymentMethodInfoOnlineCustomer(): Promise<Array<PaymentMethodCustomerVM>>;
+
+    getPaypalMeURL(customerId: number, total: string, currency: string): Promise<string>;
+
+    getPaypalQrCode(customerId: number, total: string, currency: string): Promise<string>;
 }

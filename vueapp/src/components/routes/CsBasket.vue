@@ -65,8 +65,10 @@
                 :delivery-option-id="basket.getDeliveryOptionId()"
                 @delivery-option-changed="refreshBasket"/>
 
-            <CsBasketPaymentMethod v-if="!basketErrorReport.hasProductOptionErrors()"
+            <CsBasketPaymentMethod v-if="!basketErrorReport.hasProductOptionErrors() && currencyCode"
+                                   :currency-code="currencyCode"
                                    :payment-method="basket.getPaymentMethod()"
+                                   :total="basket.getTotal()"
                                    @payment-method-changed="refreshBasketErrorReport"
             />
 

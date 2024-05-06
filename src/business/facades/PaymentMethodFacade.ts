@@ -3,6 +3,7 @@ import TitleValueVM from "../models/viewmodels/TitleValueVM";
 import IPaymentMethodDataGateway from "../../database/gateways/IPaymentMethodDataGateway";
 import DataEncrypt from "../utils/DataEncrypt";
 import PaymentMethodCustomerVM from "../models/viewmodels/PaymentMethodCustomerVM";
+import QRCode from 'qrcode';
 
 export default class PaymentMethodFacade implements IPaymentMethodRequester {
     private readonly paymentMethodDataGateway: IPaymentMethodDataGateway;
@@ -38,4 +39,20 @@ export default class PaymentMethodFacade implements IPaymentMethodRequester {
 
         return paymentMethodCustomersVM;
     }
+
+    public async getPaypalMeURL(customerId: number, total: string, currency: string): Promise<string> {
+        const paymentMethodPaypal = await this.paymentMethodDataGateway.getPaymentMethodCustomerById(customerId, 'PAYPAL_ME');
+        if (!paymentMethodPaypal) {
+            return null;
+        }
+
+        return `https://www.paypal.com/paypalme/${paymentMethodPaypal.getKey()}/${total}${currency}`;
+    }
+
+    public async getPaypalQrCode(customerId: number, total: string, currency: string): Promise<string> {
+        const url = await this.getPaypalMeURL(customerId, total, currency);
+        return await QRCode.toDataURL(url);
+    }
+
+
 }

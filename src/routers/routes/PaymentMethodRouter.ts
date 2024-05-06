@@ -17,5 +17,21 @@ export default class PaymentMethodRouter extends ApplicationRouter {
             const paymentMethods = await this.paymentMethodRequester.getPaymentMethodsForCustomer(customerId);
             res.send(paymentMethods);
         });
+
+        this.getRouter().get('/paypalMe/url', async (req: any, res: any) => {
+            const total = String(req.query.total);
+            const currencyCode = String(req.query.currencyCode);
+            const customerId = req.customer.customerId;
+            const url = await this.paymentMethodRequester.getPaypalMeURL(customerId, total, currencyCode);
+            res.send(url);
+        });
+
+        this.getRouter().get('/paypalMe/qrcode', async (req: any, res: any) => {
+            const total = String(req.query.total);
+            const currencyCode = String(req.query.currencyCode);
+            const customerId = req.customer.customerId;
+            const qrcode = await this.paymentMethodRequester.getPaypalQrCode(customerId, total, currencyCode);
+            res.send(qrcode);
+        });
     }
 }

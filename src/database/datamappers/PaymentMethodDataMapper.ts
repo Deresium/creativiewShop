@@ -32,4 +32,13 @@ export default class PaymentMethodDataMapper implements IPaymentMethodDataGatewa
             }
         });
     }
+
+    public async getPaymentMethodCustomerById(customerId: number, paymentMethod: string): Promise<PaymentMethodCustomerEntity> {
+        return await PaymentMethodCustomerEntity.findOne({
+            where: {
+                paymentMethodCode: paymentMethod,
+                customerId: customerId
+            }
+        });
+    }
 }

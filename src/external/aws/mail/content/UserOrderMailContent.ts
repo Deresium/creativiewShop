@@ -7,12 +7,16 @@ export default class UserOrderMailContent extends MailContent {
     private readonly customer: CustomerVM;
     private readonly order: BasketOrderVM;
     private readonly customerBank: CustomerBankVM;
+    private readonly paypalURL: string;
+    private readonly paypalQRcode: string;
 
-    constructor(language: string, customer: CustomerVM, order: BasketOrderVM, customerBank: CustomerBankVM) {
+    constructor(language: string, customer: CustomerVM, order: BasketOrderVM, customerBank: CustomerBankVM, paypalURL: string, paypalQRcode: string) {
         super(language);
         this.customer = customer;
         this.order = order;
         this.customerBank = customerBank;
+        this.paypalURL = paypalURL;
+        this.paypalQRcode = paypalQRcode;
     }
 
     protected getBodyEn(separator: string): string {
@@ -79,6 +83,14 @@ export default class UserOrderMailContent extends MailContent {
             BIC: ${this.customerBank.getBic()}
             `;
         }
+
+        if (this.order.getPaymentMethod() === 'PAYPAL_ME') {
+            return `
+            Lien de paiement par paypal: ${this.paypalURL}${separator}
+            QR Code:${separator}
+            <img src=${this.paypalQRcode} alt="qr code"/>
+            `
+        }
         return '';
     }
 
@@ -99,6 +111,15 @@ export default class UserOrderMailContent extends MailContent {
             BIC: ${this.customerBank.getBic()}
             `;
         }
+
+        if (this.order.getPaymentMethod() === 'PAYPAL_ME') {
+            return `
+            Paypal payment link: ${this.paypalURL}${separator}
+            QR Code:${separator} 
+            <img src=${this.paypalQRcode} alt="qr code"/>
+            `
+        }
+
         return '';
     }
 
