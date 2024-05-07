@@ -9,14 +9,16 @@ export default class UserOrderMailContent extends MailContent {
     private readonly customerBank: CustomerBankVM;
     private readonly paypalURL: string;
     private readonly paypalQRcode: string;
+    private readonly messages: Map<string, string>;
 
-    constructor(language: string, customer: CustomerVM, order: BasketOrderVM, customerBank: CustomerBankVM, paypalURL: string, paypalQRcode: string) {
+    constructor(language: string, customer: CustomerVM, order: BasketOrderVM, customerBank: CustomerBankVM, paypalURL: string, paypalQRcode: string, messages: Map<string, string>) {
         super(language);
         this.customer = customer;
         this.order = order;
         this.customerBank = customerBank;
         this.paypalURL = paypalURL;
         this.paypalQRcode = paypalQRcode;
+        this.messages = messages;
     }
 
     protected getBodyEn(separator: string): string {
@@ -31,6 +33,8 @@ export default class UserOrderMailContent extends MailContent {
         ${this.getPaymentBankTransferInfoEn(separator)}
         ${separator}
         Find all the information about your order on <a href="https://www.${this.customer.getDnsName()}">${this.customer.getDnsName()}</a>
+        ${separator}
+        ${this.messages.get('mail.order.endInfo')}
         `;
     }
 
@@ -46,6 +50,8 @@ export default class UserOrderMailContent extends MailContent {
         ${this.getPaymentBankTransferInfoFr(separator)}
         ${separator}
         Retrouvez toutes les informations de votre commande sur <a href="https://www.${this.customer.getDnsName()}">${this.customer.getDnsName()}</a>
+        ${separator}
+        ${this.messages.get('mail.order.endInfo')}
         `;
     }
 

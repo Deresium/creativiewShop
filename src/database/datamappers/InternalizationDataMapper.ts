@@ -9,7 +9,8 @@ export default class InternalizationDataMapper implements IInternalizationDataGa
                 customerId: {
                     [Op.or]: [null, customerId]
                 }
-            }
+            },
+            order: [['customerId', 'NULLS LAST']]
         });
     }
 

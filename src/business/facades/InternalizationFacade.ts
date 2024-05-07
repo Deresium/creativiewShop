@@ -16,7 +16,7 @@ export default class InternalizationFacade implements IInternalizationRequester 
             const key = internalizationMessage.getInternalizationKey();
             const internalizationVM = new InternalizationVM(key, internalizationMessage.getTextFR(), internalizationMessage.getTextEN());
 
-            if (internalizationMessage.getCustomerId() === 0) {
+            if (internalizationMessage.getCustomerId() === null) {
                 if (!mapMessages.has(key)) {
                     mapMessages.set(key, internalizationVM);
                 }

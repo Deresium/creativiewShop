@@ -149,7 +149,7 @@ export default class AppSingleton {
         const countryFacade = new CountryFacade(countryDataMapper);
         const weightPriceFacade = new WeightPriceFacade(weightPriceDataMapper);
         const paymentMethodFacade = new PaymentMethodFacade(paymentMethodDataMapper);
-        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade, sendMailDataMapper, userGroupDataMapper, customerFacade, paymentMethodFacade);
+        const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade, sendMailDataMapper, userGroupDataMapper, customerFacade, paymentMethodFacade, internalizationFacade);
         const addressFacade = new AddressFacade(addressDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
