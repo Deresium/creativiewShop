@@ -14,7 +14,7 @@ export default interface IUserRequester {
 
     getUser(userId: string, customerId: number, userGroups: Array<string>): Promise<UserVM>;
 
-    findUserPurchasers(customerId: number): Promise<Array<UserPurchaserVM>>;
+    findUserPurchasers(customerId: number, onlyWithAccess: boolean): Promise<Array<UserPurchaserVM>>;
 
     updateUserActive(userId: string, customerId: CustomerVM, access: boolean): Promise<void>;
 

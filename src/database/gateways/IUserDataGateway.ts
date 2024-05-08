@@ -14,7 +14,7 @@ export default interface IUserDataGateway {
 
     findUserById(userId: string, customerId: number): Promise<UserEntity>;
 
-    findUserPurchasers(customerId: number): Promise<Array<UserEntity>>;
+    findUserPurchasers(customerId: number, onlyWithAccess: boolean): Promise<Array<UserEntity>>;
 
     updateUserActive(userId: string, customerId: number, access: boolean): Promise<void>;
 

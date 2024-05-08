@@ -82,6 +82,9 @@ import OrderRouter from "./routers/routes/OrderRouter";
 import OrderPdfRouter from "./routers/routes/OrderPdfRouter";
 import OnlyAdminGlobalMiddleware from "./routers/middlewares/OnlyAdminGlobalMiddleware";
 import AdminGlobalRouter from "./routers/routes/AdminGlobalRouter";
+import NewsletterDataMapper from "./database/datamappers/NewsletterDataMapper";
+import NewsletterFacade from "./business/facades/NewsletterFacade";
+import NewsletterRouter from "./routers/routes/NewsletterRouter";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -129,6 +132,7 @@ export default class AppSingleton {
         const basketDataMapper = new BasketDataMapper();
         const addressDataMapper = new AddressDataMapper();
         const paymentMethodDataMapper = new PaymentMethodDataMapper();
+        const newsletterDataMapper = new NewsletterDataMapper();
 
         const customerFacade = new CustomerFacade(customerDataMapper);
         const userGroupFacade = new UserGroupFacade(userGroupDataMapper);
@@ -151,6 +155,7 @@ export default class AppSingleton {
         const paymentMethodFacade = new PaymentMethodFacade(paymentMethodDataMapper);
         const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade, sendMailDataMapper, userGroupDataMapper, customerFacade, paymentMethodFacade, internalizationFacade);
         const addressFacade = new AddressFacade(addressDataMapper);
+        const newsletterFacade = new NewsletterFacade(newsletterDataMapper, userDataMapper, userGroupDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');
@@ -216,5 +221,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new OrderRouter(basketFacade, addressFacade, checkBasketAccessMiddleware, onlyAdminStoreMiddleware).getRouter());
         this.expressApp.use('/api', new OrderPdfRouter(basketFacade, internalizationFacade, checkBasketAccessMiddleware).getRouter());
         this.expressApp.use('/api', new AdminGlobalRouter(paymentMethodFacade, onlyAdminGlobalMiddleware).getRouter());
+        this.expressApp.use('/api', new NewsletterRouter(newsletterFacade, onlyAdminStoreMiddleware).getRouter());
     }
 }

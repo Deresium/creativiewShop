@@ -31,7 +31,6 @@ export default class UserDataMapper implements IUserDataGateway {
     }
 
 
-
     public async findUserByEmailAndCustomer(email: string, customerId: number): Promise<UserEntity> {
         return await UserEntity.findOne({
             where: {
@@ -60,16 +59,25 @@ export default class UserDataMapper implements IUserDataGateway {
         });
     }
 
-    public async findUserPurchasers(customerId: number): Promise<Array<UserEntity>> {
+    public async findUserPurchasers(customerId: number, onlyWithAccess: boolean): Promise<Array<UserEntity>> {
+        const where: any = {
+            customerId: customerId,
+            '$groupCategoryCode$': {[Op.or]: [null, 'DISCOUNT']}
+        };
+
+        if (onlyWithAccess) {
+            where.access = true
+        }
+        
         return await UserEntity.findAll({
-            where: {
-                customerId: customerId,
-                '$groupCategoryCode$': {[Op.or]: [null, 'DISCOUNT']}
-            },
+            where: where,
             include: [{
                 model: UserGroupEntity,
                 as: 'userGroups',
                 required: false,
+                where: {
+                    endDate: {[Op.is]: null}
+                },
                 include: [{
                     model: GroupEntity,
                     as: 'group',
@@ -122,7 +130,7 @@ export default class UserDataMapper implements IUserDataGateway {
 
             await PasswordChangeRequestEntity.update({
                 requestUsed: true,
-            },{
+            }, {
                 where: {
                     userId: userId,
                     passwordChangeRequestId: hash
@@ -141,8 +149,6 @@ export default class UserDataMapper implements IUserDataGateway {
             })
         });
     }
-
-
 
 
 }

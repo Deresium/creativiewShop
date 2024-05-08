@@ -72,8 +72,8 @@ ProductEntity.init({
     code: DataTypes.STRING,
     nameFr: DataTypes.STRING,
     nameEn: DataTypes.STRING,
-    descriptionFr: DataTypes.STRING,
-    descriptionEn: DataTypes.STRING,
+    descriptionFr: DataTypes.TEXT,
+    descriptionEn: DataTypes.TEXT,
     deletedAt: DataTypes.DATE
 }, {
     tableName: 'Product',

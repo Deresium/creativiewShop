@@ -59,7 +59,7 @@ const headers = computed(() => [
 ]);
 
 const users = ref(new Array<UserPurchaserVM>());
-UserPurchaserRequester.requestUserPurchasers().then(response => {
+UserPurchaserRequester.requestUserPurchasers(false).then(response => {
     users.value = response;
 });
 

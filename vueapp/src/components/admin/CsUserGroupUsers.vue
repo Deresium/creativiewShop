@@ -72,7 +72,7 @@ const userId = ref(null);
 const userRules = [notEmpty(t('user'))];
 
 const users = ref(new Array<TitleValueVM<string, string>>());
-UserPurchaserRequester.requestUserPurchasers().then(response => {
+UserPurchaserRequester.requestUserPurchasers(true).then(response => {
     users.value = response.map(user => new TitleValueVM<string, string>(`${user.getFirstName()} ${user.getName()} (${user.getEmail()})`, user.getUserId()));
 });
 

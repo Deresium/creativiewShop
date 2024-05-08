@@ -101,7 +101,8 @@ export default class UserRouter extends ApplicationRouter {
 
         this.getRouter().get('/user/purchaser', this.onlyAdminMiddleware, async (req: any, res: any) => {
             const customerId = req.customer.getCustomerId();
-            const users = await this.userRequester.findUserPurchasers(customerId);
+            const onlyWithAccess = req.query.onlyWithAccess === 'true';
+            const users = await this.userRequester.findUserPurchasers(customerId, onlyWithAccess);
             res.send(users);
         });
 

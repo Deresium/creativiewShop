@@ -70,7 +70,7 @@ export default class UserGroupDataMapper implements IUserGroupDataGateway {
                 model: UserEntity,
                 as: 'user',
                 required: true,
-                where: {customerId: customerId}
+                where: {customerId: customerId, access: true}
             }]
         });
     }

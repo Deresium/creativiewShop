@@ -75,9 +75,9 @@ export default class UserFacade implements IUserRequester {
         return new UserVM(userEntity.getName(), userEntity.getFirstName(), userEntity.getEmail(), GroupConst.hasAccessTo(GroupConst.ADMIN_STORE, userGroups), GroupConst.hasAccessTo(GroupConst.ADMIN_GLOBAL, userGroups), true);
     }
 
-    public async findUserPurchasers(customerId: number): Promise<Array<UserPurchaserVM>> {
+    public async findUserPurchasers(customerId: number, onlyWithAccess: boolean): Promise<Array<UserPurchaserVM>> {
         const userPurchasers = new Array<UserPurchaserVM>();
-        const users = await this.userDataGateway.findUserPurchasers(customerId);
+        const users = await this.userDataGateway.findUserPurchasers(customerId, onlyWithAccess);
         for (const user of users) {
             let groupIdDiscountUser: string = null;
             if (user.getUserGroups().length !== 0) {
