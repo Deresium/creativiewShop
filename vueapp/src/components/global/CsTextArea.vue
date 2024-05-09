@@ -59,22 +59,21 @@ if (props.mandatory) {
 const initTinyMce = {
     resize: true,
     width: '100%',
-    plugins: "",
+    plugins: "link",
 
     // Theme options
     toolbar: ["cut copy paste pastetext | bold italic underline strikethrough | bullist numlist | alignleft aligncenter alignright alignjustify | outdent indent",
-        "formatselect fontselect fontsizeselect | forecolor backcolor | subscript superscript | removeformat"],
+        "formatselect fontselect fontsizeselect | forecolor backcolor | subscript superscript | removeformat | link"],
 
     // Options
     entityEncoding: "raw",
     cleanup: true,
-    menubar: false,
+    menubar: "insert",
     statusbar: false,
     cleanupOnStartup: true,
     insertdatetimeDateformat: "%d-%m-%Y",
     insertdatetimeTimeformat: "%H:%M:%S",
     relativeUrls: false,
-
     pluginInsertdateTimeFormat: "%H:%M:%S",
 
     language: 'fr_FR',
