@@ -60,6 +60,7 @@ const initTinyMce = {
     resize: true,
     width: '100%',
     plugins: "link",
+    convert_urls: false,
 
     // Theme options
     toolbar: ["cut copy paste pastetext | bold italic underline strikethrough | bullist numlist | alignleft aligncenter alignright alignjustify | outdent indent",

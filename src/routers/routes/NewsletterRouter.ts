@@ -5,18 +5,18 @@ import NewsletterCreationDS from "../../business/models/datastores/NewsletterCre
 
 export default class NewsletterRouter extends ApplicationRouter {
     private newsletterRequester: INewsletterRequester;
-    private readonly onlyAdminMiddleware: RequestHandler;
+    private readonly onlyAdminStoreMiddleware: RequestHandler;
 
 
-    constructor(newsletterRequester: INewsletterRequester, onlyAdminMiddleware: RequestHandler) {
+    constructor(newsletterRequester: INewsletterRequester, onlyAdminStoreMiddleware: RequestHandler) {
         super();
         this.newsletterRequester = newsletterRequester;
-        this.onlyAdminMiddleware = onlyAdminMiddleware;
+        this.onlyAdminStoreMiddleware = onlyAdminStoreMiddleware;
         this.initRoutes();
     }
 
     public initRoutes() {
-        this.getRouter().post('/newsletter', this.onlyAdminMiddleware, async (req: any, res: any) => {
+        this.getRouter().post('/newsletter', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
             const customer = req.customer;
             const object = req.body.object;
             const content = req.body.content;
