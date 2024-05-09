@@ -155,7 +155,7 @@ export default class AppSingleton {
         const paymentMethodFacade = new PaymentMethodFacade(paymentMethodDataMapper);
         const basketFacade = new BasketFacade(basketDataMapper, productOptionFacade, productOptionDataMapper, deliveryOptionFacade, currencyRateFacade, sendMailDataMapper, userGroupDataMapper, customerFacade, paymentMethodFacade, internalizationFacade);
         const addressFacade = new AddressFacade(addressDataMapper);
-        const newsletterFacade = new NewsletterFacade(newsletterDataMapper, userDataMapper, userGroupDataMapper);
+        const newsletterFacade = new NewsletterFacade(newsletterDataMapper, userDataMapper, userGroupDataMapper, sendMailDataMapper);
 
         CustomerCacheSingleton.getInstance(customerFacade).initCache().then(() => {
             console.log('customers cache done');

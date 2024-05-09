@@ -58,6 +58,7 @@ if (props.mandatory) {
 
 const initTinyMce = {
     resize: true,
+    width: '100%',
     plugins: "",
 
     // Theme options
@@ -75,7 +76,6 @@ const initTinyMce = {
     relativeUrls: false,
 
     pluginInsertdateTimeFormat: "%H:%M:%S",
-    contextmenu: "link image | inserttable | cell row column deletetable",
 
     language: 'fr_FR',
 };

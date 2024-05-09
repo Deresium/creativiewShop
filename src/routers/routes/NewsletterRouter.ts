@@ -17,15 +17,20 @@ export default class NewsletterRouter extends ApplicationRouter {
 
     public initRoutes() {
         this.getRouter().post('/newsletter', this.onlyAdminMiddleware, async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
+            const customer = req.customer;
             const object = req.body.object;
             const content = req.body.content;
             const userIds = req.body.userIds;
             const groupIds = req.body.groupIds;
             const sendToAllUsers = req.body.sendToAllUsers;
-            const newsletterCreation = new NewsletterCreationDS(customerId, object, content, userIds, groupIds, sendToAllUsers);
-            await this.newsletterRequester.createNewsletter(newsletterCreation);
-            res.send();
+            const newsletterCreation = new NewsletterCreationDS(customer, object, content, userIds, groupIds, sendToAllUsers);
+
+            try {
+                await this.newsletterRequester.createNewsletter(newsletterCreation);
+                res.send();
+            } catch (error: any) {
+                res.status(400).send(error.message);
+            }
         });
     }
 }

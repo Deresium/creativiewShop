@@ -1,20 +1,26 @@
 <template>
     <div class="content">
         <h2>{{ t('Newsletter') }}</h2>
-        <v-form v-model="formValid" @submit.prevent="submitForm">
-            <div class="selection">
-                <v-autocomplete v-model="selectedGroups" :items="groups" :label="t('groups')" :multiple="true"/>
-                <v-autocomplete v-model="selectedUsers" :items="users" :label="t('users')" :multiple="true"/>
-                <v-switch v-model="sendToAllUsers" :color="firstColor" :label="t('sendToAllUsers')"/>
-            </div>
-            <div>
-                <v-text-field v-model="object" :label="t('object')" :rules="objectRules"/>
-            </div>
-            <div>
-                <CsTextArea v-model="content" :label="t('content')" mandatory/>
-            </div>
-            <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('submit') }}</v-btn>
-        </v-form>
+        <template v-if="successSent">
+            <v-alert :text="t('newsletter.success')" type="success"/>
+        </template>
+        <template v-if="!successSent">
+            <v-alert v-if="backError" :text="t(backError)" class="alertError" type="error"/>
+            <v-form v-model="formValid" @submit.prevent="submitForm">
+                <div class="selection">
+                    <v-autocomplete v-model="selectedGroups" :items="groups" :label="t('groups')" :multiple="true"/>
+                    <v-autocomplete v-model="selectedUsers" :items="users" :label="t('users')" :multiple="true"/>
+                    <v-switch v-model="sendToAllUsers" :color="firstColor" :label="t('sendToAllUsers')"/>
+                </div>
+                <div>
+                    <v-text-field v-model="object" :label="t('object')" :rules="objectRules"/>
+                </div>
+                <div>
+                    <CsTextArea v-model="content" :label="t('content')" mandatory/>
+                </div>
+                <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('submit') }}</v-btn>
+            </v-form>
+        </template>
     </div>
 </template>
 
@@ -41,6 +47,7 @@ const groups: Ref<Array<TitleValueVM<string, string>>> = ref([]);
 const formValid = ref(false);
 const isSending = ref(false);
 const successSent = ref(false);
+const backError = ref(null);
 const selectedGroups = ref([]);
 const selectedUsers = ref([]);
 const sendToAllUsers = ref(false);
@@ -55,6 +62,7 @@ const requestUsers = async () => {
         return new TitleValueVM(title, user.getUserId());
     });
 };
+
 const requestGroups = async () => {
     const response = await axiosServer.get('/groupDiscount');
     groups.value = TitleValueParser.parseTitleValues(response.data);
@@ -65,20 +73,26 @@ requestGroups();
 
 const submitForm = async () => {
     isSending.value = true;
+    backError.value = null;
     if (!formValid.value) {
         isSending.value = false;
         return;
     }
 
-    await axiosServer.post('/newsletter', {
-        object: object.value,
-        content: content.value,
-        userIds: selectedUsers.value,
-        groupIds: selectedGroups.value,
-        sendToAllUsers: sendToAllUsers.value
-    });
-    isSending.value = false;
-    successSent.value = true;
+    try {
+        await axiosServer.post('/newsletter', {
+            object: object.value,
+            content: content.value,
+            userIds: selectedUsers.value,
+            groupIds: selectedGroups.value,
+            sendToAllUsers: sendToAllUsers.value
+        });
+        isSending.value = false;
+        successSent.value = true;
+    } catch (error: any) {
+        isSending.value = false;
+        backError.value = error.response.data;
+    }
 }
 
 </script>
@@ -86,5 +100,9 @@ const submitForm = async () => {
 <style scoped>
 .content {
     padding: 10px;
+}
+
+.alertError {
+    margin-bottom: 10px;
 }
 </style>

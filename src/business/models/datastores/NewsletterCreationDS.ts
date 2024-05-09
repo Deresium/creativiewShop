@@ -1,5 +1,7 @@
+import CustomerVM from "../viewmodels/CustomerVM";
+
 export default class NewsletterCreationDS {
-    private readonly customerId: number;
+    private readonly customer: CustomerVM;
     private readonly object: string;
     private readonly content: string;
     private readonly userIds: Array<string>;
@@ -7,8 +9,8 @@ export default class NewsletterCreationDS {
     private readonly sendToAllUsers: boolean;
 
 
-    constructor(customerId: number, object: string, content: string, userIds: Array<string>, groupIds: Array<string>, sendToAllUsers: boolean) {
-        this.customerId = customerId;
+    constructor(customer: CustomerVM, object: string, content: string, userIds: Array<string>, groupIds: Array<string>, sendToAllUsers: boolean) {
+        this.customer = customer;
         this.object = object;
         this.content = content;
         this.userIds = userIds;
@@ -18,7 +20,11 @@ export default class NewsletterCreationDS {
 
 
     public getCustomerId(): number {
-        return this.customerId;
+        return this.customer.getCustomerId();
+    }
+
+    public getCustomer() {
+        return this.customer;
     }
 
     public getObject(): string {
