@@ -85,6 +85,7 @@ import AdminGlobalRouter from "./routers/routes/AdminGlobalRouter";
 import NewsletterDataMapper from "./database/datamappers/NewsletterDataMapper";
 import NewsletterFacade from "./business/facades/NewsletterFacade";
 import NewsletterRouter from "./routers/routes/NewsletterRouter";
+import ErrorHandlerMiddleware from "./routers/middlewares/ErrorHandlerMiddleware";
 
 export default class AppSingleton {
     private static instance: AppSingleton;
@@ -222,5 +223,6 @@ export default class AppSingleton {
         this.expressApp.use('/api', new OrderPdfRouter(basketFacade, internalizationFacade, checkBasketAccessMiddleware).getRouter());
         this.expressApp.use('/api', new AdminGlobalRouter(paymentMethodFacade, onlyAdminGlobalMiddleware).getRouter());
         this.expressApp.use('/api', new NewsletterRouter(newsletterFacade, onlyAdminStoreMiddleware).getRouter());
+        this.expressApp.use(new ErrorHandlerMiddleware().getRequestHandler());
     }
 }

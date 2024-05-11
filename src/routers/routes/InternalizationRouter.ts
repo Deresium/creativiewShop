@@ -11,8 +11,13 @@ export default class InternalizationRouter extends ApplicationRouter {
     }
 
     public initRoutes() {
-        this.getRouter().get('/internalizationMessages', async (req: any, res: any) => {
-            res.status(200).send(await this.internalizationRequester.getInternalizationMessagesForCustomer(req.customer.getCustomerId()));
+
+        this.getRouter().get('/internalizationMessages', async (req: any, res: any, next: any) => {
+            try {
+                res.status(200).send(await this.internalizationRequester.getInternalizationMessagesForCustomer(req.customer.getCustomerId()));
+            } catch (error) {
+                next(error);
+            }
         });
     }
 }

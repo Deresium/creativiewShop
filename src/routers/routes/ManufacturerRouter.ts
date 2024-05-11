@@ -17,43 +17,63 @@ export default class ManufacturerRouter extends ApplicationRouter {
     }
 
     public initRoutes(): void {
-        this.getRouter().post('/manufacturer', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
-            const name = req.body.name;
-            const manufacturer = new ManufacturerDS(name, customerId);
-            await this.manufacturerRequester.addManufacturer(manufacturer);
-            res.send();
+        this.getRouter().post('/manufacturer', this.onlyAdminStoreMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const customerId = req.customer.getCustomerId();
+                const name = req.body.name;
+                const manufacturer = new ManufacturerDS(name, customerId);
+                await this.manufacturerRequester.addManufacturer(manufacturer);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().put('/manufacturer/:manufacturerId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
-            const manufacturerId = String(req.params.manufacturerId);
-            const customerId = req.customer.getCustomerId();
-            const name = req.body.name;
+        this.getRouter().put('/manufacturer/:manufacturerId', this.onlyAdminStoreMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const manufacturerId = String(req.params.manufacturerId);
+                const customerId = req.customer.getCustomerId();
+                const name = req.body.name;
 
-            const manufacturer = new ManufacturerUpdateDS(name, customerId, manufacturerId);
-            await this.manufacturerRequester.updateManufacturer(manufacturer);
-            res.send();
+                const manufacturer = new ManufacturerUpdateDS(name, customerId, manufacturerId);
+                await this.manufacturerRequester.updateManufacturer(manufacturer);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().delete('/manufacturer/:manufacturerId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
-            const manufacturerId = String(req.params.manufacturerId);
-            const customerId = req.customer.getCustomerId();
+        this.getRouter().delete('/manufacturer/:manufacturerId', this.onlyAdminStoreMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const manufacturerId = String(req.params.manufacturerId);
+                const customerId = req.customer.getCustomerId();
 
-            await this.manufacturerRequester.removeManufacturer(manufacturerId, customerId);
-            res.send();
+                await this.manufacturerRequester.removeManufacturer(manufacturerId, customerId);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/manufacturer', async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
-            const manufacturers = await this.manufacturerRequester.getAllManufacturer(customerId);
-            res.status(200).send(manufacturers);
+        this.getRouter().get('/manufacturer', async (req: any, res: any, next: any) => {
+            try {
+                const customerId = req.customer.getCustomerId();
+                const manufacturers = await this.manufacturerRequester.getAllManufacturer(customerId);
+                res.status(200).send(manufacturers);
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/manufacturer/:manufacturerId', async (req: any, res: any) => {
-            const manufacturerId = String(req.params.manufacturerId);
-            const customerId = req.customer.getCustomerId();
-            const manufacturer = await this.manufacturerRequester.getManufacturerById(manufacturerId, customerId);
-            res.status(200).send(manufacturer);
+        this.getRouter().get('/manufacturer/:manufacturerId', async (req: any, res: any, next: any) => {
+            try {
+                const manufacturerId = String(req.params.manufacturerId);
+                const customerId = req.customer.getCustomerId();
+                const manufacturer = await this.manufacturerRequester.getManufacturerById(manufacturerId, customerId);
+                res.status(200).send(manufacturer);
+            } catch (error) {
+                next(error);
+            }
         });
     }
 }

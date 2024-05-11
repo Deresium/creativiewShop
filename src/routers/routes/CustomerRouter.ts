@@ -12,15 +12,23 @@ export default class CustomerRouter extends ApplicationRouter {
     }
 
     public initRoutes() {
-        this.getRouter().get('/customerInfo', async (req: any, res: any) => {
-            res.status(200).send(req.customer);
+        this.getRouter().get('/customerInfo', async (req: any, res: any, next: any) => {
+            try {
+                res.status(200).send(req.customer);
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/customer/bank', async (req: any, res: any) => {
-            const customerBankId = req.customer.getDefaultBankCustomerId();
-            const language = req.query.language;
-            const customerBank = await this.customerRequester.getCustomerBankById(customerBankId, language);
-            res.send(customerBank);
+        this.getRouter().get('/customer/bank', async (req: any, res: any, next: any) => {
+            try {
+                const customerBankId = req.customer.getDefaultBankCustomerId();
+                const language = req.query.language;
+                const customerBank = await this.customerRequester.getCustomerBankById(customerBankId, language);
+                res.send(customerBank);
+            } catch (error) {
+                next(error);
+            }
         });
     }
 }

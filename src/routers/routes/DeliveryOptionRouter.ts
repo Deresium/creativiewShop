@@ -28,82 +28,126 @@ export default class DeliveryOptionRouter extends ApplicationRouter {
     }
 
     public initRoutes() {
-        this.getRouter().post('/deliveryOption', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
-            const deliveryOptionId = await this.deliveryOptionRequester.addDeliveryOption(customerId);
-            res.send(deliveryOptionId);
+        this.getRouter().post('/deliveryOption', this.onlyAdminStoreMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const customerId = req.customer.getCustomerId();
+                const deliveryOptionId = await this.deliveryOptionRequester.addDeliveryOption(customerId);
+                res.send(deliveryOptionId);
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().put('/deliveryOption/:deliveryOptionId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
-            const deliveryOptionId = String(req.params.deliveryOptionId);
-            const customerId = req.customer.getCustomerId();
-            const active = req.body.active;
-            const nameFr = req.body.nameFr;
-            const deliveryOptionUpdate = new DeliveryOptionUpdateDS(deliveryOptionId, customerId, active, nameFr);
-            await this.deliveryOptionRequester.updateDeliveryOption(deliveryOptionUpdate);
-            res.send();
+        this.getRouter().put('/deliveryOption/:deliveryOptionId', this.onlyAdminStoreMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const deliveryOptionId = String(req.params.deliveryOptionId);
+                const customerId = req.customer.getCustomerId();
+                const active = req.body.active;
+                const nameFr = req.body.nameFr;
+                const deliveryOptionUpdate = new DeliveryOptionUpdateDS(deliveryOptionId, customerId, active, nameFr);
+                await this.deliveryOptionRequester.updateDeliveryOption(deliveryOptionUpdate);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().delete('/deliveryOption/:deliveryOptionId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
-            const deliveryOptionId = String(req.params.deliveryOptionId);
-            const customerId = req.customer.getCustomerId();
-            await this.deliveryOptionRequester.deleteDeliveryOption(deliveryOptionId, customerId);
-            res.send();
+        this.getRouter().delete('/deliveryOption/:deliveryOptionId', this.onlyAdminStoreMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const deliveryOptionId = String(req.params.deliveryOptionId);
+                const customerId = req.customer.getCustomerId();
+                await this.deliveryOptionRequester.deleteDeliveryOption(deliveryOptionId, customerId);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/deliveryOption/:deliveryOptionId', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
-            const deliveryOptionId = String(req.params.deliveryOptionId);
-            const customerId = req.customer.getCustomerId();
-            const deliveryOption = await this.deliveryOptionRequester.getDeliveryOption(deliveryOptionId, customerId);
-            res.send(deliveryOption);
+        this.getRouter().get('/deliveryOption/:deliveryOptionId', this.onlyAdminStoreMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const deliveryOptionId = String(req.params.deliveryOptionId);
+                const customerId = req.customer.getCustomerId();
+                const deliveryOption = await this.deliveryOptionRequester.getDeliveryOption(deliveryOptionId, customerId);
+                res.send(deliveryOption);
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/deliveryOption', this.onlyAdminStoreMiddleware, async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
-            const deliveryOptions = await this.deliveryOptionRequester.getDeliveryOptions(customerId);
-            res.send(deliveryOptions);
+        this.getRouter().get('/deliveryOption', this.onlyAdminStoreMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const customerId = req.customer.getCustomerId();
+                const deliveryOptions = await this.deliveryOptionRequester.getDeliveryOptions(customerId);
+                res.send(deliveryOptions);
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().post('/deliveryOption/:deliveryOptionId/country/:countryId', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any) => {
-            const deliveryOptionId = String(req.params.deliveryOptionId);
-            const countryId = Number(req.params.countryId);
-            await this.deliveryOptionCountryRequester.addDeliveryOptionCountry(deliveryOptionId, countryId);
-            res.send();
+        this.getRouter().post('/deliveryOption/:deliveryOptionId/country/:countryId', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const deliveryOptionId = String(req.params.deliveryOptionId);
+                const countryId = Number(req.params.countryId);
+                await this.deliveryOptionCountryRequester.addDeliveryOptionCountry(deliveryOptionId, countryId);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().delete('/deliveryOption/:deliveryOptionId/country/:countryId', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any) => {
-            const deliveryOptionId = String(req.params.deliveryOptionId);
-            const countryId = Number(req.params.countryId);
-            await this.deliveryOptionCountryRequester.deleteDeliveryOptionCountry(deliveryOptionId, countryId);
-            res.send();
+        this.getRouter().delete('/deliveryOption/:deliveryOptionId/country/:countryId', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const deliveryOptionId = String(req.params.deliveryOptionId);
+                const countryId = Number(req.params.countryId);
+                await this.deliveryOptionCountryRequester.deleteDeliveryOptionCountry(deliveryOptionId, countryId);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/deliveryOption/:deliveryOptionId/country', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any) => {
-            const deliveryOptionId = String(req.params.deliveryOptionId);
-            const countries = await this.deliveryOptionCountryRequester.getDeliveryOptionCountries(deliveryOptionId);
-            res.send(countries);
+        this.getRouter().get('/deliveryOption/:deliveryOptionId/country', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const deliveryOptionId = String(req.params.deliveryOptionId);
+                const countries = await this.deliveryOptionCountryRequester.getDeliveryOptionCountries(deliveryOptionId);
+                res.send(countries);
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/country', async (req: any, res: any) => {
-            const language = req.query.language;
-            const countries = await this.countryRequester.getAllCountries(language);
-            res.send(countries);
+        this.getRouter().get('/country', async (req: any, res: any, next: any) => {
+            try {
+                const language = req.query.language;
+                const countries = await this.countryRequester.getAllCountries(language);
+                res.send(countries);
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().post('/deliveryOption/:deliveryOptionId/weightPrice', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any) => {
-            const deliveryOptionId = String(req.params.deliveryOptionId);
-            const gram = String(req.body.gram);
-            const price = String(req.body.price);
+        this.getRouter().post('/deliveryOption/:deliveryOptionId/weightPrice', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const deliveryOptionId = String(req.params.deliveryOptionId);
+                const gram = String(req.body.gram);
+                const price = String(req.body.price);
 
-            const weightPrice = new WeightPriceDS(deliveryOptionId, gram, price);
-            await this.weightPriceRequester.addWeightPriceForDeliveryOption(weightPrice);
-            res.send();
+                const weightPrice = new WeightPriceDS(deliveryOptionId, gram, price);
+                await this.weightPriceRequester.addWeightPriceForDeliveryOption(weightPrice);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/deliveryOption/:deliveryOptionId/weightPrice', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any) => {
-            const deliveryOptionId = String(req.params.deliveryOptionId);
-            const weightPrices = await this.weightPriceRequester.getWeightPriceForDeliveryOption(deliveryOptionId);
-            res.send(weightPrices);
+        this.getRouter().get('/deliveryOption/:deliveryOptionId/weightPrice', this.onlyAdminStoreMiddleware, this.checkDeliveryOptionOwnerMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const deliveryOptionId = String(req.params.deliveryOptionId);
+                const weightPrices = await this.weightPriceRequester.getWeightPriceForDeliveryOption(deliveryOptionId);
+                res.send(weightPrices);
+            } catch (error) {
+                next(error);
+            }
         });
     }
 }

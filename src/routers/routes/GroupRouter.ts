@@ -14,10 +14,14 @@ export default class GroupRouter extends ApplicationRouter {
     }
 
     public initRoutes(): void {
-        this.getRouter().get('/groupDiscount', this.onlyAdminMiddleware, async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
-            const groups = await this.groupRequester.getDiscountGroupsForCustomer(customerId);
-            res.send(groups);
+        this.getRouter().get('/groupDiscount', this.onlyAdminMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const customerId = req.customer.getCustomerId();
+                const groups = await this.groupRequester.getDiscountGroupsForCustomer(customerId);
+                res.send(groups);
+            } catch (error) {
+                next(error);
+            }
         });
     }
 

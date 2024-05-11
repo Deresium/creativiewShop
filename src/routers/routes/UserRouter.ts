@@ -62,17 +62,25 @@ export default class UserRouter extends ApplicationRouter {
             }
         });
 
-        this.getRouter().post('/logout', async (req: any, res: any) => {
-            const cookieGenerator = new CookiesGenerator(null);
-            res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
-            res.send();
+        this.getRouter().post('/logout', async (req: any, res: any, next: any) => {
+            try {
+                const cookieGenerator = new CookiesGenerator(null);
+                res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().post('/forgotPassword', this.checkTokenRecaptchaMiddleware, async (req: any, res: any) => {
-            const email = req.body.email;
-            const customer = req.customer;
-            await this.userRequester.addPasswordChangeRequest(email, customer);
-            res.send();
+        this.getRouter().post('/forgotPassword', this.checkTokenRecaptchaMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const email = req.body.email;
+                const customer = req.customer;
+                await this.userRequester.addPasswordChangeRequest(email, customer);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
         this.getRouter().post('/changePasswordRequest', this.checkTokenRecaptchaMiddleware, async (req: any, res: any) => {
@@ -88,30 +96,42 @@ export default class UserRouter extends ApplicationRouter {
             }
         });
 
-        this.getRouter().get('/user', async (req: any, res: any) => {
-            const userId = req.userId;
-            const customerId = req.customer.getCustomerId();
-            if (!userId) {
-                res.status(200).send();
-                return;
+        this.getRouter().get('/user', async (req: any, res: any, next: any) => {
+            try {
+                const userId = req.userId;
+                const customerId = req.customer.getCustomerId();
+                if (!userId) {
+                    res.status(200).send();
+                    return;
+                }
+                const user = await this.userRequester.getUser(userId, customerId, req.userGroups);
+                res.status(200).send(user);
+            } catch (error) {
+                next(error);
             }
-            const user = await this.userRequester.getUser(userId, customerId, req.userGroups);
-            res.status(200).send(user);
         });
 
-        this.getRouter().get('/user/purchaser', this.onlyAdminMiddleware, async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
-            const onlyWithAccess = req.query.onlyWithAccess === 'true';
-            const users = await this.userRequester.findUserPurchasers(customerId, onlyWithAccess);
-            res.send(users);
+        this.getRouter().get('/user/purchaser', this.onlyAdminMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const customerId = req.customer.getCustomerId();
+                const onlyWithAccess = req.query.onlyWithAccess === 'true';
+                const users = await this.userRequester.findUserPurchasers(customerId, onlyWithAccess);
+                res.send(users);
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().put('/user/:userId/access', this.onlyAdminMiddleware, async (req: any, res: any) => {
-            const customer = req.customer;
-            const userId = String(req.params.userId);
-            const access = req.body.access;
-            await this.userRequester.updateUserActive(userId, customer, access);
-            res.send();
+        this.getRouter().put('/user/:userId/access', this.onlyAdminMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const customer = req.customer;
+                const userId = String(req.params.userId);
+                const access = req.body.access;
+                await this.userRequester.updateUserActive(userId, customer, access);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
         this.getRouter().post('/user/:userId/group/discount/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async (req: any, res: any) => {
@@ -125,18 +145,26 @@ export default class UserRouter extends ApplicationRouter {
             res.send();
         });
 
-        this.getRouter().delete('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async (req: any, res: any) => {
-            const userId = String(req.params.userId);
-            const groupId = String(req.params.groupId);
-            await this.userGroupRequester.deleteUserFromGroup(userId, groupId);
-            res.send();
+        this.getRouter().delete('/user/:userId/group/:groupId', this.onlyAdminMiddleware, this.checkUserOwnerMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const userId = String(req.params.userId);
+                const groupId = String(req.params.groupId);
+                await this.userGroupRequester.deleteUserFromGroup(userId, groupId);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/group/:groupId/users', this.onlyAdminMiddleware, async (req: any, res: any) => {
-            const customerId = req.customer.getCustomerId();
-            const groupId = String(req.params.groupId);
-            const users = await this.userRequester.getUsersFromGroupForCustomer(customerId, groupId);
-            res.send(users);
+        this.getRouter().get('/group/:groupId/users', this.onlyAdminMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const customerId = req.customer.getCustomerId();
+                const groupId = String(req.params.groupId);
+                const users = await this.userRequester.getUsersFromGroupForCustomer(customerId, groupId);
+                res.send(users);
+            } catch (error) {
+                next(error);
+            }
         });
     }
 }

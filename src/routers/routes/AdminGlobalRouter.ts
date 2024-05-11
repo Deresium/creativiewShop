@@ -14,18 +14,26 @@ export default class AdminGlobalRouter extends ApplicationRouter {
     }
 
     public initRoutes(): void {
-        this.getRouter().put('/adminGlobal/onlinePaymentInfo', this.onlyAdminGlobalMiddleware, async (req: any, res: any) => {
-            const customerId = req.body.customerId;
-            const key = req.body.key;
-            const secret = req.body.secret;
+        this.getRouter().put('/adminGlobal/onlinePaymentInfo', this.onlyAdminGlobalMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const customerId = req.body.customerId;
+                const key = req.body.key;
+                const secret = req.body.secret;
 
-            await this.paymentMethodRequester.updateKeySecretForCustomerOnlinePayment(key, secret, customerId);
-            res.send();
+                await this.paymentMethodRequester.updateKeySecretForCustomerOnlinePayment(key, secret, customerId);
+                res.send();
+            } catch (error) {
+                next(error);
+            }
         });
 
-        this.getRouter().get('/adminGlobal/onlinePaymentInfo', this.onlyAdminGlobalMiddleware, async (req: any, res: any) => {
-            const paymentInfoOnline = await this.paymentMethodRequester.getPaymentMethodInfoOnlineCustomer();
-            res.send(paymentInfoOnline);
+        this.getRouter().get('/adminGlobal/onlinePaymentInfo', this.onlyAdminGlobalMiddleware, async (req: any, res: any, next: any) => {
+            try {
+                const paymentInfoOnline = await this.paymentMethodRequester.getPaymentMethodInfoOnlineCustomer();
+                res.send(paymentInfoOnline);
+            } catch (error) {
+                next(error);
+            }
         });
     }
 }
