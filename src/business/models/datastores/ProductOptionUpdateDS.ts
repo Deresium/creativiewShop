@@ -40,7 +40,10 @@ export default class ProductOptionUpdateDS {
     }
 
     public getWeight(): string {
-        return this.weight;
+        if (this.weight) {
+            return this.weight;
+        }
+        return null;
     }
 
     public getStock(): number {
