@@ -34,8 +34,7 @@ export default class ProductOptionStoreFilter {
         }
         const upperSearchTerm = this.searchTerm.toUpperCase();
         return this.include(upperSearchTerm, this.getProductName()) ||
-            this.include(upperSearchTerm, this.getProductOptionName()) ||
-            this.include(upperSearchTerm, this.getProductDescription());
+            this.include(upperSearchTerm, this.getProductOptionName());
     }
 
     private filterOnCategories(): boolean {
