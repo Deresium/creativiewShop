@@ -70,7 +70,7 @@ export default class ProductOptionRouter extends ApplicationRouter {
                 const nameFr = req.body.nameFr;
                 const nameEn = req.body.nameEn;
                 const stock = req.body.stock;
-                const weight = String(req.body.weight);
+                const weight = req.body.weight;
                 const active = req.body.active;
                 const preorder = req.body.preorder;
                 const featured = req.body.featured;

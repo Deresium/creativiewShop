@@ -144,7 +144,12 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         if (productOption.getListPrices() && productOption.getListPrices()[0]) {
             price = productOption.getListPrices()[0].getPrice().toFixed(2);
         }
+        let weight = null;
+        if (productOption.getWeight()) {
+            weight = productOption.getWeight().toFixed(2);
+        }
+
         return new ProductOptionVM(productOption.getProductOptionId(), productOption.getProductId(), productOption.getNameFr(), productOption.getNameEn(),
-            productOption.getCode(), productOption.getStock(), productOption.getActive(), productOption.getFeatured(), productOption.getClick(), productOption.getWeight().toFixed(2), productOption.getPreorder(), price);
+            productOption.getCode(), productOption.getStock(), productOption.getActive(), productOption.getFeatured(), productOption.getClick(), weight, productOption.getPreorder(), price);
     }
 }
