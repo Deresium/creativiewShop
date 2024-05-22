@@ -1,6 +1,7 @@
 <template>
     <h2>{{ t('users') }}</h2>
     <v-data-table
+        v-model:sort-by="sortBy"
         :headers="headers"
         :items="users"
         item-key="userId"
@@ -51,11 +52,12 @@ const handleRemoveUserAccess = () => {
     textSnackbar.value = t('removeUserAccess.success');
 };
 
+const sortBy: any = ref([{key: 'access', order: 'asc'}]);
 const headers = computed(() => [
-    {title: t('name'), value: 'name'},
-    {title: t('firstName'), value: 'firstName'},
-    {title: t('email'), value: 'email'},
-    {title: t('access'), value: 'access'},
+    {title: t('name'), value: 'name', sortable: true},
+    {title: t('firstName'), value: 'firstName', sortable: true},
+    {title: t('email'), value: 'email', sortable: true},
+    {title: t('access'), value: 'access', sortable: true},
 ]);
 
 const users = ref(new Array<UserPurchaserVM>());
