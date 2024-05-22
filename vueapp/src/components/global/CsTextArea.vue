@@ -1,7 +1,8 @@
 <template>
     <v-input v-model="localModelValue" #default="{isDisabled}" :hide-details="hideDetails" :label="label" :name="name"
              :rules="rules">
-        <editor v-model="localModelValue" :disabled="disabled || isDisabled.value" :init="initTinyMce" :name="name"/>
+        <editor v-model="localModelValue" :aria-label="label" :disabled="disabled || isDisabled.value"
+                :init="initTinyMce" :name="name"/>
     </v-input>
 </template>
 
@@ -69,7 +70,7 @@ const initTinyMce = {
     // Options
     entityEncoding: "raw",
     cleanup: true,
-    menubar: "insert",
+    menubar: "",
     statusbar: false,
     cleanupOnStartup: true,
     insertdatetimeDateformat: "%d-%m-%Y",

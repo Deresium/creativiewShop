@@ -59,18 +59,22 @@
                 @billing-address-changed="refreshBasketErrorReport"
             />
 
+
             <CsBasketDeliveryOption
                 v-if="basket.getDeliveryAddressCountryId() && !basketErrorReport.hasProductOptionErrors()"
                 :delivery-country-id="basket.getDeliveryAddressCountryId()"
                 :delivery-option-id="basket.getDeliveryOptionId()"
                 @delivery-option-changed="refreshBasket"/>
 
-            <CsBasketPaymentMethod v-if="!basketErrorReport.hasProductOptionErrors() && currencyCode"
-                                   :currency-code="currencyCode"
-                                   :payment-method="basket.getPaymentMethod()"
-                                   :total="basket.getTotal()"
-                                   @payment-method-changed="refreshBasketErrorReport"
+
+            <CsBasketPaymentMethod
+                v-if="!basketErrorReport.hasProductOptionErrors() && currencyCode && basket.getTotal()"
+                :currency-code="currencyCode"
+                :paymentMethod="basket.getPaymentMethod()"
+                :total="basket.getTotal()"
+                @payment-method-changed="refreshBasketErrorReport"
             />
+
 
             <div class="basketTotal">
                 <p>{{ t('total') }}: {{ basket.getTotal() }}{{ currencySymbol }}</p>
@@ -82,17 +86,18 @@
                 </v-btn>
             </div>
 
+
             <v-alert v-if="basketErrorReport.hasProductOptionErrors()" type="error">
                 <p v-for="error in basketErrorReport.getProductOptionErrors()" :key="error.getId()">
                     {{ t(error.getReason(), {productName: error.getLabel()}) }}</p>
             </v-alert>
+
 
             <v-alert v-if="!basketErrorReport.hasProductOptionErrors() && basketErrorReport.hasBasketErrors()"
                      type="error">
                 <p v-for="error in basketErrorReport.getBasketErrors()" :key="error.getId()">
                     {{ t(error.getReason()) }}</p>
             </v-alert>
-
         </div>
     </div>
 
@@ -125,7 +130,6 @@
 
 <script lang="ts" setup>
 import {computed, Ref, ref, watch} from "vue";
-import BasketRequester from "../../requesters/BasketRequester.ts";
 import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 import {useI18n} from "vue-i18n";
 import axiosServer from "../../axios/axiosServer.ts";
@@ -133,10 +137,11 @@ import CsBasketQuantity from "../store/CsBasketQuantity.vue";
 import BasketVM from "../../viewmodels/BasketVM";
 import BasketErrorReportVM from "../../viewmodels/BasketErrorReportVM.ts";
 import BasketErrorReportRequester from "../../requesters/BasketErrorReportRequester.ts";
-import CsBasketAddress from "../store/CsBasketAddress.vue";
-import CsBasketDeliveryOption from "../store/CsBasketDeliveryOption.vue";
-import CsBasketPaymentMethod from "../store/CsBasketPaymentMethod.vue";
 import router from "../../router/router.ts";
+import BasketRequester from "../../requesters/BasketRequester.ts";
+import CsBasketDeliveryOption from "../store/CsBasketDeliveryOption.vue";
+import CsBasketAddress from "../store/CsBasketAddress.vue";
+import CsBasketPaymentMethod from "../store/CsBasketPaymentMethod.vue";
 
 const {t} = useI18n({useScope: "global"});
 

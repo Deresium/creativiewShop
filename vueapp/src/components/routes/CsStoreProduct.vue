@@ -59,7 +59,7 @@
                     {{ t('addToBasket') }}
                 </v-btn>
 
-                <p class="description">{{ productOptionStore.getDescription() }}</p>
+                <p class="description" v-html="DOMPurify.sanitize(productOptionStore.getDescription())"></p>
             </div>
         </article>
     </div>
@@ -93,6 +93,7 @@ import {useRoute} from "vue-router";
 import router from "../../router/router.ts";
 import useCustomer from "../../compositionfunctions/customer.ts";
 import axiosServer from "../../axios/axiosServer.ts";
+import DOMPurify from 'dompurify';
 
 
 const {t} = useI18n({useScope: 'global'});

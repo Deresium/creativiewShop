@@ -7,8 +7,8 @@
             <v-text-field v-model="code" :label="t('code')" name="code"/>
             <v-text-field v-model="nameFr" :label="t('nameFr')" name="nameFr"/>
             <v-text-field v-model="nameEn" :label="t('nameEn')" name="nameEn"/>
-            <v-textarea v-model="descriptionFr" :label="t('descriptionFr')" name="descriptionFr"/>
-            <v-textarea v-model="descriptionEn" :label="t('descriptionEn')" name="descriptionEn"/>
+            <CsTextArea v-model="descriptionFr" :label="t('descriptionFr')" name="descriptionFr"/>
+            <CsTextArea v-model="descriptionEn" :label="t('descriptionEn')" name="descriptionEn"/>
             <v-autocomplete v-model="manufacturerId" :items="manufacturerList" :label="t('manufacturer')"
                             name="manufacturer"/>
             <v-btn :disabled="isSending" :loading="isSending" type="submit">{{ t('update') }}</v-btn>
@@ -25,6 +25,7 @@ import TitleValueVM from "../../../viewmodels/TitleValueVM.ts";
 import ManufacturerRequester from "../../../requesters/ManufacturerRequester.ts";
 import {useRoute} from "vue-router";
 import ProductRequester from "../../../requesters/ProductRequester.ts";
+import CsTextArea from "../../global/CsTextArea.vue";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -61,7 +62,9 @@ ProductRequester.requestProduct(productIdString).then(response => {
     nameFr.value = response.getNameFr();
     nameEn.value = response.getNameEn();
     descriptionFr.value = response.getDescriptionFr();
+    descriptionFr.value = descriptionFr.value.replaceAll('\r\n', '<br/>');
     descriptionEn.value = response.getDescriptionEn();
+    descriptionEn.value = descriptionEn.value.replaceAll('\r\n', '<br/>');
 });
 
 const submitForm = async () => {
