@@ -63,8 +63,10 @@ ProductRequester.requestProduct(productIdString).then(response => {
     nameEn.value = response.getNameEn();
     descriptionFr.value = response.getDescriptionFr();
     descriptionFr.value = descriptionFr.value.replaceAll('\r\n', '<br/>');
+    descriptionFr.value = descriptionFr.value.replaceAll('\n', '<br/>');
     descriptionEn.value = response.getDescriptionEn();
     descriptionEn.value = descriptionEn.value.replaceAll('\r\n', '<br/>');
+    descriptionEn.value = descriptionEn.value.replaceAll('\n', '<br/>');
 });
 
 const submitForm = async () => {
