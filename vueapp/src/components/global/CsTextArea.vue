@@ -69,6 +69,7 @@ const initTinyMce = {
 
     // Options
     entityEncoding: "raw",
+    contextmenu: false,
     cleanup: true,
     menubar: "",
     statusbar: false,
