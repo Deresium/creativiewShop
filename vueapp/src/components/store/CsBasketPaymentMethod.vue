@@ -49,7 +49,7 @@ const {t} = useI18n({useScope: "global"});
 const props = defineProps({
     paymentMethod: {
         type: String,
-        required: true
+        required: false
     },
     total: {
         type: String,

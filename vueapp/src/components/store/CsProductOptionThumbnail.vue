@@ -7,6 +7,7 @@
                 <p class="title">{{ productOptionStore.getTitle() }}</p>
                 <p v-if="productOptionStore.getHasStock()" class="inStock">{{ t('inStock') }}</p>
                 <p v-if="!productOptionStore.getHasStock()" class="outStock">{{ t('outStock') }}</p>
+                <p v-if="productOptionStore.getPreorder()" class="preorder">{{ t('preorder') }}</p>
                 <p :class="basePriceClass" class="basePrice">{{ productOptionStore.getBasePrice() }}{{
                         currencySymbol
                     }}</p>
@@ -149,5 +150,9 @@ const clickOnConsultProduct = async () => {
 
 .outStock {
     color: #cc0000;
+}
+
+.preorder {
+    color: dodgerblue;
 }
 </style>

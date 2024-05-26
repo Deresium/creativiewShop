@@ -1,7 +1,6 @@
 import IBasketDataGateway from "../../database/gateways/IBasketDataGateway";
 import IProductOptionRequester from "../requesters/IProductOptionRequester";
 import BasketVM from "../models/viewmodels/BasketVM";
-import BasketOrderVM from "../models/viewmodels/BasketOrderVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ProductOptionBasketVM from "../models/viewmodels/ProductOptionBasketVM";
 import ICurrencyRateRequester from "../requesters/ICurrencyRateRequester";
@@ -48,7 +47,13 @@ export default class BasketBuilder {
             }
 
             const total = (price.mul(basketProductOption.getQuantity()));
-            const totalWeight = (productOptionStore.getWeight().mul(basketProductOption.getQuantity()));
+            let productOptionWeight = new Decimal(0);
+            if (productOptionStore.getWeight()) {
+                productOptionWeight = productOptionStore.getWeight()
+            }
+
+            const totalWeight = productOptionWeight.mul(basketProductOption.getQuantity());
+
             totalBasket = totalBasket.add(total);
             totalWeightBasket = totalWeightBasket.add(totalWeight);
             const productOptionBasket = new ProductOptionBasketDS(
@@ -56,7 +61,7 @@ export default class BasketBuilder {
                 productOptionStore.getProductId(),
                 productOptionStore.getHasStock(),
                 productOptionStore.getStock(),
-                productOptionStore.getWeight(),
+                productOptionWeight,
                 productOptionStore.getManufacturerId(),
                 productOptionStore.getManufacturer(),
                 productOptionStore.getPreorder(),
@@ -74,7 +79,7 @@ export default class BasketBuilder {
                 total
             );
 
-            if(productOptionStore.getPreorder()){
+            if (productOptionStore.getPreorder()) {
                 basketHasPreorderItems = true;
             }
 

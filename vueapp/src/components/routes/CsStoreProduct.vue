@@ -33,6 +33,7 @@
                 <p class="title">{{ productOptionStore.getTitle() }}</p>
                 <p v-if="productOptionStore.getHasStock()" class="inStock">{{ t('inStock') }}</p>
                 <p v-if="!productOptionStore.getHasStock()" class="outStock">{{ t('outStock') }}</p>
+                <p v-if="productOptionStore.getPreorder()" class="preorder">{{ t('preorder') }}</p>
                 <p v-if="productOptionStore.getManufacturer()">
                     {{ t('manufacturer') }}:
                     <router-link
@@ -230,6 +231,10 @@ const imageSrc = (productPictureId: string) => {
 
 .outStock {
     color: #cc0000;
+}
+
+.preorder {
+    color: dodgerblue;
 }
 
 @media (width >= 1200px) {

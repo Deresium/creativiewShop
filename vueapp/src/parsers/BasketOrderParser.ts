@@ -17,7 +17,8 @@ export default class BasketOrderParser {
                 basketProductOption.quantity,
                 basketProductOption.pictures,
                 basketProductOption.title,
-                basketProductOption.total
+                basketProductOption.total,
+                basketProductOption.preorder
             );
             basketProductOptionOrders.push(basketProductOptionOrder);
         }

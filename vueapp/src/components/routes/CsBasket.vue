@@ -19,10 +19,14 @@
                 <template #item.title="{ item }">
                     <router-link
                         :to="{name: 'productOptionStore', params: {productOptionId: item.getProductOptionId()}}">
-                        {{ item.getTitle() }} <span v-if="item.hasMultipleOptions()">({{
-                            item.getTitleOption()
-                        }})</span>
+                        {{ item.getTitle() }}
+                        <span v-if="item.hasMultipleOptions()">
+                            ({{ item.getTitleOption() }})
+                        </span>
                     </router-link>
+                    <p v-if="item.getPreorder()" class="preorder">
+                        {{ t('preorder') }}
+                    </p>
                 </template>
 
                 <template #item.quantity="{ item }">
@@ -74,6 +78,16 @@
                 :total="basket.getTotal()"
                 @payment-method-changed="refreshBasketErrorReport"
             />
+
+            <v-alert v-if="basket.getHasPreorderItems()" class="infoPreorder"
+                     type="info">
+                <p>{{ t('preorder.info.1') }}</p>
+                <p>{{ t('preorder.info.2') }}</p>
+                <p>{{ t('preorder.info.3') }}</p>
+                <p>{{ t('preorder.info.4') }}</p>
+                <p>{{ t('preorder.info.5') }}</p>
+                <p>{{ t('preorder.info.6') }}</p>
+            </v-alert>
 
 
             <div class="basketTotal">
@@ -276,5 +290,14 @@ watch(currencyCode, async () => {
     display: flex;
     align-items: center;
     width: 100px;
+}
+
+.preorder {
+    color: dodgerblue;
+}
+
+.infoPreorder {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 </style>

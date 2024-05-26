@@ -18,6 +18,11 @@
                     </div>
                 </template>
 
+                <template #item.title="{ item }">
+                    {{ item.getTitle() }}
+                    <p v-if="item.getPreorder()" class="preorder">{{ t('preorder') }}</p>
+                </template>
+
                 <template #item.price="{ item }">
                     {{ item.getPrice() }}&nbsp{{ order.getCurrencySymbol() }}
                 </template>
@@ -182,5 +187,9 @@ h2 {
 
 .infos p {
     margin-bottom: 20px;
+}
+
+.preorder {
+    color: dodgerblue;
 }
 </style>

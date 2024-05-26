@@ -6,9 +6,10 @@ export default class BasketProductOptionOrderVM {
     private readonly pictures: Array<string>;
     private readonly title: string;
     private readonly total: string;
+    private readonly preorder: boolean;
 
 
-    constructor(productOptionId: string, productId: string, price: string, quantity: number, pictures: Array<string>, title: string, total: string) {
+    constructor(productOptionId: string, productId: string, price: string, quantity: number, pictures: Array<string>, title: string, total: string, preorder: boolean) {
         this.productOptionId = productOptionId;
         this.productId = productId;
         this.price = price;
@@ -16,6 +17,7 @@ export default class BasketProductOptionOrderVM {
         this.pictures = pictures;
         this.title = title;
         this.total = total;
+        this.preorder = preorder;
     }
 
 

@@ -45,7 +45,8 @@ export default class BasketOrderBuilder {
                 productOptionBasket.getQuantity(),
                 pictureIds,
                 this.getTitle(productOptionBasket.getProductOption()),
-                totalPrice
+                totalPrice,
+                productOptionBasket.getProductOption().getPreorder()
             );
             productOptionOrdersBasket.push(basketProductOptionOrderVM);
         }
