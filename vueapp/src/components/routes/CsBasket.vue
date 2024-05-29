@@ -80,13 +80,11 @@
             />
 
             <v-alert v-if="basket.getHasPreorderItems()" class="infoPreorder"
-                     type="info">
+                     type="warning">
+                <p>{{ t('preorder.info.title') }}</p>
                 <p>{{ t('preorder.info.1') }}</p>
                 <p>{{ t('preorder.info.2') }}</p>
                 <p>{{ t('preorder.info.3') }}</p>
-                <p>{{ t('preorder.info.4') }}</p>
-                <p>{{ t('preorder.info.5') }}</p>
-                <p>{{ t('preorder.info.6') }}</p>
             </v-alert>
 
 
