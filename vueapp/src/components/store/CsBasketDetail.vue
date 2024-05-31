@@ -42,13 +42,17 @@
                 <p v-if="deliveryAddress.getAddressId()">
                     <b>{{ t('deliveryAddress') }}</b>
                     <br/>
+                    {{ deliveryAddress.getUserName() }} {{ deliveryAddress.getUserFirstName() }}
+                    <br/>
                     {{ deliveryAddress.getStreet() }} {{ deliveryAddress.getStreetNumber() }}
                     <span v-if="deliveryAddress.getBox()">({{ deliveryAddress.getBox() }})</span><br/>
                     {{ deliveryAddress.getZipCode() }} {{ deliveryAddress.getCity() }}<br/>
                     {{ deliveryAddress.getCountryName() }}
                 </p>
                 <p v-if="billingAddress.getAddressId()">
-                    <b>{{ t('deliveryAddress') }}</b>
+                    <b>{{ t('billingAddress') }}</b>
+                    <br/>
+                    {{ billingAddress.getUserName() }} {{ billingAddress.getUserFirstName() }}
                     <br/>
                     {{ billingAddress.getStreet() }} {{ billingAddress.getStreetNumber() }}
                     <span v-if="billingAddress.getBox()">({{ billingAddress.getBox() }})</span><br/>

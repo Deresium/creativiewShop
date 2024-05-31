@@ -3,6 +3,7 @@ import AddressCreationDS from "../../business/models/datastores/AddressCreationD
 import AddressEntity from "../entities/AddressEntity";
 import AddressUpdateDS from "../../business/models/datastores/AddressUpdateDS";
 import CountryEntity from "../entities/CountryEntity";
+import UserEntity from "../entities/UserEntity";
 
 export default class AddressDataMapper implements IAddressDataGateway {
     public async addAddress(addressCreation: AddressCreationDS): Promise<AddressEntity> {
@@ -60,7 +61,7 @@ export default class AddressDataMapper implements IAddressDataGateway {
             where: {
                 addressId: addressId
             },
-            include: [{model: CountryEntity, as: 'country'}]
+            include: [{model: CountryEntity, as: 'country'}, {model: UserEntity, as: 'user'}]
         });
     }
 

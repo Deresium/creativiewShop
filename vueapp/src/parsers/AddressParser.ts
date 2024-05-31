@@ -11,7 +11,7 @@ export default class AddressParser {
     }
 
     public static parseAddress(address: any): AddressVM {
-        return new AddressVM(address.addressId, address.countryId, address.countryName, address.city, address.street, address.streetNumber, address.box, address.zipCode);
+        return new AddressVM(address.addressId, address.countryId, address.countryName, address.city, address.street, address.streetNumber, address.box, address.zipCode, address.userName, address.userFirstName);
     }
 
     public static parseAddressToTitleValue(address: any): TitleValueVM<string, string> {

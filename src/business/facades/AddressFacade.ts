@@ -61,6 +61,14 @@ export default class AddressFacade implements IAddressRequester {
         if (addressEntity.getBox()) {
             address = `${address} (${box} ${addressEntity.getBox()})`
         }
-        return new AddressVM(addressEntity.getAddressId(), addressEntity.getCountryId(), countryName, addressEntity.getCity(), addressEntity.getStreet(), addressEntity.getStreetNumber(), addressEntity.getBox(), addressEntity.getZipCode(), address);
+
+        let name: string = null;
+        let firstName: string = null;
+        if (addressEntity.getUser()) {
+            name = addressEntity.getUser().getName();
+            firstName = addressEntity.getUser().getFirstName();
+        }
+
+        return new AddressVM(addressEntity.getAddressId(), addressEntity.getCountryId(), countryName, addressEntity.getCity(), addressEntity.getStreet(), addressEntity.getStreetNumber(), addressEntity.getBox(), addressEntity.getZipCode(), address, name, firstName);
     }
 }

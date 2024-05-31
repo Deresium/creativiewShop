@@ -8,9 +8,11 @@ export default class AddressVM {
     private readonly box: string;
     private readonly zipCode: string;
     private readonly completeAddressLine: string;
+    private readonly userName: string;
+    private readonly userFirstName: string;
 
 
-    constructor(addressId: string, countryId: number, countryName: string, city: string, street: string, streetNumber: string, box: string, zipCode: string, completeAddressLine: string) {
+    constructor(addressId: string, countryId: number, countryName: string, city: string, street: string, streetNumber: string, box: string, zipCode: string, completeAddressLine: string, userName: string, userFirstName: string) {
         this.addressId = addressId;
         this.countryId = countryId;
         this.countryName = countryName;
@@ -20,5 +22,7 @@ export default class AddressVM {
         this.box = box;
         this.zipCode = zipCode;
         this.completeAddressLine = completeAddressLine;
+        this.userName = userName;
+        this.userFirstName = userFirstName;
     }
 }

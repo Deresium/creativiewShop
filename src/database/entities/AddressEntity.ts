@@ -1,6 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import DatabaseSingleton from "../DatabaseSingleton";
 import CountryEntity from "./CountryEntity";
+import UserEntity from "./UserEntity";
 
 export default class AddressEntity extends Model {
     private readonly addressId: string;
@@ -12,6 +13,8 @@ export default class AddressEntity extends Model {
     private readonly streetNumber: string;
     private readonly box: string;
     private readonly zipCode: string;
+
+    private readonly user: UserEntity;
 
 
     getAddressId(): string {
@@ -50,6 +53,11 @@ export default class AddressEntity extends Model {
     public getZipCode(): string {
         return this.zipCode;
     }
+
+
+    public getUser(): UserEntity {
+        return this.user;
+    }
 }
 
 AddressEntity.init({
@@ -71,4 +79,10 @@ AddressEntity.hasOne(CountryEntity, {
     sourceKey: 'countryId',
     foreignKey: 'countryId',
     as: 'country'
+});
+
+AddressEntity.hasOne(UserEntity, {
+    sourceKey: 'userId',
+    foreignKey: 'userId',
+    as: 'user'
 });
