@@ -37,7 +37,10 @@
                     class="thumbnail"
                 />
             </div>
-            <v-btn :to="{name: 'store'}" class="buttonDiscover">{{ t('discoverStore') }}</v-btn>
+            <v-btn :to="{name: 'store', query: {sort: 'DATEADD_DESC'}}" class="buttonDiscover">{{
+                    t('discoverStore')
+                }}
+            </v-btn>
         </div>
 
         <div class="featured">

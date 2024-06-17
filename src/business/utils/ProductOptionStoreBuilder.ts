@@ -1,5 +1,4 @@
 import ProductOptionEntity from "../../database/entities/ProductOptionEntity";
-import ProductOptionStoreVM from "../models/viewmodels/ProductOptionStoreVM";
 import CustomerVM from "../models/viewmodels/CustomerVM";
 import ProductOptionDiscountEntity from "../../database/entities/ProductOptionDiscountEntity";
 import PercentCalculator from "./PercentCalculator";
@@ -57,7 +56,7 @@ export default class ProductOptionStoreBuilder {
         }
 
         const allOptions = this.allOptionsForProduct.map(productOption => {
-            return new TitleValueVM(this.getOptionName(productOption), productOption.getProductOptionId(),);
+            return new TitleValueVM(this.getOptionName(productOption), productOption.getProductOptionId());
         });
 
         return new ProductOptionStoreDS(

@@ -16,19 +16,19 @@ export default interface IProductOptionRequester {
 
     deleteProductOption(productOptionId: string): Promise<void>;
 
-    getProductOptionFeatured(customerId: string): Promise<Array<string>>;
+    getProductOptionFeatured(customerId: number): Promise<Array<string>>;
 
-    getProductOptionLastOneAdded(customerId: string): Promise<Array<string>>;
+    getProductOptionLastOneAdded(customerId: number): Promise<Array<string>>;
 
-    getProductOptionOnlyOneLeft(customerId: string): Promise<Array<string>>;
+    getProductOptionOnlyOneLeft(customerId: number): Promise<Array<string>>;
 
-    getProductOptionRandom(customerId: string): Promise<Array<string>>;
+    getProductOptionRandom(customerId: number): Promise<Array<string>>;
 
-    getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<string>>;
+    getProductOptionDiscount(customerId: number, groups: Array<string>): Promise<Array<string>>;
 
-    getProductOptionSearch(customerId: string, searchTerm: string, categoryIds: Array<string>, manufacturerIds: Array<string>, language: string): Promise<Array<string>>;
+    getProductOptionSearch(customer: CustomerVM, groupIds: Array<string>, searchTerm: string, categoryIds: Array<string>, manufacturerIds: Array<string>, currency: string, language: string, orderBy: string): Promise<Array<string>>;
 
-    getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreDS>;
+    getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, withOptions: boolean, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreDS>;
 
     getProductOptionStoreVM(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreVM>;
 }

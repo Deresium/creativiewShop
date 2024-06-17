@@ -12,17 +12,17 @@ export default interface IProductOptionDataGateway {
 
     deleteProductOption(productOptionId: string): Promise<void>;
 
-    getProductOptionFeatured(customerId: string): Promise<Array<ProductOptionEntity>>;
+    getProductOptionFeatured(customerId: number): Promise<Array<ProductOptionEntity>>;
 
-    getProductOptionStore(productOptionId: string, groupIds: Array<string>): Promise<ProductOptionEntity>;
+    getProductOptionStores(productOptionId: Array<string>, groupIds: Array<string>): Promise<Array<ProductOptionEntity>>;
 
-    getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<ProductOptionEntity>>;
+    getProductOptionDiscount(customerId: number, groups: Array<string>): Promise<Array<ProductOptionEntity>>;
 
-    getProductOptionLastOneAdded(customerId: string): Promise<Array<ProductOptionEntity>>;
+    getProductOptionLastOneAdded(customerId: number): Promise<Array<ProductOptionEntity>>;
 
-    getProductOptionOnlyOneLeft(customerId: string): Promise<Array<ProductOptionEntity>>;
+    getProductOptionOnlyOneLeft(customerId: number): Promise<Array<ProductOptionEntity>>;
 
-    getAllProductOptionStore(customerId: string): Promise<Array<ProductOptionEntity>>;
+    getAllProductOptionStore(customerId: number): Promise<Array<ProductOptionEntity>>;
 
     getProductOptionByProductActive(productId: string): Promise<Array<ProductOptionEntity>>;
 

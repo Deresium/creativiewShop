@@ -28,12 +28,14 @@ export default class ProductOptionStoreRequester {
         return response.data;
     }
 
-    public static async requestSearchAllProductOptionIds(searchTerm: string, categoryIds?: Array<string>, manufacturers?: Array<string>): Promise<Array<string>> {
+    public static async requestSearchAllProductOptionIds(searchTerm: string, currency: string, orderBy: string, categoryIds?: Array<string>, manufacturers?: Array<string>): Promise<Array<string>> {
         const response = await axiosServer.get('/store', {
             params: {
                 searchTerm: searchTerm,
                 categoryIds: categoryIds,
-                manufacturerIds: manufacturers
+                manufacturerIds: manufacturers,
+                currency: currency,
+                orderBy: orderBy,
             }
         });
         return response.data;

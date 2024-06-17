@@ -40,7 +40,7 @@ export default class BasketBuilder {
 
         const basketProductOptions = await this.basketDataGateway.getBasketProductOptions(this.basketId);
         for (const basketProductOption of basketProductOptions) {
-            const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language, currencyRates);
+            const productOptionStore = await this.productOptionRequester.getProductOptionStore(basketProductOption.getProductOptionId(), groupIds, customer, currency, language, true, currencyRates);
             let price = productOptionStore.getBasePrice();
             if (productOptionStore.getDiscountPrice()) {
                 price = productOptionStore.getDiscountPrice();

@@ -79,6 +79,13 @@ export default class ProductOptionStoreDS {
         return this.discountPrice;
     }
 
+    public getDefaultPrice(): Decimal {
+        if (this.discountPrice) {
+            return this.discountPrice;
+        }
+        return this.basePrice;
+    }
+
     public getPercent(): Decimal {
         return this.percent;
     }

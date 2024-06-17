@@ -4,14 +4,22 @@
 
         <div v-if="loadedStore" class="storeLoaded">
 
-            <div v-if="categories.length >= 1" class="filter">
-                <v-btn :color="firstColor" append-icon="mdi-plus" variant="flat" @click="showFilters=true">
-                    {{ t('filter') }}
-                </v-btn>
+            <div class="filter">
+                <v-autocomplete v-if="categories.length >= 1" v-model="selectedCategories" :items="categories"
+                                :label="('category')"
+                                :multiple="true" density="compact"
+                                name="category"/>
+                <v-autocomplete v-if="manufacturers.length >= 1" v-model="selectedManufacturers" :items="manufacturers"
+                                :label="('manufacturer')"
+                                :multiple="true" density="compact"
+                                name="manufacturer"/>
             </div>
-            <div v-if="selectedManufacturerNames.length >= 1" class="manufacturer">
-                <p>{{ t('manufacturer') }}: {{ selectedManufacturerNames[0] }}</p>
-            </div>
+
+            <v-chip-group v-model="orderBySelected" class="chips">
+                <v-chip v-for="orderWay in orderWays" :key="orderWay" :color="firstColor" :value="orderWay">
+                    {{ t(`sort.${orderWay}`) }}
+                </v-chip>
+            </v-chip-group>
 
             <v-data-iterator :items="searchedProductOptionIds" :items-per-page="10" :page="nbPage">
                 <template #default="{ items }">
@@ -58,113 +66,94 @@
                 </template>
 
             </v-data-iterator>
-
-            <v-overlay v-if="showFilters" v-model="showFilters" :scrim="firstColor"
-                       opacity="99%">
-                <div class="overlayContent">
-                    <v-btn class="closeIcon" density="compact" icon="mdi-close" variant="flat"
-                           @click="showFilters=false"/>
-                    <div class="categoriesFilter">
-                        <h2>{{ t('categories') }}</h2>
-                        <CsStoreFilter
-                            v-for="category in categories"
-                            :key="category.getCategoryId()"
-                            :base-selection="selectedCategories"
-                            :category="category"
-                            @value-change="updateSelectedCategories"
-                        />
-                    </div>
-                    <!--                    <div class="manufacturerFilter">
-                                            <v-checkbox
-                                                v-for="manufacturer in manufacturers"
-                                                :key="manufacturer.getManufacturerId()"
-                                                v-model="selectedManufacturers"
-                                                :hide-details="true"
-                                                :label="manufacturer.getName()"
-                                                :value="manufacturer.getManufacturerId()"
-                                                density="compact"
-                                            />
-                                        </div>-->
-                    <v-btn variant="flat" @click="searchFilter">{{ t('search') }}</v-btn>
-                </div>
-            </v-overlay>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import {useRoute} from "vue-router";
-import {Ref, ref} from "vue";
+import {computed, Ref, ref, watch} from "vue";
 import ProductOptionStoreRequester from "../../requesters/ProductOptionStoreRequester.ts";
 import CsProductOptionThumbnail from "../store/CsProductOptionThumbnail.vue";
 import {useI18n} from "vue-i18n";
-import CategoryVM from "../../viewmodels/CategoryVM.ts";
-import CategoryRequester from "../../requesters/CategoryRequester.ts";
-import useCustomer from "../../compositionfunctions/customer.ts";
-import CsStoreFilter from "../store/CsStoreFilter.vue";
-import ManufacturerVM from "../../viewmodels/ManufacturerVM.ts";
 import ManufacturerRequester from "../../requesters/ManufacturerRequester.ts";
+import CategoryFlatRequester from "../../requesters/CategoryFlatRequester.ts";
+import TitleValueVM from "../../viewmodels/TitleValueVM.ts";
+import Debouncer from "../../compositionfunctions/Debouncer.ts";
+import useCustomer from "../../compositionfunctions/customer.ts";
+import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 
-const {t} = useI18n({useScope: "global"});
+const {t, locale} = useI18n({useScope: "global"});
 
-const {query: {searchTerm, manufacturerIds}} = useRoute();
+const {query: {searchTerm, sort, manufacturerIds}} = useRoute();
 let searchTermString: string = null;
-let manufacturersQuery = new Array<string>();
+let sortString: string = null;
 if (searchTerm) {
     searchTermString = String(searchTerm);
 }
 
-if (manufacturerIds) {
-    if (typeof manufacturerIds === 'string') {
-        manufacturersQuery.push(manufacturerIds);
-    } else {
-        manufacturersQuery.push(...manufacturerIds);
-    }
+if (sort) {
+    sortString = String(sort);
 }
 
 const {firstColor} = useCustomer();
+const storeStore = useStoreStore();
+const currencyCode = computed(() => storeStore.getCurrencyCode);
+
 
 const nbPage = ref(1);
 const loadedStore = ref(false);
 const searchedProductOptionIds = ref(new Array<string>());
-const categories = ref(new Array<CategoryVM>()) as Ref<Array<CategoryVM>>;
-const manufacturers = ref(new Array<ManufacturerVM>());
-const selectedCategories = ref(new Map<string, string>());
-const selectedManufacturerNames = ref(new Array<string>());
-const showFilters = ref(false);
+const categories = ref(new Array<TitleValueVM<string, string>>()) as Ref<Array<TitleValueVM<string, string>>>;
+const manufacturers = ref(new Array<TitleValueVM<string, string>>()) as Ref<Array<TitleValueVM<string, string>>>;
+const selectedCategories = ref(new Array<string>());
+const selectedManufacturers = ref(new Array<string>());
+const orderBySelected = ref();
+const orderWays = [
+    'PRICE_ASC',
+    'PRICE_DESC',
+    'DATEADD_ASC',
+    'DATEADD_DESC'
+];
+
+if (sortString) {
+    orderBySelected.value = sortString;
+}
+
+if (manufacturerIds) {
+    if (typeof manufacturerIds === 'string') {
+        selectedManufacturers.value.push(manufacturerIds);
+    } else {
+        selectedManufacturers.value.push(...manufacturerIds);
+    }
+}
 
 const refreshStore = async () => {
     loadedStore.value = false;
-    searchedProductOptionIds.value = await ProductOptionStoreRequester.requestSearchAllProductOptionIds(searchTermString, [...selectedCategories.value.keys()], manufacturersQuery);
+    searchedProductOptionIds.value = await ProductOptionStoreRequester.requestSearchAllProductOptionIds(searchTermString, currencyCode.value, orderBySelected.value, selectedCategories.value, selectedManufacturers.value);
     loadedStore.value = true;
 };
 refreshStore();
 
-CategoryRequester.requestCategories().then(response => {
-    categories.value = response;
+CategoryFlatRequester.requestCategoriesFlat().then(response => {
+    categories.value = response.map(category => {
+        let title = category.getNameEn();
+        if (locale.value === 'fr') {
+            title = category.getNameFr();
+        }
+        return new TitleValueVM<string, string>(title, category.getCategoryId());
+    });
 });
 
 ManufacturerRequester.getManufacturers().then(response => {
-    manufacturers.value = response;
-    for (const manufacturer of manufacturers.value) {
-        if (manufacturersQuery.includes(manufacturer.getManufacturerId())) {
-            selectedManufacturerNames.value.push(manufacturer.getName());
-        }
-    }
+    manufacturers.value = response.map(manufacturer => new TitleValueVM<string, string>(manufacturer.getName(), manufacturer.getManufacturerId()));
 });
 
-const updateSelectedCategories = (checked: boolean, categoryId: string) => {
-    if (checked) {
-        selectedCategories.value.set(categoryId, categoryId);
-    } else {
-        selectedCategories.value.delete(categoryId);
-    }
-};
+const debounceRefreshStore = new Debouncer(1000, refreshStore);
 
-const searchFilter = async () => {
-    await refreshStore();
-    showFilters.value = false;
-};
+watch([selectedManufacturers, selectedCategories], () => {
+    debounceRefreshStore.debounce();
+});
 
 
 const goToNextPage = (nextFct: Function) => {
@@ -177,17 +166,15 @@ const goToPrevPage = (prevFct: Function) => {
     prevFct();
 };
 
+watch(orderBySelected, () => {
+    refreshStore();
+});
+
 </script>
 
 <style scoped>
 .storeLoaded {
     margin: 10px;
-}
-
-.filter {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
 }
 
 .productOptions {
@@ -221,30 +208,18 @@ const goToPrevPage = (prevFct: Function) => {
     width: 45%;
 }
 
-.overlayContent {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow-y: scroll;
-    padding-left: 10px;
-}
-
-.closeIcon {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-
-.categoriesFilter {
-    margin-bottom: 10px;
-}
-
 .categoriesFilter h2 {
     padding-left: 0;
 }
 
-.manufacturer {
-    margin-bottom: 20px;
+.filter {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chips {
+    margin-bottom: 10px;
 }
 
 @media (width >= 600px) {

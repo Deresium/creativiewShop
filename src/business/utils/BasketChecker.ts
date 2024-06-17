@@ -65,7 +65,8 @@ export default class BasketChecker {
     }
 
     private async checkProductOption(productOptionBasket: BasketProductOptionEntity): Promise<BasketErrorVM> {
-        const productOptionStore = await this.productOptionDataGateway.getProductOptionStore(productOptionBasket.getProductOptionId(), this.groupIds);
+        const productOptionStores = await this.productOptionDataGateway.getProductOptionStores([productOptionBasket.getProductOptionId()], this.groupIds);
+        const productOptionStore = productOptionStores[0];
         const label = this.getLabel(productOptionStore.getProduct().getNameFr(), productOptionStore.getProduct().getNameEn());
 
         if (productOptionStore.getStock() < productOptionBasket.getQuantity()) {

@@ -83,12 +83,15 @@ export default class StoreRouter extends ApplicationRouter {
 
         this.getRouter().get('/store', async (req: any, res: any, next: any) => {
             try {
-                const customerId = req.customer.getCustomerId();
+                const customer = req.customer;
                 const searchTerm = req.query.searchTerm;
                 const categoryIds = req.query.categoryIds;
+                const orderBy = req.query.orderBy;
                 const manufacturerIds = req.query.manufacturerIds;
                 const language = req.query.language;
-                const productOptions = await this.productOptionRequester.getProductOptionSearch(customerId, searchTerm, categoryIds, manufacturerIds, language);
+                const groups = req.userGroups;
+                const currency = req.query.currency;
+                const productOptions = await this.productOptionRequester.getProductOptionSearch(customer, groups, searchTerm, categoryIds, manufacturerIds, currency, language, orderBy);
                 res.send(productOptions);
             } catch (error) {
                 next(error);

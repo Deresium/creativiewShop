@@ -15,7 +15,6 @@ export default class ProductOptionFacade implements IProductOptionRequester {
     private readonly productOptionDataGateway: IProductOptionDataGateway;
     private readonly currencyRateRequester: ICurrencyRateRequester;
 
-
     constructor(productOptionDataGateway: IProductOptionDataGateway, currencyRateRequester: ICurrencyRateRequester) {
         this.productOptionDataGateway = productOptionDataGateway;
         this.currencyRateRequester = currencyRateRequester;
@@ -43,22 +42,22 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         await this.productOptionDataGateway.updateProductOption(productOptionUpdate);
     }
 
-    public async getProductOptionFeatured(customerId: string): Promise<Array<string>> {
+    public async getProductOptionFeatured(customerId: number): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getProductOptionFeatured(customerId);
         return productOptions.map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionLastOneAdded(customerId: string): Promise<Array<string>> {
+    public async getProductOptionLastOneAdded(customerId: number): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getProductOptionLastOneAdded(customerId);
         return productOptions.map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionOnlyOneLeft(customerId: string): Promise<Array<string>> {
+    public async getProductOptionOnlyOneLeft(customerId: number): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getProductOptionOnlyOneLeft(customerId);
         return productOptions.map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionRandom(customerId: string): Promise<Array<string>> {
+    public async getProductOptionRandom(customerId: number): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getAllProductOptionStore(customerId);
         const productOptionsRandom = new Array<string>();
         let max = 5;
@@ -75,31 +74,75 @@ export default class ProductOptionFacade implements IProductOptionRequester {
         return productOptionsRandom;
     }
 
-
-    public async getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<string>> {
+    public async getProductOptionDiscount(customerId: number, groups: Array<string>): Promise<Array<string>> {
         const productOptions = await this.productOptionDataGateway.getProductOptionDiscount(customerId, groups);
         return productOptions.map(productOption => productOption.getProductOptionId());
     }
 
-    public async getProductOptionSearch(customerId: string, searchTerm: string, categoryIds: Array<string>, manufacturerIds: Array<string>, language: string): Promise<Array<string>> {
-        const productOptions = await this.productOptionDataGateway.getAllProductOptionStore(customerId);
-        return productOptions.filter(productOption => {
-            return new ProductOptionStoreFilter(productOption, language, searchTerm, categoryIds, manufacturerIds).filter();
-        }).map(productOption => productOption.getProductOptionId());
+    public async getProductOptionSearch(customer: CustomerVM, groupIds: Array<string>, searchTerm: string, categoryIds: Array<string>, manufacturerIds: Array<string>, currency: string, language: string, orderBy: string): Promise<Array<string>> {
+        const productOptions = await this.productOptionDataGateway.getAllProductOptionStore(customer.getCustomerId());
+        const productOptionsFilter = productOptions.filter(productOption => {
+            return new ProductOptionStoreFilter(productOption, language, searchTerm, categoryIds, manufacturerIds).filter()
+        });
+        if (!orderBy) {
+            return productOptionsFilter.map(productOption => productOption.getProductOptionId());
+        }
+
+        switch (orderBy) {
+            case 'PRICE_ASC':
+                const currencyRates = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
+                const productOptionIds = productOptionsFilter.map(productOption => productOption.getProductOptionId());
+                const productOptionsStore = await this.getMultipleProductOptionStore(productOptionIds, groupIds, customer, currency, language, false, currencyRates);
+                const orderProductOptions = productOptionsStore.sort((po1, po2) => po1.getDefaultPrice().comparedTo(po2.getDefaultPrice()));
+                return orderProductOptions.map(productOption => productOption.getProductOptionId());
+            case 'PRICE_DESC':
+                const currencyRatesDesc = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
+                const productOptionIdsDesc = productOptionsFilter.map(productOption => productOption.getProductOptionId());
+                const productOptionsStoreDesc = await this.getMultipleProductOptionStore(productOptionIdsDesc, groupIds, customer, currency, language, false, currencyRatesDesc);
+                const orderProductOptionsDesc = productOptionsStoreDesc.sort((po1, po2) => po2.getDefaultPrice().comparedTo(po1.getDefaultPrice()));
+                return orderProductOptionsDesc.map(productOption => productOption.getProductOptionId());
+            case 'DATEADD_ASC':
+                const productOptionOrderByDateAsc = productOptionsFilter.sort((po1, po2) => po1.getCreatedAt().getTime() - po2.getCreatedAt().getTime());
+                return productOptionOrderByDateAsc.map(productOption => productOption.getProductOptionId());
+            case 'DATEADD_DESC':
+                const productOptionOrderByDateDesc = productOptionsFilter.sort((po1, po2) => po2.getCreatedAt().getTime() - po1.getCreatedAt().getTime());
+                return productOptionOrderByDateDesc.map(productOption => productOption.getProductOptionId());
+            default:
+                return productOptionsFilter.map(productOption => productOption.getProductOptionId());
+        }
     }
 
-    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreDS> {
+    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, withOptions: boolean, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreDS> {
+        if (!productOptionId) {
+            return null;
+        }
+        const productOptionStores = await this.getMultipleProductOptionStore([productOptionId], groupIds, customer, currency, language, withOptions, currencyRates);
+        if (productOptionStores && productOptionStores.length > 0) {
+            return productOptionStores[0];
+        }
+        return null;
+    }
+
+    public async getMultipleProductOptionStore(productOptionId: Array<string>, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, withOptions: boolean, currencyRates?: Map<string, Decimal>): Promise<Array<ProductOptionStoreDS>> {
         let currencyRatesLocal = currencyRates;
         if (!currencyRatesLocal) {
             currencyRatesLocal = await this.currencyRateRequester.getCurrentCurrencyRateForCustomer(customer.getCustomerId());
         }
-        const productOption = await this.productOptionDataGateway.getProductOptionStore(productOptionId, groupIds);
-        const allOptionsForProduct = await this.productOptionDataGateway.getProductOptionByProductActive(productOption.getProductId());
-        return new ProductOptionStoreBuilder(productOption, allOptionsForProduct, currencyRatesLocal, customer, currency, language).buildProductOptionStore();
+        const productOptions = await this.productOptionDataGateway.getProductOptionStores(productOptionId, groupIds);
+        const productOptionsBuild = new Array<ProductOptionStoreDS>();
+        for (const productOption of productOptions) {
+            let allOptionsForProduct = new Array<ProductOptionEntity>();
+            if (withOptions) {
+                allOptionsForProduct = await this.productOptionDataGateway.getProductOptionByProductActive(productOption.getProductId());
+            }
+            const productOptionBuild = new ProductOptionStoreBuilder(productOption, allOptionsForProduct, currencyRatesLocal, customer, currency, language).buildProductOptionStore();
+            productOptionsBuild.push(productOptionBuild);
+        }
+        return productOptionsBuild;
     }
 
     public async getProductOptionStoreVM(productOptionId: string, groupIds: Array<string>, customer: CustomerVM, currency: string, language: string, currencyRates?: Map<string, Decimal>): Promise<ProductOptionStoreVM> {
-        const productOptionStore = await this.getProductOptionStore(productOptionId, groupIds, customer, currency, language, currencyRates);
+        const productOptionStore = await this.getProductOptionStore(productOptionId, groupIds, customer, currency, language, true, currencyRates);
         let startDateDiscount: string;
         let endDateDiscount: string;
         let discountPrice: string;

@@ -81,7 +81,7 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
         });
     }
 
-    public async getProductOptionFeatured(customerId: string): Promise<Array<ProductOptionEntity>> {
+    public async getProductOptionFeatured(customerId: number): Promise<Array<ProductOptionEntity>> {
         return await ProductOptionEntity.findAll({
             attributes: ['productOptionId'],
             where: {
@@ -105,7 +105,7 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
         });
     };
 
-    public async getProductOptionLastOneAdded(customerId: string): Promise<Array<ProductOptionEntity>> {
+    public async getProductOptionLastOneAdded(customerId: number): Promise<Array<ProductOptionEntity>> {
         return await ProductOptionEntity.findAll({
             attributes: ['productOptionId', 'createdAt'],
             where: {
@@ -138,7 +138,7 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
         });
     }
 
-    public async getProductOptionOnlyOneLeft(customerId: string): Promise<Array<ProductOptionEntity>> {
+    public async getProductOptionOnlyOneLeft(customerId: number): Promise<Array<ProductOptionEntity>> {
         return await ProductOptionEntity.findAll({
             attributes: ['productOptionId'],
             where: {
@@ -172,9 +172,9 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
     }
 
 
-    public async getAllProductOptionStore(customerId: string): Promise<Array<ProductOptionEntity>> {
+    public async getAllProductOptionStore(customerId: number): Promise<Array<ProductOptionEntity>> {
         return await ProductOptionEntity.findAll({
-            attributes: ['productOptionId', 'nameFr', 'nameEn'],
+            attributes: ['productOptionId', 'nameFr', 'nameEn', 'createdAt'],
             where: {
                 active: true,
                 deletedAt: {
@@ -210,7 +210,7 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
     }
 
 
-    public async getProductOptionDiscount(customerId: string, groups: Array<string>): Promise<Array<ProductOptionEntity>> {
+    public async getProductOptionDiscount(customerId: number, groups: Array<string>): Promise<Array<ProductOptionEntity>> {
         const date = new Date();
         return await ProductOptionEntity.findAll({
             attributes: ['productOptionId'],
@@ -253,11 +253,11 @@ export default class ProductOptionDataMapper implements IProductOptionDataGatewa
         });
     }
 
-    public async getProductOptionStore(productOptionId: string, groupIds: Array<string>): Promise<ProductOptionEntity> {
+    public async getProductOptionStores(productOptionId: Array<string>, groupIds: Array<string>): Promise<Array<ProductOptionEntity>> {
         const date = new Date();
-        return await ProductOptionEntity.findOne({
+        return await ProductOptionEntity.findAll({
             where: {
-                productOptionId: productOptionId,
+                productOptionId: {[Op.in]: productOptionId},
                 '$groupId$': {[Op.or]: [null, groupIds]}
             },
             include: [
