@@ -2,7 +2,9 @@
     <div>
         <v-skeleton-loader v-if="!loaded" type="card"></v-skeleton-loader>
         <article v-if="loaded" class="productOption">
-            <img :alt="productOptionStore.getTitle()" :src="firstImageSrc" class="imgThumbnail"/>
+            <router-link :to="{name: 'productOptionStore', params: {productOptionId: props.productOptionId}}">
+                <img :alt="productOptionStore.getTitle()" :src="firstImageSrc" class="imgThumbnail"/>
+            </router-link>
             <div class="info">
                 <p class="title">{{ productOptionStore.getTitle() }}</p>
                 <p v-if="productOptionStore.getHasStock()" class="inStock">{{ t('inStock') }}</p>
@@ -19,10 +21,22 @@
                     <p>{{ nbDays }}{{ t('date.d') }} {{ nbHours }}{{ t('date.h') }} {{ nbMinutes }}{{ t('date.m') }}</p>
                 </div>
             </div>
-            <v-btn :color="firstColor" class="btnConsult" variant="flat" @click="clickOnConsultProduct">
-                {{ t('consultProduct') }}
+            <v-btn :color="firstColor" class="btnConsult" variant="flat" @click="clickOnAddBasket">
+                {{ t('addToBasket') }}
             </v-btn>
         </article>
+        <v-snackbar v-model="showAddBasketSuccess">
+            {{ t('addBasket.success') }}
+            <template v-slot:actions>
+                <v-btn
+                    color="green"
+                    variant="text"
+                    @click="showAddBasketSuccess = false"
+                >
+                    {{ t('close') }}
+                </v-btn>
+            </template>
+        </v-snackbar>
     </div>
 </template>
 
@@ -34,7 +48,7 @@ import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 import useCountdown from "../../compositionfunctions/countdown.ts";
 import {useI18n} from "vue-i18n";
 import useCustomer from "../../compositionfunctions/customer.ts";
-import router from "../../router/router.ts";
+import axiosServer from "../../axios/axiosServer.ts";
 
 
 const props = defineProps({
@@ -54,6 +68,8 @@ const currencySymbol = computed(() => storeStore.getCurrencySymbol);
 const currencyCode = computed(() => storeStore.getCurrencyCode);
 const {nbDays, nbHours, nbMinutes, endOfDiscount, startCountdown} = useCountdown();
 const {firstColor} = useCustomer();
+
+const showAddBasketSuccess = ref(false);
 
 
 const firstImageSrc = computed(() => {
@@ -91,9 +107,13 @@ watch(currencyCode, () => {
     refreshProductOptionStore();
 });
 
-const clickOnConsultProduct = async () => {
-    await router.push({name: 'productOptionStore', params: {productOptionId: props.productOptionId}});
-}
+const clickOnAddBasket = async () => {
+    await axiosServer.post(`/basket/productOption/${props.productOptionId}`, {
+        quantity: 1
+    });
+    showAddBasketSuccess.value = true;
+    await storeStore.refreshNbItemsInStore();
+};
 
 
 </script>
