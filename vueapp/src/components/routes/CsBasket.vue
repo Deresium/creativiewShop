@@ -76,7 +76,8 @@
                 :currency-code="currencyCode"
                 :paymentMethod="basket.getPaymentMethod()"
                 :total="basket.getTotal()"
-                @payment-method-changed="refreshBasketErrorReport"
+                @paypalURLChanged="updatePaypalLink"
+                @payment-method-changed="updatePaymentMethod"
             />
 
             <v-alert v-if="basket.getHasPreorderItems()" class="infoPreorder"
@@ -161,6 +162,9 @@ const storeStore = useStoreStore();
 const currencySymbol = computed(() => storeStore.getCurrencySymbol);
 const currencyCode = computed(() => storeStore.getCurrencyCode);
 
+const paypalURL = ref();
+const paymentMethod = ref();
+
 const basketHeaders = computed(() => [
     {title: t('picture'), value: 'picture'},
     {title: t('name'), value: 'title'},
@@ -183,6 +187,7 @@ const txtSnackbar = ref(null);
 const refreshBasket = async () => {
     loaded.value = false;
     basket.value = await BasketRequester.requestBasket(currencyCode.value);
+    paymentMethod.value = basket.value.getPaymentMethod();
     basketErrorReport.value = await BasketErrorReportRequester.requestBasketErrorReport();
     loaded.value = true;
 };
@@ -235,11 +240,26 @@ const validateBasket = async () => {
             }
         });
         await storeStore.refreshNbItemsInStore();
-        await router.push({name: 'basketOrderSuccess'});
+        await router.push({
+            name: 'basketOrderSuccess',
+            query: {
+                paypalURL: paypalURL.value,
+                paymentMethod: paymentMethod.value
+            }
+        });
         loadingValidationBasket.value = false;
     } catch (error) {
         await refreshBasket();
     }
+};
+
+const updatePaypalLink = (paypalLink: string) => {
+    paypalURL.value = paypalLink;
+};
+
+const updatePaymentMethod = async (paymentMethodEmit: string) => {
+    paymentMethod.value = paymentMethodEmit;
+    await refreshBasketErrorReport();
 };
 
 const imageSrc = (productId: string, productOptionId: string, productPictureId: string) => {
