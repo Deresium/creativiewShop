@@ -1,4 +1,4 @@
-import cookie from "cookie";
+import {serialize} from "cookie";
 import jwt from "jsonwebtoken";
 
 export default class CookiesGenerator {
@@ -26,7 +26,7 @@ export default class CookiesGenerator {
     }
 
     private generateSignatureCookie(value: string, deleteCookie = false): string {
-        return cookie.serialize('signature', value, {
+        return serialize('signature', value, {
             secure: process.env.NODE_ENV === 'production',
             httpOnly: true,
             maxAge: this.getTimeToLive(deleteCookie),
@@ -36,7 +36,7 @@ export default class CookiesGenerator {
     }
 
     private generatePayloadCookie(value: string, deleteCookie = false): string {
-        return cookie.serialize('payload', value, {
+        return serialize('payload', value, {
             secure: process.env.NODE_ENV === 'production',
             maxAge: this.getTimeToLive(deleteCookie),
             sameSite: true,

@@ -1,6 +1,6 @@
 import ApplicationMiddleware from "./ApplicationMiddleware";
 import {RequestHandler} from "express";
-import cookie from "cookie";
+import {parse} from "cookie";
 import jwt from "jsonwebtoken"
 import CookiesGenerator from "../../business/utils/CookiesGenerator";
 
@@ -12,7 +12,7 @@ export default class ExtractTokenMiddleware extends ApplicationMiddleware {
 
     defineMiddlewareFunction(): RequestHandler {
         return (req: any, res: any, next: any) => {
-            const cookies = cookie.parse(req.headers.cookie || '');
+            const cookies = parse(req.headers.cookie || '');
             const sign = cookies.signature;
             const payload = cookies.payload;
             if (sign && payload) {
@@ -23,7 +23,8 @@ export default class ExtractTokenMiddleware extends ApplicationMiddleware {
                     req.userId = decrypt.userId;
                     const cookieGenerator = new CookiesGenerator(req.userId, req.userGroups);
                     res.setHeader('Set-Cookie', [cookieGenerator.getSignatureCookie(), cookieGenerator.getPayloadCookie()]);
-                }catch(error){
+                } catch (error) {
+                    console.error(error);
                     res.status(401).send();
                     return;
                 }
