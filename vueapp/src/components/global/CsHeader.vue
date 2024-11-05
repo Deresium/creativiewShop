@@ -8,10 +8,16 @@
         </div>
 
         <div class="right headerItem">
-            <v-btn v-if="hasAccessToStore" icon="mdi-magnify" variant="flat" @click="handleClickSearch"/>
-            <v-badge v-if="hasAccessToStore" :content="nbItemsCart">
-                <v-btn icon="mdi-cart" variant="flat" @click="clickOnBasket"/>
-            </v-badge>
+            <div class="selectors">
+                <CsSelectLocale/>
+                <CsSelectCurrency v-if="hasAccessToStore"/>
+            </div>
+            <div class="storeButtons">
+                <v-btn v-if="hasAccessToStore" icon="mdi-magnify" variant="flat" @click="handleClickSearch"/>
+                <v-badge v-if="hasAccessToStore" :content="nbItemsCart">
+                    <v-btn icon="mdi-cart" variant="flat" @click="clickOnBasket"/>
+                </v-badge>
+            </div>
         </div>
         <CsMenu/>
     </header>
@@ -35,6 +41,8 @@ import router from "../../router/router.ts";
 import {useStoreStore} from "../../pinia/store/StoreStore.ts";
 import {useI18n} from "vue-i18n";
 import useCustomer from "../../compositionfunctions/customer.ts";
+import CsSelectLocale from "./CsSelectLocale.vue";
+import CsSelectCurrency from "./CsSelectCurrency.vue";
 
 const {t} = useI18n({useScope: "global"});
 
@@ -83,7 +91,7 @@ header {
 }
 
 .headerItem {
-    flex-grow: 1;
+    width: 33%;
     display: flex;
 }
 
@@ -106,7 +114,15 @@ img.imgLogo {
     justify-content: center;
 }
 
-.overlayContent {
+.selectors {
+    display: none;
+}
+
+@media (width >= 1200px) {
+    .selectors {
+        display: flex;
+        column-gap: 10px;
+    }
 }
 
 </style>
