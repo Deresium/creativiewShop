@@ -85,9 +85,9 @@ export default class StoreRouter extends ApplicationRouter {
             try {
                 const customer = req.customer;
                 const searchTerm = req.query.searchTerm;
-                const categoryIds = req.query.categoryIds;
+                const categoryIds = req.query["categoryIds[]"];
                 const orderBy = req.query.orderBy;
-                const manufacturerIds = req.query.manufacturerIds;
+                const manufacturerIds = req.query["manufacturerIds[]"];
                 const language = req.query.language;
                 const groups = req.userGroups;
                 const currency = req.query.currency;
