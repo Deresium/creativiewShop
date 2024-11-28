@@ -86,16 +86,16 @@ export default class StoreRouter extends ApplicationRouter {
                 const customer = req.customer;
                 const searchTerm = req.query.searchTerm;
                 const categoryIds = req.query["categoryIds[]"];
-                const categoryArrayIds = Array.isArray(categoryIds) ? categoryIds : [categoryIds];
+                const categoryArrayIds = !categoryIds || Array.isArray(categoryIds) ? categoryIds : [categoryIds];
 
                 const orderBy = req.query.orderBy;
                 const manufacturerIds = req.query["manufacturerIds[]"];
-                const manufacturerArrayIds = Array.isArray(manufacturerIds) ? manufacturerIds : [manufacturerIds];
+                const manufacturerArrayIds = !manufacturerIds || Array.isArray(manufacturerIds) ? manufacturerIds : [manufacturerIds];
 
                 const language = req.query.language;
                 const groups = req.userGroups;
                 const currency = req.query.currency;
-                const productOptions = await this.productOptionRequester.getProductOptionSearch(customer, groups, searchTerm, categoryIds, manufacturerIds, currency, language, orderBy);
+                const productOptions = await this.productOptionRequester.getProductOptionSearch(customer, groups, searchTerm, categoryArrayIds, manufacturerArrayIds, currency, language, orderBy);
                 res.send(productOptions);
             } catch (error) {
                 next(error);
