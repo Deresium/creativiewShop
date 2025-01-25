@@ -25,4 +25,8 @@ export default interface IUserDataGateway {
     findPasswordChangeRequest(hash: string): Promise<PasswordChangeRequestEntity>;
 
     updatePasswordBasedOnChangeRequest(userId: string, hash: string, newPassword: string, newSalt: string): Promise<void>;
+
+    updatePhoneNumber(userId: string, phoneNumber: string): Promise<void>;
+
+    getPhoneNumber(userId: string): Promise<string>;
 }

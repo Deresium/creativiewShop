@@ -55,6 +55,8 @@
                 </template>
             </v-data-table>
 
+            <CsPhoneNumber/>
+
             <CsBasketAddress
                 v-if="!basketErrorReport.hasProductOptionErrors()"
                 :billing-address-id="basket.getBillingAddressId()"
@@ -155,6 +157,7 @@ import BasketRequester from "../../requesters/BasketRequester.ts";
 import CsBasketDeliveryOption from "../store/CsBasketDeliveryOption.vue";
 import CsBasketAddress from "../store/CsBasketAddress.vue";
 import CsBasketPaymentMethod from "../store/CsBasketPaymentMethod.vue";
+import CsPhoneNumber from "../store/CsPhoneNumber.vue";
 
 const {t} = useI18n({useScope: "global"});
 

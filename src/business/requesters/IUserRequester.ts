@@ -25,4 +25,8 @@ export default interface IUserRequester {
     addPasswordChangeRequest(email: string, customer: CustomerVM): Promise<void>;
 
     updatePasswordBasedOnChangeRequest(uuid: string, password: string, repeatPassword: string): Promise<void>;
+
+    updatePhoneNumber(userId: string, phoneNumber: string): Promise<void>;
+
+    getPhoneNumber(userId: string): Promise<string>;
 }

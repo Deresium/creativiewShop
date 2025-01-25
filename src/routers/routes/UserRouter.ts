@@ -96,6 +96,27 @@ export default class UserRouter extends ApplicationRouter {
             }
         });
 
+        this.getRouter().put('/user/phoneNumber', async (req: any, res: any, next: any) => {
+            try {
+                const userId = req.userId;
+                const phoneNumber = req.body.phoneNumber;
+                await this.userRequester.updatePhoneNumber(userId, phoneNumber);
+                res.send();
+            } catch (error: any) {
+                next(error);
+            }
+        });
+
+        this.getRouter().get('/user/phoneNumber', async (req: any, res: any, next: any) => {
+            try {
+                const userId = req.userId;
+                const phoneNumber = await this.userRequester.getPhoneNumber(userId);
+                res.send(phoneNumber);
+            } catch (error: any) {
+                next(error);
+            }
+        });
+
         this.getRouter().get('/user', async (req: any, res: any, next: any) => {
             try {
                 const userId = req.userId;
@@ -166,5 +187,7 @@ export default class UserRouter extends ApplicationRouter {
                 next(error);
             }
         });
+
+        this.getRouter()
     }
 }

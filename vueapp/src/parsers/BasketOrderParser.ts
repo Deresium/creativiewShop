@@ -61,7 +61,8 @@ export default class BasketOrderParser {
             createdAt,
             orderedAt,
             paidAt,
-            deliveredAt
+            deliveredAt,
+            data.phoneNumber,
         );
     }
 

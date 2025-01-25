@@ -22,9 +22,10 @@ export default class BasketOrderVM {
     private readonly orderedAt: string;
     private readonly paidAt: string;
     private readonly deliveredAt: string;
+    private readonly phoneNumber: string;
 
 
-    constructor(basketId: string, basketProductOptionOrders: Array<BasketProductOptionOrderVM>, totalWeight: string, deliveryPrice: string, productOptionsPrice: string, totalPrice: string, deliveryAddressId: string, billingAddressId: string, deliveryOptionLabel: string, paymentMethod: string, basketStateCode: string, currencyCode: string, currencySymbol: string, firstName: string, name: string, email: string, orderNumber: string, createdAt: string, orderedAt: string, paidAt: string, deliveredAt: string) {
+    constructor(basketId: string, basketProductOptionOrders: Array<BasketProductOptionOrderVM>, totalWeight: string, deliveryPrice: string, productOptionsPrice: string, totalPrice: string, deliveryAddressId: string, billingAddressId: string, deliveryOptionLabel: string, paymentMethod: string, basketStateCode: string, currencyCode: string, currencySymbol: string, firstName: string, name: string, email: string, orderNumber: string, createdAt: string, orderedAt: string, paidAt: string, deliveredAt: string, phoneNumber: string) {
         this.basketId = basketId;
         this.basketProductOptionOrders = basketProductOptionOrders;
         this.totalWeight = totalWeight;
@@ -47,6 +48,7 @@ export default class BasketOrderVM {
         this.deliveredAt = deliveredAt;
         this.paidAt = paidAt;
         this.deliveredAt = deliveredAt;
+        this.phoneNumber = phoneNumber;
     }
 
 

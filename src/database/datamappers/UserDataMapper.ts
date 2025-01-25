@@ -68,7 +68,7 @@ export default class UserDataMapper implements IUserDataGateway {
         if (onlyWithAccess) {
             where.access = true
         }
-        
+
         return await UserEntity.findAll({
             where: where,
             include: [{
@@ -148,6 +148,25 @@ export default class UserDataMapper implements IUserDataGateway {
                 transaction: t
             })
         });
+    }
+
+    public async updatePhoneNumber(userId: string, phoneNumber: string): Promise<void> {
+        await UserEntity.update({
+            phone: phoneNumber,
+        }, {
+            where: {
+                userId: userId
+            }
+        });
+    }
+
+    public async getPhoneNumber(userId: string): Promise<string> {
+        const user = await UserEntity.findOne({
+            where: {
+                userId: userId
+            }
+        });
+        return user.getPhoneNumber();
     }
 
 

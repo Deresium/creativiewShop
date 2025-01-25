@@ -59,6 +59,11 @@
                     {{ billingAddress.getZipCode() }} {{ billingAddress.getCity() }}<br/>
                     {{ billingAddress.getCountryName() }}
                 </p>
+                <p v-if="order.getPhoneNumber()">
+                    <b>{{ t('phone') }}</b>
+                    <br/>
+                    {{ order.getPhoneNumber() }}
+                </p>
                 <p>
                     <b>{{ t('totalPrice') }}</b>
                     <br/>

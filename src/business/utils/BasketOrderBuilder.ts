@@ -115,7 +115,8 @@ export default class BasketOrderBuilder {
             createdAt,
             orderedAt,
             paidAt,
-            deliveredAt
+            deliveredAt,
+            this.basket.getUser().getPhoneNumber()
         )
     }
 

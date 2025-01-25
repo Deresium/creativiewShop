@@ -146,5 +146,17 @@ export default class UserFacade implements IUserRequester {
         await this.userDataGateway.updatePasswordBasedOnChangeRequest(passwordRequest.getUserId(), hashUuid, passwordHashed.getHashedPassword(), passwordHashed.getSalt());
     }
 
+    public async updatePhoneNumber(userId: string, phoneNumber: string): Promise<void> {
+        if (!phoneNumber || !userId) {
+            return;
+        }
+
+        await this.userDataGateway.updatePhoneNumber(userId, phoneNumber);
+    }
+
+    public async getPhoneNumber(userId: string): Promise<string> {
+        return await this.userDataGateway.getPhoneNumber(userId);
+    }
+
 
 }
