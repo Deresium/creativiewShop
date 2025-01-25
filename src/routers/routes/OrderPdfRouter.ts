@@ -41,7 +41,18 @@ export default class OrderPdfRouter extends ApplicationRouter {
                 doc.image(path.join(__dirname, `../../../public/logos/${2}.png`), x, y, {
                     fit: [100, 100],
                 });
-                y += 100;
+                y += 50;
+                doc.fontSize(12);
+                doc.text(`${messages.get('name')}: ${order.getFirstName()} ${order.getName()}`, x, y);
+                y += 30;
+                if (order.getEmail()) {
+                    doc.text(`${messages.get('email')}: ${order.getEmail()}`, x, y);
+                    y += 30;
+                }
+                if (order.getPhoneNumber()) {
+                    doc.text(`${messages.get('phone')}: ${order.getPhoneNumber()}`, x, y);
+                    y += 30;
+                }
                 doc.fontSize(25);
                 doc.text(messages.get('productList'), x, y);
                 doc.fontSize(12);

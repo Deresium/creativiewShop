@@ -98,4 +98,8 @@ export default class BasketOrderVM {
     public getOrderNumber(): string {
         return this.orderNumber;
     }
+
+    public getPhoneNumber(): string {
+        return this.phoneNumber;
+    }
 }
