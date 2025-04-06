@@ -1,5 +1,6 @@
 import AwsCredentialsSingleton from "../AwsCredentialsSingleton";
-import {SendEmailCommand} from "@aws-sdk/client-ses";
+import {GetSendQuotaCommand, SendEmailCommand} from "@aws-sdk/client-ses";
+import Sleeper from "../../../business/utils/Sleeper";
 
 
 export default class MailSender {
@@ -19,18 +20,41 @@ export default class MailSender {
 
     public async sendMail(): Promise<void> {
         if (process.env.NODE_ENV === 'production') {
-            await this.sendEmailProd();
+            await this.sendSeriesProd();
         } else {
-            await this.sendEmailLocal();
+            await this.sendSeriesLocal();
         }
     }
 
-    private async sendEmailLocal(): Promise<void> {
-        const mails = this.to.toString();
-        console.log(`mail local: [${this.title}] de [${this.from}] vers [${mails}] avec contenu \n ${this.htmlBody}`);
+    private async sendSeriesProd(): Promise<void> {
+        const client = AwsCredentialsSingleton.getInstance().getSESClient();
+
+        const command = new GetSendQuotaCommand({});
+        const response = await client.send(command);
+
+        if (response.SentLast24Hours + this.to.length > response.Max24HourSend) {
+            console.log(`Max day quota reached: ${response.Max24HourSend}. Operation aborted`);
+            return;
+        }
+
+        for (const email of this.to) {
+            await this.sendEmailProd(email);
+            await new Sleeper().sleep(100);
+        }
     }
 
-    private async sendEmailProd(): Promise<void> {
+    private async sendSeriesLocal(): Promise<void> {
+        for (const email of this.to) {
+            await this.sendEmailLocal(email);
+            await new Sleeper().sleep(100);
+        }
+    }
+
+    private async sendEmailLocal(email: string): Promise<void> {
+        console.log(`mail local: [${this.title}] de [${this.from}] vers [${email}] avec contenu \n ${this.htmlBody}`);
+    }
+
+    private async sendEmailProd(email: string): Promise<void> {
         const client = AwsCredentialsSingleton.getInstance().getSESClient();
         const command = new SendEmailCommand({
             Message: {
@@ -47,7 +71,7 @@ export default class MailSender {
                 }
             },
             Destination: {
-                ToAddresses: this.to
+                ToAddresses: [email]
             },
             Source: this.from
         });

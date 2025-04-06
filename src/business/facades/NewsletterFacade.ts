@@ -25,10 +25,6 @@ export default class NewsletterFacade implements INewsletterRequester {
             throw new Error('newsletter.noEmail');
         }
 
-        if (listMailsToSend.size > 30) {
-            throw new Error('newsletter.toMuchEmail');
-        }
-
         await this.sendMailDataGateway.sendEmailNewsletter(newsletterCreation.getCustomer(), newsletterCreation.getObject(), newsletterCreation.getContent(), Array.from(listMailsToSend));
         await this.newsletterDataGateway.addNewsletter(newsletterCreation);
     }
