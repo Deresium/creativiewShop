@@ -15,8 +15,7 @@ export default class DatabaseSingleton {
         }
 
         this.sequelize = new Sequelize(process.env.DATABASE_URL, {
-            dialectOptions,
-            schema: 'creativiewshopschema'
+            dialectOptions
         });
     }
 
